@@ -1,0 +1,16 @@
+{% extends 'layout.j2' %}
+
+{% block page_styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock page_styles %}
+
+{% block content %}
+  <div id="intro">
+    <h2>Welcome to Limit Manual</h3>
+    <p>
+      A site where you can easily find information about Final Fantasy VII's characters, mechanics, and universe.
+      We hope to provide intuitive access to everything you want to know during your visit,
+      whether you're a first-time player, want to optimize your next playthrough, or you're specifically here because you can't figure out how to get mythril.
+    </p>
+  </div>
+{% endblock content %}

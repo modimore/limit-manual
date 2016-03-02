@@ -1,0 +1,43 @@
+#intro-box {
+  overflow: auto;
+  width: 500px;
+  margin: auto;
+
+  background-color: #cbe;
+  color: black;
+  border: 2px solid #98a;
+  border-radius: 5px;
+}
+
+#intro-box img.portrait {
+  width: 200px;
+  margin: 10px;
+  float: left;
+
+  background-color: #98a;
+}
+
+#intro-box table {
+  float: right;
+  width: 280px;
+  margin-bottom: 10px;
+
+  border-collapse: collapse;
+}
+
+#intro-box table tr {
+  border-left: 2px solid #98a;
+  border-bottom: 2px solid #98a;
+  width: 100%;
+}
+
+#intro-box table th {
+  text-align: right;
+  width: 95px;
+  padding-right: 5px;
+}
+
+#intro-box p {
+  clear: right;
+  margin: 10px;
+}

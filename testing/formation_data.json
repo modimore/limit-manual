@@ -1,0 +1,104 @@
+[
+  {
+    "locations": [
+      {
+        "name": "Sector 1",
+        "areas": ["Platform"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": 1,
+        "enemies": [ { "name": "MP", "version": "Normal" }, { "name": "MP", "version": "Normal" } ]
+      }
+    ]
+  },
+  {
+    "locations": [
+      {
+        "location": "Sector 1",
+        "areas": ["Platform", "Sector 1 Station", "Sector 1"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": 1,
+        "enemies": [ { "name": "MP", "version": "Normal" }, { "name": "MP", "version": "Normal" } ]
+      }
+    ]
+  },
+  {
+    "locations": [
+      {
+        "location": "Sector 1",
+        "areas": ["Platform", "Sector 1 Station", "Sector 1"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": 1,
+        "enemies": [ { "name": "Guard Hound", "version": "Normal" } ]
+      }
+    ]
+  },
+  {
+    "locations": [
+      {
+        "location": "Sector 1",
+        "areas": ["Platform", "Sector 1 Station", "Sector 1"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": 1,
+        "enemies": [ { "name": "MP", "version": "Normal" }, { "name": "Guard Hound", "version": "Normal" } ]
+      }
+    ]
+  },
+  {
+    "locations": [
+      {
+        "location": "Sector 1",
+        "areas": ["Platform", "Sector 1 Station", "Sector 1"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": -1,
+        "enemies": [ { "name": "Guard Hound", "version": "Normal" } ]
+      }
+    ]
+  },
+  {
+    "locations": [
+      {
+        "name": "Sector 1",
+        "areas": ["Outside Reactor"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": 1,
+        "enemies": [ { "name": "Mono Drive", "version": "Normal" }, { "name": "Mono Drive", "version": "Normal" }]
+      }
+    ]
+  },
+  {
+    "locations": [
+      {
+        "name": "Sector 1",
+        "areas": ["Outside Reactor"]
+      }
+    ],
+    "rows": [
+      {
+        "row_num": 1,
+        "enemies": [ { "name": "MP", "version": "Normal" }, { "name": "MP", "version": "Normal" } ]
+      },
+      {
+        "row_num": 2,
+        "enemies": [ { "name": "Mono Drive", "version": "Normal" } ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,65 @@
+/* stat box container */
+#stat-box {
+  overflow: auto;
+  width: 600px;
+  padding: 10px;
+  margin: auto;
+
+  background-color: maroon;
+  border: 2px solid rosybrown;
+  border-radius: 5px;
+}
+
+/* stat box left side layout */
+#stat-box .left {
+  float: left;
+  width: 200px;
+  margin-right: 10px;
+}
+
+#stat-box .left>* {
+  width: 200px;
+  margin-top: 10px;
+}
+
+#stat-box .left>*:first-child,
+#stat-box .right>*:first-child {
+  margin-top: 0px;
+}
+
+/* rest of stat box layout*/
+#stat-box .right {
+  display: inline-block;
+  width: 390px;
+}
+
+#stat-box .right>* {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* stat box general elements */
+#stat-box img { background-color: rosybrown; }
+
+#stat-box table {
+  border-collapse: collapse;
+  border: 2px solid rosybrown;
+}
+
+#stat-box th, #stat-box td {
+  padding: 2px 5px;
+  border: 1px solid rosybrown;
+}
+
+#stat-box th { color: lightblue; }
+#stat-box tbody th { text-align: left; }
+#stat-box td { text-align: right; }
+
+#stat-box #items ul {
+  padding: 0px;
+  margin: 0px;
+
+  list-style-type: none;
+}
+
+#status-immunities td { text-align: left; }

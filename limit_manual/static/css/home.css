@@ -1,0 +1,9 @@
+#intro {
+  width: 60%;
+  min-width: 500px;
+  margin: auto;
+}
+
+#intro h2 {
+  text-align: center;
+}

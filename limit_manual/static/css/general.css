@@ -1,0 +1,50 @@
+body {
+  background-color: #324;
+  color: aliceblue;
+}
+
+.menu {
+  background-color: #0000b0;
+  border: 5px solid #eee;
+  border-radius: 10px;
+  color: white;
+  font-family: Verdana, sans-serif;
+}
+.menu.ulc { background-color: #0000B0; } /* blue = 176 = 128 + 32 + 16 = 0b10110000 */
+.menu.llc { background-color: #000050; } /* blue = 80 = 64 + 16 = 0b01010000 */
+.menu.urc { background-color: #000080; } /* blue = 128 = 128 = 0b10000000 */
+.menu-lrc { background-color: #000040; } /* blue = 32 = 32 = 0b00100000 */
+
+.banner {
+  overflow: auto;
+  width: calc(100%-5px);
+  margin-bottom: 5px;
+}
+.banner img {
+  height: 80px;
+  float: left;
+}
+.banner h1 {
+  float: left;
+  font-size: 44px;
+  font-weight: normal;
+  height: 50px;
+  margin: 15px auto;
+}
+
+ul.menu-nav {
+  list-style-type: none;
+  float: right;
+  height: 20px;
+  margin: 30px 10px;
+}
+
+ul.menu-nav > li {
+  display: inline;
+  margin: 0px 3px;
+}
+
+ul.menu-nav a {
+  color: #eee;
+  text-decoration: none;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block title %}<title>Limit Manual - A FFVII Info Site</title>{% endblock title %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/general.css') }}">
+    {% block page_styles %}{% endblock %}
+  </head>
+
+  <body>
+    <div class="banner menu">
+      <img src="{{ url_for('static', filename='images/ffvii-logo-banner.png') }}">
+      <h1>Limit Manual</h1>
+      <ul class="menu-nav">
+        <li><a href="#characters">Characters</a></li>
+        <li><a href="#items">Items</a></li>
+        <li><a href="#enemies">Enemies</a></li>
+        <li><a href="#mechanics">Mechanics</a></li>
+      </ul>
+    </div>
+
+    <div id="content">{% block content %}{% endblock content %}</div>
+  </body>
+</html>

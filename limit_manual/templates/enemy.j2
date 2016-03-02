@@ -1,0 +1,144 @@
+{% extends 'layout.j2' %}
+
+{% block title %}<title>Enemy: {{ base.name }} - Limit Manual</title>{% endblock %}
+
+{% block page_styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/enemy.css') }}">
+{% endblock page_styles %}
+
+{% macro stat_kvp(stat, value) -%}
+  <th>{{ stat }}</th>
+  <td>{{ value }}</td>
+{%- endmacro %}
+
+{% block content %}
+  <div id="stat-box">
+    {# left block #}
+    <div class="left">
+      {# Enemy Image #}
+      <img src="{{ url_for('static', filename=base.image) }}" alt="Enemy model: {{ base.name }}">
+
+      {# Enemy Version Info #}
+      <table id="info">
+        <tbody>
+          <tr>{{ stat_kvp('Name', base.name) }}</tr>
+          <tr>{{ stat_kvp('Version', enemy.version) }}</tr>
+        </tbody>
+      </table>
+
+      {# Rewards for defeating enemy #}
+      <table id="rewards">
+        <thead>
+          <tr>
+            <th colspan="2">Rewards</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>{{ stat_kvp("EXP", enemy.exp) }}</tr>
+          <tr>{{ stat_kvp("AP", enemy.ap) }}</tr>
+          <tr>{{ stat_kvp("Gil", enemy.gil) }}</tr>
+        </tbody>
+      </table>
+
+      {# Items #}
+      <table id="items">
+        <tbody>
+          {% if (items.drop|length) > 0 %}
+            <tr>
+              <th>Drop</th>
+              <td>
+                <ul>
+                  {% for item in items.drop %}
+                    <li>{{ item[0] }} [{{ item[1] }}]</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+          {% endif %}{# drop #}
+
+          {% if (items.steal|length) > 0 %}
+          <tr>
+            <th>Steal</th>
+            <td>
+              <ul>
+                {% for item in items.steal %}
+                  <li>{{ item[0] }} [{{ item[1] }}]</li>
+                {% endfor %}
+              <ul>
+            </td>
+          </tr>
+          {% endif %}{# steal #}
+
+          {% if items.morph %}
+            <tr>{{ stat_kvp('Morph',items.morph) }}</tr>
+          {% endif %}{# morph #}
+        </tbody>
+      </table>
+    </div>{# div.left #}
+
+    <div class="right">
+      <p>{{ base.description }}</p>
+
+      {# Stats #}
+      <table id="stats">
+        <thead>
+          <tr>
+            <th colspan=4>Stats</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {{ stat_kvp('Level', enemy.level) }}
+            {{ stat_kvp('Version', enemy.version) }}
+          </tr>
+          <tr>
+            {{ stat_kvp('HP', enemy.hp) }}
+            {{ stat_kvp('MP', enemy.mp) }}
+          </tr>
+          <tr>
+            {{ stat_kvp('Attack', enemy.attack) }}
+            {{ stat_kvp('Magic Attack', enemy.magic_attack) }}
+          </tr>
+          <tr>
+            {{ stat_kvp('Defense', enemy.defense) }}
+            {{ stat_kvp('Magic Defense', enemy.magic_defense) }}
+          </tr>
+          <tr>
+            {{ stat_kvp('Defense%', enemy.defense_pct) }}
+            {{ stat_kvp('Magic Defense%', enemy.magic_defense_pct) }}
+          </tr>
+          <tr>
+            {{ stat_kvp('Dexterity', enemy.dexterity) }}
+            {{ stat_kvp('Luck', enemy.luck) }}
+          </tr>
+        </tbody>
+      </table>
+
+      {# Elemental Affinities #}
+      {% if (elements|length) > 0 %}
+        <table id="elemental-modifiers">
+          <thead>
+            <tr><th colspan="2">Elemental Modifiers</th></tr>
+          </thead>
+          <tbody>
+            {% for element in elements %}
+              <tr>{{ stat_kvp(element.element, element.modifier) }}</tr>
+            {% endfor %}{# elements #}
+          </tbody>
+        </table>
+      {% endif %}{# elements #}
+
+      {% if (statuses|length) > 0 %}
+        <table id="status-immunities">
+          <thead>
+            <tr><th>Status Immunities</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>{{ statuses | join(', ') }}</td></tr>
+          </tbody>
+        </table>
+      {% endif %}{# statuses #}
+
+    </div>{# div.right #}
+  </div>
+{% endblock content%}

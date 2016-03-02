@@ -1,0 +1,210 @@
+[
+  {
+    "name": "Grunt",
+    "description": "A low-ranking Shinra military unit. Grunts are often assigned to guard duty at various shinra facilities.",
+    "image": "images/enemies/grunt.png",
+    "versions":
+    [
+      {
+        "version": "Normal",
+        "info": {
+          "level": 7,
+          "hp": 40,
+          "mp": 0,
+          "attack": 12,
+          "magic_attack": 2,
+          "defense": 10,
+          "magic_defense": 2,
+          "defense_pct": 4,
+          "magic_defense_pct": 0,
+          "dexterity": 58,
+          "luck": 8,
+          "exp": 22,
+          "ap": 2,
+          "gil": 15
+        },
+        "items": [
+          { "item_name": "Potion", "get_method": "Drop", "get_chance": 8 },
+          { "item_name": "Potion", "get_method": "Drop", "get_chance": 8 },
+          { "item_name": "Grenade", "get_method": "Steal", "get_chance": 8 },
+          { "item_name": "Potion", "get_method": "Morph" }
+        ],
+        "status_immunities": [],
+        "elemental_modifiers": []
+      }
+    ]
+  },
+  {
+    "name": "MP",
+    "description": "A member of the Shinra Military Police, armed with a machine gun and some basic riot control gear.",
+    "image": "images/enemies/mp.png",
+    "versions":
+    [
+      {
+        "version": "Normal",
+        "info": {
+          "level": 2,
+          "hp": 30,
+          "mp": 0,
+          "attack": 6,
+          "magic_attack": 0,
+          "defense": 4,
+          "magic_defense": 0,
+          "defense_pct": 0,
+          "magic_defense_pct": 0,
+          "dexterity": 50,
+          "luck": 4,
+          "exp": 16,
+          "ap": 2,
+          "gil": 10
+        },
+        "items": [
+          { "item_name": "Potion", "get_method": "Drop", "get_chance": 8 },
+          { "item_name": "Grenade", "get_method": "Steal", "get_chance": 8 },
+          { "item_name": "Potion", "get_method": "Morph" }
+        ],
+        "status_immunities": [],
+        "elemental_modifiers": []
+      }
+    ]
+  },
+  {
+    "name": "1st Ray",
+    "description": "A laser cannon that is part of Reactor No. 1's security system.",
+    "image": "images/enemies/1st_ray.png",
+    "versions":
+    [
+      {
+        "version": "Normal",
+        "info": {
+          "level": 4,
+          "hp": 18,
+          "mp": 0,
+          "attack": 10,
+          "magic_attack": 0,
+          "defense": 2,
+          "magic_defense": 0,
+          "defense_pct": 0,
+          "magic_defense_pct": 0,
+          "dexterity": 40,
+          "luck": 0,
+          "exp": 12,
+          "ap": 1,
+          "gil": 5
+        },
+        "items": [
+          { "item_name": "Potion", "get_method": "Morph" }
+        ],
+        "status_immunities": ["Sleep","Poison","Sadness","Fury","Frog","Small","Death-sentence","Paralyzed","Darkness"],
+        "elemental_modifiers": [
+          { "element": "Lighting", "modifier": 200 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Guard Hound",
+    "description": "Seemingly a panther-dog hybrid set to roam the grounds of Shinra company reactors defending against intruders",
+    "image": "images/enemies/guard_hound.png",
+    "versions":
+    [
+      {
+        "version": "Normal",
+        "info": {
+          "level": 3,
+          "hp": 42,
+          "mp": 0,
+          "attack": 8,
+          "magic_attack": 2,
+          "defense": 4,
+          "magic_defense": 2,
+          "defense_pct": 6,
+          "magic_defense_pct": 0,
+          "dexterity": 64,
+          "luck": 6,
+          "exp": 20,
+          "ap": 2,
+          "gil": 12
+        },
+        "items": [
+          { "item_name": "Potion", "get_method": "Drop", "get_chance": 8 },
+          { "item_name": "Grenade", "get_method": "Steal", "get_chance": 32 },
+          { "item_name": "Potion", "get_method": "Morph" }
+        ],
+        "status_immunities": [],
+        "elemental_modifiers": []
+      }
+    ]
+  },
+  {
+    "name": "Mono Drive",
+    "description": "This tiny floating watch-creature aims to please its fellow guards by shouting loudly when it sees it enemies and setting its targets on fire.",
+    "image": "images/enemies/mono_drive.png",
+    "versions":
+    [
+      {
+        "version": "Normal",
+        "info": {
+          "level": 2,
+          "hp": 28,
+          "mp": 28,
+          "attack": 3,
+          "magic_attack": 3,
+          "defense": 6,
+          "magic_defense": 4,
+          "defense_pct": 6,
+          "magic_defense_pct": 0,
+          "dexterity": 49,
+          "luck": 2,
+          "exp": 18,
+          "ap": 3,
+          "gil": 8
+        },
+        "items": [
+          { "item_name": "Potion", "get_method": "Drop", "get_chance": 8 },
+          { "item_name": "Ether", "get_method": "Drop", "get_chance": 2 },
+          { "item_name": "Ether", "get_method": "Morph" }
+        ],
+        "status_immunities": ["Stop","Frog","Paralyzed"],
+        "elemental_modifiers": [
+          { "element": "Wind", "modifier": 200 },
+          { "element": "Earth", "modifier": 0 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Sweeper",
+    "description": "A gun-toting robot that serves as the heavy trooper of the No. 1 Reactor. Adorned with drills also, but doesn't use them in combat.",
+    "image": "images/enemies/sweeper.png",
+    "versions":
+    [
+      {
+        "version": "Normal",
+        "info": {
+          "level": 8,
+          "hp": 140,
+          "mp": 0,
+          "attack": 18,
+          "magic_attack": 0,
+          "defense": 20,
+          "magic_defense": 4,
+          "defense_pct": 0,
+          "magic_defense_pct": 0,
+          "dexterity": 48,
+          "luck": 1,
+          "exp": 27,
+          "ap": 3,
+          "gil": 30
+        },
+        "items": [
+          { "item_name": "Potion", "get_method": "Morph" }
+        ],
+        "status_immunities": ["Sleep","Poison","Sadness","Fury","Frog","Small","Death-sentence","Paralyzed","Darkness"],
+        "elemental_modifiers": [
+          { "element": "Lightning", "modifier": 200 }
+        ]
+      }
+    ]
+  }
+]
