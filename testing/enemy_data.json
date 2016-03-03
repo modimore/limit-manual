@@ -3,6 +3,7 @@
     "name": "Grunt",
     "description": "A low-ranking Shinra military unit. Grunts are often assigned to guard duty at various shinra facilities.",
     "image": "images/enemies/grunt.png",
+    "default_version": "Normal",
     "versions":
     [
       {
@@ -38,6 +39,7 @@
     "name": "MP",
     "description": "A member of the Shinra Military Police, armed with a machine gun and some basic riot control gear.",
     "image": "images/enemies/mp.png",
+    "default_version": "Normal",
     "versions":
     [
       {
@@ -72,6 +74,7 @@
     "name": "1st Ray",
     "description": "A laser cannon that is part of Reactor No. 1's security system.",
     "image": "images/enemies/1st_ray.png",
+    "default_version": "Normal",
     "versions":
     [
       {
@@ -106,6 +109,7 @@
     "name": "Guard Hound",
     "description": "Seemingly a panther-dog hybrid set to roam the grounds of Shinra company reactors defending against intruders",
     "image": "images/enemies/guard_hound.png",
+    "default_version": "Normal",
     "versions":
     [
       {
@@ -140,6 +144,7 @@
     "name": "Mono Drive",
     "description": "This tiny floating watch-creature aims to please its fellow guards by shouting loudly when it sees it enemies and setting its targets on fire.",
     "image": "images/enemies/mono_drive.png",
+    "default_version": "Normal",
     "versions":
     [
       {
@@ -177,6 +182,7 @@
     "name": "Sweeper",
     "description": "A gun-toting robot that serves as the heavy trooper of the No. 1 Reactor. Adorned with drills also, but doesn't use them in combat.",
     "image": "images/enemies/sweeper.png",
+    "default_version": "Normal",
     "versions":
     [
       {

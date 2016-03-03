@@ -10,5 +10,6 @@ db = SQLAlchemy(app)
 def welcome():
     return render_template('welcome.j2')
 
+# Import enemy-related and formation-related classes
 from . import enemy
 from . import formation

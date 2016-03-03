@@ -55,11 +55,17 @@
 #stat-box tbody th { text-align: left; }
 #stat-box td { text-align: right; }
 
-#stat-box #items ul {
+#stat-box table ul,
+#stat-box table dl {
   padding: 0px;
   margin: 0px;
 
   list-style-type: none;
+}
+
+#stat-box table#formations ul>li,
+#stat-box table#formations dl>*  {
+  margin: 0px;
 }
 
 #status-immunities td { text-align: left; }

@@ -2,9 +2,6 @@ from limit_manual import db
 from limit_manual.enemy import EnemyBase, Enemy
 from limit_manual.formation import FormationLocation, FormationEnemy
 
-print(FormationLocation.query.all())
-print(FormationEnemy.query.all())
-
 class Enemy2(object):
     def __init__(self,name,version,position):
         self.name = name.strip()
@@ -44,7 +41,7 @@ class FullFormation(object):
         db.session.commit()
 
 if __name__ == '__main__':
-    f = open('formation_data.txt', 'r')
+    f = open('testing/formation_data.txt', 'r')
     if f.readline().strip() != '-start':
         import sys
         sys.exit(0)

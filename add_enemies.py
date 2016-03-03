@@ -4,7 +4,7 @@ from limit_manual.enemy import (db, EnemyBase, Enemy, EnemyItem,
 
 # add an individual enemy to the database
 def add_enemy(enemy):
-    base = EnemyBase(enemy['name'],enemy['description'],enemy['image'])
+    base = EnemyBase(enemy['name'],enemy['description'],enemy['image'],enemy['default_version'])
     db.session.add(base)
 
     for version in enemy['versions']:
@@ -22,7 +22,7 @@ def add_enemy(enemy):
 
     db.session.commit()
 
-def upload_from_json(filename="enemy_data.json"):
+def upload_from_json(filename="testing/enemy_data.json"):
     document = json.load(open(filename,'r'))
 
     for enemy in document:

@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 
 from limit_manual import app, db
 
@@ -10,11 +10,13 @@ class EnemyBase(db.Model):
     name = db.Column(db.String(30))
     description = db.Column(db.String(200))
     image = db.Column(db.String(50))
+    default_version = db.Column(db.String(40))
 
-    def __init__(self, name, description, image):
+    def __init__(self, name, description, image, version='Normal'):
         self.name = name
         self.description = description
         self.image = image
+        self.default_version = version
 
     def __repr__(self):
         return '<Base Enemy {0!s}>'.format(self.name)
@@ -134,15 +136,24 @@ class EnemyStatusImmunity(db.Model):
     def __repr__(self):
         return '<StatusImmunity {0!r}:{1!s}>'.format(self.enemy,self.status)
 
+
 # Route declaration for specific enemy pages
 @app.route('/enemy/<name>')
 def enemy(name):
+    from .formation import get_formation_ids
+    from .formation import get_formation
+
+    # Query tables for information related to this enemy
     base = EnemyBase.query.filter_by(name=name).one()
-    enemy = Enemy.query.filter_by(base=base).first()
+    version = request.args.get('version', base.default_version)
+    print(version)
+    print(base.default_version)
+    enemy = Enemy.query.filter_by(base=base).filter_by(version=version).first()
     _items = EnemyItem.query.filter_by(enemy=enemy).all()
     elements = EnemyElementalModifier.query.filter_by(enemy=enemy).all()
     _statuses = EnemyStatusImmunity.query.filter_by(enemy=enemy).all()
 
+    # Arrange information about the items this enemy carries
     items = { 'drop':[], 'steal':[], 'morph': None }
     for _item in _items:
         if _item.get_method == 'Drop':
@@ -152,8 +163,14 @@ def enemy(name):
         else:
             items['morph'] = _item.item_name
 
+    # Arrange set of statuses the enemy is immune to
     statuses = {pair.status for pair in _statuses}
+
+    # Find and arrange all formations containing this enemy
+    _formation_ids = get_formation_ids(enemy)
+    formations = [ get_formation(uid) for uid in _formation_ids ]
 
     return render_template('enemy.j2',
                            base=base, enemy=enemy, items=items,
-                           elements=elements, statuses=statuses)
+                           elements=elements, statuses=statuses,
+                           formations=formations)

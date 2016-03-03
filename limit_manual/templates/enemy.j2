@@ -11,6 +11,10 @@
   <td>{{ value }}</td>
 {%- endmacro %}
 
+{% macro enemy_link(name,version) -%}
+  <a href="/enemy/{{name}}?version={{version}}">{{ name }}</a>
+{%- endmacro %}
+
 {% block content %}
   <div id="stat-box">
     {# left block #}
@@ -138,6 +142,39 @@
           </tbody>
         </table>
       {% endif %}{# statuses #}
+
+      {% if (formations|length) > 0 %}
+        <table id="formations">
+          <thead>
+            <tr><th colspan="2">Formations</th></tr>
+            <tr>
+              <th>Locations</th>
+              <th>Enemies</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for formation in formations %}
+              <tr>
+                <td><dl>
+                  {% for location in formation.locations %}
+                    <dt>{{ location.name }}</dt>
+                    <dd>{{ location.areas | join(', ') }}</dd>
+                  {% endfor %}{# locations #}
+                </dl></td>
+                <td>
+                  <ul>
+                    {% for row in formation.enemy_rows %}
+                      <li>
+                        {% for enemy in row.enemies %}{{ enemy_link(enemy.name, enemy.version) }} {% endfor %}
+                      </li>
+                    {% endfor %}{# rows #}
+                  </ul>
+                </td>
+              </tr>
+            {% endfor %}{# formations #}
+          </tbody>
+        </table>
+      {% endif %}{# formations #}
 
     </div>{# div.right #}
   </div>

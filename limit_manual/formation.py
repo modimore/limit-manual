@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request
 
 from limit_manual import app, db
 from limit_manual.enemy import EnemyBase, Enemy
@@ -35,3 +35,27 @@ class FormationLocation(db.Model):
 
     def __repr__(self):
         return '<Formation {0} in {1}>'.format(self.formation_id,self.location)
+
+def get_formation_ids(enemy):
+    _formations = FormationEnemy.query.filter_by(enemy=enemy).all()
+    formation_ids = { f.formation_id for f in _formations }
+    return formation_ids
+
+def get_formation(uid):
+    formation = {
+        'id': uid,
+        'locations': [],
+        'enemy_rows': []
+    }
+
+    _locations = FormationLocation.query.filter_by(formation_id=uid)
+    for location in { _loc.location for _loc in _locations.all() }:
+        areas = { _loc.area for _loc in _locations.filter_by(location=location).all() }
+        formation['locations'].append({ 'name': location, 'areas': areas })
+
+    _enemies = FormationEnemy.query.filter_by(formation_id=uid)
+    for row_num in { _e.row_num for _e in _enemies.all() }:
+        enemies = [ {'name': _e.enemy.base.name, 'version': _e.enemy.version } for _e in _enemies.filter_by(row_num=row_num).all() ]
+        formation['enemy_rows'].append({ 'row_num': row_num, 'enemies': enemies })
+
+    return formation
