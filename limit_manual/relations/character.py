@@ -3,7 +3,7 @@
 
 from flask import render_template
 
-from limit_manual import app, db
+from .. import app, db
 
 class Character(db.Model):
     uid = db.Column(db.Integer, primary_key=True)

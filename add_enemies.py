@@ -4,10 +4,16 @@ from limit_manual.enemy import (db, EnemyBase, Enemy, EnemyItem,
 
 # add an individual enemy to the database
 def add_enemy(enemy):
-    base = EnemyBase(enemy['name'],enemy['description'],enemy['image'],enemy['default_version'])
-    db.session.add(base)
+    if len(EnemyBase.query.filter_by(name=enemy['name']).all()) == 0:
+        base = EnemyBase(enemy['name'],enemy['description'],enemy['image'],enemy['default_version'])
+        db.session.add(base)
+    else:
+        base = EnemyBase.query.filter_by(name=enemy['name']).one()
 
     for version in enemy['versions']:
+        if len(Enemy.query.filter_by(base=base).filter_by(version=version['version']).all()) != 0:
+            continue
+
         enemy = Enemy(base,version['version'],**version['info'])
         db.session.add(enemy)
 

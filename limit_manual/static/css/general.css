@@ -3,6 +3,21 @@ body {
   color: aliceblue;
 }
 
+.content-box {
+  overflow: auto;
+  width: 600px;
+  padding: 10px;
+  margin: auto;
+
+  border: 5px solid #eee;
+  border-radius: 10px;
+}
+
+.default-colors {
+  background-color: #d70000;
+  color: #eddf36;
+}
+
 .menu {
   background-color: #0000b0;
   border: 5px solid #eee;
@@ -10,6 +25,7 @@ body {
   color: white;
   font-family: Verdana, sans-serif;
 }
+
 .menu.ulc { background-color: #0000B0; } /* blue = 176 = 128 + 32 + 16 = 0b10110000 */
 .menu.llc { background-color: #000050; } /* blue = 80 = 64 + 16 = 0b01010000 */
 .menu.urc { background-color: #000080; } /* blue = 128 = 128 = 0b10000000 */
@@ -47,4 +63,22 @@ ul.menu-nav > li {
 ul.menu-nav a {
   color: #eee;
   text-decoration: none;
+}
+
+table {
+  border-collapse: collapse;
+  border: 2px solid #eddf36;
+}
+
+th, td {
+  padding: 2px 5px;
+  border: 1px solid #eddf36;
+}
+
+table ul,
+table dl {
+  padding: 0px;
+  margin: 0px;
+
+  list-style-type: none;
 }

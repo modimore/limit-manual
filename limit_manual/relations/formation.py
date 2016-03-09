@@ -1,7 +1,7 @@
 from flask import render_template, request
 
-from limit_manual import app, db
-from limit_manual.enemy import EnemyBase, Enemy
+from .. import app, db
+from .enemy import EnemyBase, Enemy
 
 # A relation to track enemy formations
 # Each instance associates an enemy with a row and a position in that row
@@ -40,6 +40,9 @@ def get_formation_ids(enemy):
     _formations = FormationEnemy.query.filter_by(enemy=enemy).all()
     formation_ids = { f.formation_id for f in _formations }
     return formation_ids
+
+def get_locations(formation_id):
+    return
 
 def get_formation(uid):
     formation = {

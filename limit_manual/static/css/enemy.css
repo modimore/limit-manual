@@ -1,14 +1,13 @@
-/* stat box container */
-#stat-box {
-  overflow: auto;
-  width: 600px;
-  padding: 10px;
-  margin: auto;
-
-  background-color: maroon;
-  border: 2px solid rosybrown;
-  border-radius: 5px;
+.enemy-colors {
+  background-color: #740000;
+  color: #decec1;
 }
+
+.enemy-colors .lighter {
+  color: #faeaed;
+}
+
+table, th, td { border-color: #decec1; }
 
 /* stat box left side layout */
 #stat-box .left {
@@ -18,13 +17,8 @@
 }
 
 #stat-box .left>* {
-  width: 200px;
+  width: 100%;
   margin-top: 10px;
-}
-
-#stat-box .left>*:first-child,
-#stat-box .right>*:first-child {
-  margin-top: 0px;
 }
 
 /* rest of stat box layout*/
@@ -38,30 +32,18 @@
   margin-top: 10px;
 }
 
+#stat-box .left>*:first-child,
+#stat-box .right>*:first-child {
+  margin-top: 0px;
+}
+
 /* stat box general elements */
-#stat-box img { background-color: rosybrown; }
+#stat-box img { background-color: #b99b91; }
 
-#stat-box table {
-  border-collapse: collapse;
-  border: 2px solid rosybrown;
-}
-
-#stat-box th, #stat-box td {
-  padding: 2px 5px;
-  border: 1px solid rosybrown;
-}
-
-#stat-box th { color: lightblue; }
 #stat-box tbody th { text-align: left; }
 #stat-box td { text-align: right; }
 
-#stat-box table ul,
-#stat-box table dl {
-  padding: 0px;
-  margin: 0px;
-
-  list-style-type: none;
-}
+#stat-box table#other-versions td { text-align: center; }
 
 #stat-box table#formations ul>li,
 #stat-box table#formations dl>*  {

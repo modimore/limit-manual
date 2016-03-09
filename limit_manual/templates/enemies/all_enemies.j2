@@ -1,0 +1,33 @@
+{% extends 'layout.j2' %}
+
+{% block title %}<title>All Enemies - Limit Manual</title>{% endblock %}
+
+{% block page_styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/enemy.css') }}">
+{% endblock page_styles %}
+
+{% macro enemy_link(name,version,version_link=false) -%}
+  <a href="/enemies/{{name}}?version={{version}}">{{ version if version_link else name }}</a>
+{%- endmacro %}
+
+{% block content %}
+  <div class="content-box enemy-colors">
+    <table>
+      <tr class="lighter">
+        <th>Name</th>
+        <th>Versions</th>
+      </tr>
+      {% for enemy in enemies %}
+        <tr>
+          <td>{{ enemy.name }}</td>
+          <td>
+            <ul>
+              {% for version in enemy.versions %}
+                <li>{{ enemy_link(enemy.name,version,version_link=true) }}</li>
+              {% endfor %}{# versions #}
+            </ul>
+          </td>
+        </tr>
+      {% endfor %}
+  </div>
+{% endblock %}{# content #}
