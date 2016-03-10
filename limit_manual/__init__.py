@@ -10,7 +10,6 @@ db = SQLAlchemy(app)
 def welcome():
     return render_template('welcome.j2')
 
-# Import enemy-related and formation-related classes
-from .interfaces import enemy as e_interface
-from .relations import enemy as e_relation
-from .relations import formation
+# Import routes with enemy-related interfaces
+from .interfaces import enemy
+from .interfaces import item

@@ -1,6 +1,6 @@
 from flask import render_template, request
 
-from .. import app, db
+from .. import db
 
 # Bare-bones template for a specific enemy sub-type
 # Contains a name, image, and description
@@ -135,20 +135,3 @@ class EnemyStatusImmunity(db.Model):
 
     def __repr__(self):
         return '<StatusImmunity {0!r}:{1!s}>'.format(self.enemy,self.status)
-
-@app.route('/enemies')
-@app.route('/enemies/all')
-def all_enemies():
-    from .formation import get_formation_ids, get_locations
-
-    enemies = []
-
-    for base in EnemyBase.query.add_columns(EnemyBase.uid,EnemyBase.name).all():
-        info = { 'name': base.name }
-
-        _versions = Enemy.query.filter_by(base_id=base.uid).all()
-        info['versions'] = [v.version for v in _versions]
-
-        enemies.append(info)
-
-    return render_template('enemies/all_enemies.j2', enemies=enemies)

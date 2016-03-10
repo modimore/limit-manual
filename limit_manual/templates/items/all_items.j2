@@ -1,0 +1,25 @@
+{% extends 'layout.j2' %}
+
+{% block title %}<title>Items - Limit Manual</title>{% endblock %}
+
+{% block page_styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/item.css') }}">
+{% endblock page_styles %}
+
+{% block content %}
+  <div class="content-box item-colors">
+    <table>
+      <thead>
+        <tr><th>Items</th></tr>
+        <tr><th>Name</th></tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.name }}</td>
+          </tr>
+        {% endfor %}{# items #}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

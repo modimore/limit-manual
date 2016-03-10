@@ -1,26 +1,41 @@
 from flask import render_template, request
 
 from .. import app
-from ..relations import enemy as EReln
+from ..relations import enemy as EnemyRelations
 
+class EnemyBase(object):
+    @staticmethod
+    def db_reference(name):
+        return EnemyRelations.EnemyBase.query.filter_by(name=name).one()
+
+    def __init__(self,name):
+        self.name = name
+        this_enemy = self.db_reference(self.name)
+        self.uid = this_enemy.uid
+
+    def all_versions(self):
+        db_versions = EnemyRelations.Enemy.query.filter_by(base=self.db_reference(self.name))
+        return { v.version for v in db_versions }
 
 # Template interface for an enemy
-class Enemy(object):
+class Enemy(EnemyBase):
     def __init__(self,name,version=None):
-        self.name = name
+        EnemyBase.__init__(self,name)
         self.version = version
 
         # Find description, image(, and version if not provided)
-        base = EReln.EnemyBase.query.filter_by(name=name).one()
-        if version == None: version = base.default_version
+        base = EnemyBase.db_reference(self.name)
+        if version == None: base.default_version
+
         self.description = base.description
         self.image = base.image
 
         # Query for list of all versions of this enemy
-        versions = EReln.Enemy.query.filter_by(base=base)
+        versions = EnemyRelations.Enemy.query.filter_by(base=base)
 
         # Get stats and rewards from table for this specific version
         this_v = versions.filter_by(version=version).one()
+        self.uid = this_v.uid
         self.stats = {
             'level' : this_v.level,
             'hp'    : this_v.hp,
@@ -40,9 +55,12 @@ class Enemy(object):
             'gil'   : this_v.gil
         }
 
-        self.items = { 'drop': [], 'steal': [], 'morph': None }
+        # Find the names of all other versions of this enemy
+        self.other_versions = self.all_versions() - { self.version }
 
-        items = EReln.EnemyItem.query.filter_by(enemy=this_v).all()
+        # Fill list of items that can be gotten from this enemy
+        self.items = { 'drop': [], 'steal': [], 'morph': None }
+        items = EnemyRelations.EnemyItem.query.filter_by(enemy=this_v).all()
         for item in items:
             if item.get_method == 'drop':
                 self.items['drop'].append( (item.item_name, item.get_chance) )
@@ -52,35 +70,41 @@ class Enemy(object):
                 self.items['morph'] = item.item_name
 
         self.elemental_modifiers = []
-
-        elem_mods = EReln.EnemyElementalModifier.query.filter_by(enemy=this_v).all()
+        elem_mods = EnemyRelations.EnemyElementalModifier.query.filter_by(enemy=this_v).all()
         for mod in elem_mods:
             self.elemental_modifiers.append( { 'element': mod.element, 'modifier': mod.modifier } )
 
-        stat_imms = EReln.EnemyStatusImmunity.query.filter_by(enemy=this_v).all()
+        stat_imms = EnemyRelations.EnemyStatusImmunity.query.filter_by(enemy=this_v).all()
         self.status_immunities = { imm.status for imm in stat_imms }
+
+    def get_formations(self):
+        from ..relations.formation import get_formation_ids
+        from ..relations.formation import get_formation
+
+        formation_ids = get_formation_ids(self.uid)
+        return [ get_formation(fid) for fid in formation_ids ]
 
 # Route declaration for specific enemy pages
 @app.route('/enemies/<name>')
 def enemy(name):
-    from ..relations.formation import get_formation_ids
-    from ..relations.formation import get_formation
-
     version_name = request.args.get('version', None)
-
     enemy = Enemy(name,version_name)
 
-    base = EReln.EnemyBase.query.filter_by(name=name).one()
-    _all_versions = EReln.Enemy.query.filter_by(base=base)
-    _enemy = _all_versions.filter_by(version=enemy.version).one()
-
-    other_versions = { e.version for e in _all_versions.all() if e.version != version_name }
-
-    # Find and arrange all formations containing this enemy
-    _formation_ids = get_formation_ids(_enemy)
-    formations = [ get_formation(uid) for uid in _formation_ids ]
-
     return render_template('enemies/enemy.j2',
-                           enemy=enemy, other_versions=other_versions,
-                           items=enemy.items, elements=enemy.elemental_modifiers, statuses=enemy.status_immunities,
-                           formations=formations)
+                           enemy=enemy,
+                           formations=enemy.get_formations())
+
+@app.route('/enemies')
+@app.route('/enemies/all')
+def all_enemies():
+    from ..relations.formation import get_formation_ids, get_locations
+
+    enemies = []
+
+    for db_base in EnemyRelations.EnemyBase.query.add_columns(EnemyRelations.EnemyBase.uid,EnemyRelations.EnemyBase.name).all():
+        info = { 'name': db_base.name }
+        info['versions'] = EnemyBase(db_base.name).all_versions()
+
+        enemies.append(info)
+
+    return render_template('enemies/all_enemies.j2', enemies=enemies)

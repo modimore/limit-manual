@@ -31,13 +31,13 @@
       </table>
 
       {# Links to other versions #}
-      {% if (other_versions|length) > 0 %}
+      {% if (enemy.other_versions|length) > 0 %}
         <table id="other-versions">
           <thead>
             <tr><th class="lighter">Other Versions</th></tr>
           </thead>
           <tbody>
-            {% for version in other_versions %}
+            {% for version in enemy.other_versions %}
               <tr><td>
                 {{ enemy_link(enemy.name,version,version_link=true) }}
               </td></tr>
@@ -64,12 +64,12 @@
           <th colspan="2">Items</th>
         </tr></thead>
         <tbody>
-          {% if (items.drop|length) > 0 %}
+          {% if (enemy.items.drop|length) > 0 %}
             <tr>
               <th class="lighter">Drop</th>
               <td>
                 <ul>
-                  {% for item in items.drop %}
+                  {% for item in enemy.items.drop %}
                     <li>{{ item[0] }} [{{ item[1] }}]</li>
                   {% endfor %}
                 </ul>
@@ -77,12 +77,12 @@
             </tr>
           {% endif %}{# drop #}
 
-          {% if (items.steal|length) > 0 %}
+          {% if (enemy.items.steal|length) > 0 %}
           <tr>
             <th class="lighter">Steal</th>
             <td>
               <ul>
-                {% for item in items.steal %}
+                {% for item in enemy.items.steal %}
                   <li>{{ item[0] }} [{{ item[1] }}]</li>
                 {% endfor %}
               <ul>
@@ -90,8 +90,8 @@
           </tr>
           {% endif %}{# steal #}
 
-          {% if items.morph %}
-            <tr>{{ stat_kvp('Morph',items.morph) }}</tr>
+          {% if enemy.items.morph %}
+            <tr>{{ stat_kvp('Morph',enemy.items.morph) }}</tr>
           {% endif %}{# morph #}
         </tbody>
       </table>
@@ -134,26 +134,26 @@
       </table>
 
       {# Elemental Affinities #}
-      {% if (elements|length) > 0 %}
+      {% if (enemy.elemental_modifiers|length) > 0 %}
         <table id="elemental-modifiers">
           <thead>
             <tr><th class="lighter" colspan="2">Elemental Modifiers</th></tr>
           </thead>
           <tbody>
-            {% for element in elements %}
+            {% for element in enemy.elemental_modifiers %}
               <tr>{{ stat_kvp(element.element, element.modifier) }}</tr>
             {% endfor %}{# elements #}
           </tbody>
         </table>
       {% endif %}{# elements #}
 
-      {% if (statuses|length) > 0 %}
+      {% if (enemy.status_immunities|length) > 0 %}
         <table id="status-immunities">
           <thead>
             <tr><th class="lighter">Status Immunities</th></tr>
           </thead>
           <tbody>
-            <tr><td>{{ statuses | join(', ') }}</td></tr>
+            <tr><td>{{ enemy.status_immunities | join(', ') }}</td></tr>
           </tbody>
         </table>
       {% endif %}{# statuses #}

@@ -36,8 +36,8 @@ class FormationLocation(db.Model):
     def __repr__(self):
         return '<Formation {0} in {1}>'.format(self.formation_id,self.location)
 
-def get_formation_ids(enemy):
-    _formations = FormationEnemy.query.filter_by(enemy=enemy).all()
+def get_formation_ids(enemy_id):
+    _formations = FormationEnemy.query.filter_by(enemy_id=enemy_id).all()
     formation_ids = { f.formation_id for f in _formations }
     return formation_ids
 
