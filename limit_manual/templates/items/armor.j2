@@ -1,0 +1,35 @@
+{% extends 'items/all_items.j2' %}
+
+{% block title %}<title>Armor - Limit Manual</title>{% endblock %}
+
+{% block content %}
+  <div class="content-box item-colors">
+    <table>
+      <thead>
+        <tr><th colspan="7">Armor</th></tr>
+        <tr>
+          <th>Name</th>
+          <th>Slots</th>
+          <th>Growth</th>
+          <th>Defense</th>
+          <th>Defense%</th>
+          <th>Magic Defense</th>
+          <th>Magic Defense%</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for piece in armor %}
+          <tr>
+            <td>{{ piece.name }}</td>
+            <td>{{ piece.linked_slots }},{{ piece.single_slots }}</td>
+            <td>{{ piece.growth_rate }}</td>
+            <td>{{ piece.defense }}</td>
+            <td>{{ piece.defense_pct }}</td>
+            <td>{{ piece.magic_defense }}</td>
+            <td>{{ piece.magic_defense_pct }}</td>
+          </tr>
+        {% endfor %}{# armor #}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

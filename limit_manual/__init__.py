@@ -13,3 +13,4 @@ def welcome():
 # Import routes with enemy-related interfaces
 from .interfaces import enemy
 from .interfaces import item
+from .interfaces import character

@@ -3,6 +3,10 @@
   color: #f9ec86;
 }
 
+table {
+  margin: auto;
+}
+
 table, th, td {
   border-color: #f9ec86;
 }

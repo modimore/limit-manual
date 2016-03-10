@@ -15,6 +15,7 @@ class Weapon(db.Model):
     uid = db.Column(db.Integer, db.ForeignKey('item.uid'),
                         primary_key=True)
     name = db.Column(db.String(20))
+    wielder = db.Column(db.String(10))
     item = db.relationship('Item', backref=db.backref('weapon', lazy='dynamic'))
     # Weapons and Armor
     growth_rate = db.Column(db.Integer)
@@ -26,13 +27,14 @@ class Weapon(db.Model):
     magic_bonus = db.Column(db.Integer)
     element = db.Column(db.String(16))
 
-    def __init__(self, item_id, name='Buster Sword',
-                 attack=18, hit_pct=96, magic_bonus=2,
-                 element='Cut',
-                 linked_slots=1, single_slots=0,
+    def __init__(self, item_id, name, wielder,
+                 attack, hit_pct, magic_bonus,
+                 element,
+                 linked_slots, single_slots,
                  growth_rate=1):
         self.uid = item_id
         self.name = name
+        self.wielder = wielder
         self.attack = attack
         self.hit_pct = hit_pct
         self.magic_bonus = magic_bonus
@@ -60,10 +62,10 @@ class Armor(db.Model):
     defense_pct = db.Column(db.Integer)
     magic_defense_pct = db.Column(db.Integer)
 
-    def __init__(self, item_id, name='Bronze Bangle',
-                 defense=8, magic_defense=0,
-                 defense_pct=0,magic_defense_pct=0,
-                 linked_slots=0,single_slots=0,
+    def __init__(self, item_id, name,
+                 defense, magic_defense,
+                 defense_pct,magic_defense_pct,
+                 linked_slots,single_slots,
                  growth_rate=1):
         self.uid = item_id
         self.name = name

@@ -4,6 +4,7 @@ from .. import app, db
 
 from ..relations import item as ItemRelations
 
+# Representation of the basic item type
 class Item(object):
     @staticmethod
     def db_reference(name):
@@ -26,6 +27,7 @@ class Item(object):
             db.session.add(ItemRelations.Item(name))
         db.session.commit()
 
+# Representation of a weapon
 class Weapon(Item):
     @staticmethod
     def db_reference(name):
@@ -34,27 +36,28 @@ class Weapon(Item):
     def __init__(self,name):
         Item.__init__(self,name)
 
-        db_row = self.db_reference(self.name)
+        ref = self.db_reference(self.name)
         # Weapon properties
-        self.attack = db_row.attack
-        self.hit_pct = db_row.hit_pct
-        self.magic_bonus = db_row.magic_bonus
-        self.element = db_row.element
+        self.wielder = ref.wielder
+        self.attack = ref.attack
+        self.hit_pct = ref.hit_pct
+        self.magic_bonus = ref.magic_bonus
+        self.element = ref.element
         # Materia-related properties
-        self.linked_slots = db_row.linked_slots
-        self.single_slots = db_row.single_slots
-        self.growth_rate = db_row.growth_rate
+        self.linked_slots = ref.linked_slots
+        self.single_slots = ref.single_slots
+        self.growth_rate = ref.growth_rate
 
     def __repr__(self):
         return '<{0}>'.format(self.name)
 
     @staticmethod
-    def create(name,attack,hit_pct,magic_bonus,element,
-               linked_slots,single_slots,growth_rate):
+    def create(name,wielder,attack,hit_pct,magic_bonus,element,
+               linked_slots,single_slots,growth_rate=1):
         # Make sure the item exists in the general items table
         uid = Item.db_reference(name).uid if Item.db_reference(name) != None else Item.create(name)
         # Add the weapon to the weapons table
-        db.session.add(ItemRelations.Weapon(uid, name,
+        db.session.add(ItemRelations.Weapon(uid,name,wielder,
                                             attack,hit_pct,
                                             magic_bonus,
                                             element,
@@ -65,7 +68,7 @@ class Weapon(Item):
 
     def create_many(weapons):
         for weapon in weapons:
-            uid = Item.db_reference(weapon.name).uid if Item.db_reference(weapon.name) != None else Item.create(weapon.name)
+            uid = Item.db_reference(weapon['name']).uid if Item.db_reference(weapon['name']) != None else Item.create(weapon['name'])
             db.session.add(ItemRelations.Weapon(uid,**weapon))
         db.session.commit()
 
@@ -77,23 +80,23 @@ class Armor(Item):
     def __init__(self,name):
         Item.__init__(self,name)
 
-        db_row = self.db_reference(self.name)
+        ref = self.db_reference(self.name)
         # Armor properties
-        self.defense = db_row.defense
-        self.magic_defense = db_row.magic_defense
-        self.defense_pct = db_row.defense_pct
-        self.magic_defense_pct = db_row.magic_defense_pct
+        self.defense = ref.defense
+        self.magic_defense = ref.magic_defense
+        self.defense_pct = ref.defense_pct
+        self.magic_defense_pct = ref.magic_defense_pct
         # Materia-related properties
-        self.linked_slots = db_row.linked_slots
-        self.single_slots = db_row.single_slots
-        self.growth_rate = db_row.growth_rate
+        self.linked_slots = ref.linked_slots
+        self.single_slots = ref.single_slots
+        self.growth_rate = ref.growth_rate
 
     def __repr__(self):
         return '<{0}>'.format(self.name)
 
     @staticmethod
     def create(name,defense,magic_defense,defense_pct,magic_defense_pct,
-               linked_slots,single_slots,growth_rate):
+               linked_slots,single_slots,growth_rate=1):
         # Make sure the item exists in the general items table
         uid = Item.db_reference(name).uid if Item.db_reference(name) != None else Item.create(name)
         # Add the weapon to the weapons table
@@ -108,7 +111,7 @@ class Armor(Item):
 
     def create_many(armor_list):
         for armor in armor_list:
-            uid = Item.db_reference(armor.name).uid if Item.db_reference(armor.name) != None else Item.create(armor.name)
+            uid = Item.db_reference(armor['name']).uid if Item.db_reference(armor['name']) != None else Item.create(armor['name'])
             db.session.add(ItemRelations.Armor(uid,**armor))
         db.session.commit()
 
@@ -118,3 +121,21 @@ def all_items():
     items = [ Item(item.name,item.uid) for item in ItemRelations.Item.query.all() ]
 
     return render_template('items/all_items.j2', items=items)
+
+@app.route('/items/weapons')
+@app.route('/weapons')
+def all_weapons():
+    _weapons = ItemRelations.Weapon.query.with_entities(ItemRelations.Weapon.name)\
+                                         .order_by(ItemRelations.Weapon.wielder)\
+                                         .all()
+    weapons = [ Weapon(wp.name) for wp in _weapons ]
+
+    return render_template('items/weapons.j2', weapons=weapons)
+
+@app.route('/items/armor')
+@app.route('/armor')
+def all_armor():
+    _armor = ItemRelations.Armor.query.with_entities(ItemRelations.Armor.name).all()
+    armor = [ Armor(ar.name) for ar in _armor ]
+
+    return render_template('items/armor.j2', armor=armor)
