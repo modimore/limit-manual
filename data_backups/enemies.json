@@ -1,0 +1,318 @@
+[
+  {
+    "name": "Grunt",
+    "uid": 1,
+    "default_version": "Normal",
+    "versions": [
+      {
+        "uid": 1,
+        "status_immunities": [],
+        "version": "Normal",
+        "rewards": {
+          "ap": 2,
+          "gil": 15,
+          "exp": 22
+        },
+        "items": [
+          {
+            "item_name": "Potion",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 12,
+          "mp": 0,
+          "luck": 8,
+          "defense": 10,
+          "hp": 40,
+          "level": 7,
+          "magic_attack": 2,
+          "magic_defense": 2,
+          "magic_defense_pct": 0,
+          "dexterity": 58,
+          "defense_pct": 4
+        },
+        "elemental_modifiers": []
+      }
+    ],
+    "description": "A low-ranking Shinra military unit. Grunts are often assigned to guard duty at various shinra facilities."
+  },
+  {
+    "name": "MP",
+    "uid": 2,
+    "default_version": "Normal",
+    "versions": [
+      {
+        "uid": 2,
+        "status_immunities": [],
+        "version": "Normal",
+        "rewards": {
+          "ap": 2,
+          "gil": 10,
+          "exp": 16
+        },
+        "items": [
+          {
+            "item_name": "Potion",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 6,
+          "mp": 0,
+          "luck": 4,
+          "defense": 4,
+          "hp": 30,
+          "level": 2,
+          "magic_attack": 0,
+          "magic_defense": 0,
+          "magic_defense_pct": 0,
+          "dexterity": 50,
+          "defense_pct": 0
+        },
+        "elemental_modifiers": []
+      }
+    ],
+    "description": "A member of the Shinra Military Police, armed with a machine gun and some basic riot control gear."
+  },
+  {
+    "name": "1st Ray",
+    "uid": 3,
+    "default_version": "Normal",
+    "versions": [
+      {
+        "uid": 3,
+        "status_immunities": [
+          "Darkness",
+          "Fury",
+          "Poison",
+          "Small",
+          "Sadness",
+          "Sleep",
+          "Death-sentence",
+          "Frog",
+          "Paralyzed"
+        ],
+        "version": "Normal",
+        "rewards": {
+          "ap": 1,
+          "gil": 5,
+          "exp": 12
+        },
+        "items": [
+          {
+            "item_name": "Potion",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 10,
+          "mp": 0,
+          "luck": 0,
+          "defense": 2,
+          "hp": 18,
+          "level": 4,
+          "magic_attack": 0,
+          "magic_defense": 0,
+          "magic_defense_pct": 0,
+          "dexterity": 40,
+          "defense_pct": 0
+        },
+        "elemental_modifiers": [
+          {
+            "element": "Lighting",
+            "modifier": 200
+          }
+        ]
+      }
+    ],
+    "description": "A laser cannon that is part of Reactor No. 1's security system."
+  },
+  {
+    "name": "Guard Hound",
+    "uid": 4,
+    "default_version": "Normal",
+    "versions": [
+      {
+        "uid": 4,
+        "status_immunities": [],
+        "version": "Normal",
+        "rewards": {
+          "ap": 2,
+          "gil": 12,
+          "exp": 20
+        },
+        "items": [
+          {
+            "item_name": "Potion",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 8,
+          "mp": 0,
+          "luck": 6,
+          "defense": 4,
+          "hp": 42,
+          "level": 3,
+          "magic_attack": 2,
+          "magic_defense": 2,
+          "magic_defense_pct": 0,
+          "dexterity": 64,
+          "defense_pct": 6
+        },
+        "elemental_modifiers": []
+      }
+    ],
+    "description": "Seemingly a panther-dog hybrid set to roam the grounds of Shinra company reactors defending against intruders"
+  },
+  {
+    "name": "Mono Drive",
+    "uid": 5,
+    "default_version": "Normal",
+    "versions": [
+      {
+        "uid": 5,
+        "status_immunities": [
+          "Stop",
+          "Frog",
+          "Paralyzed"
+        ],
+        "version": "Normal",
+        "rewards": {
+          "ap": 3,
+          "gil": 8,
+          "exp": 18
+        },
+        "items": [
+          {
+            "item_name": "Ether",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 3,
+          "mp": 28,
+          "luck": 2,
+          "defense": 6,
+          "hp": 28,
+          "level": 2,
+          "magic_attack": 3,
+          "magic_defense": 4,
+          "magic_defense_pct": 0,
+          "dexterity": 49,
+          "defense_pct": 6
+        },
+        "elemental_modifiers": [
+          {
+            "element": "Earth",
+            "modifier": 0
+          },
+          {
+            "element": "Wind",
+            "modifier": 200
+          }
+        ]
+      }
+    ],
+    "description": "This tiny floating watch-creature aims to please its fellow guards by shouting loudly when it sees it enemies and setting its targets on fire."
+  },
+  {
+    "name": "Sweeper",
+    "uid": 6,
+    "default_version": "Normal",
+    "versions": [
+      {
+        "uid": 7,
+        "status_immunities": [
+          "Darkness",
+          "Fury",
+          "Poison",
+          "Small",
+          "Sadness",
+          "Sleep",
+          "Death-sentence",
+          "Frog",
+          "Paralyzed"
+        ],
+        "version": "Battle Square",
+        "rewards": {
+          "ap": 3,
+          "gil": 30,
+          "exp": 27
+        },
+        "items": [
+          {
+            "item_name": "Potion",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 22,
+          "mp": 0,
+          "luck": 1,
+          "defense": 20,
+          "hp": 280,
+          "level": 8,
+          "magic_attack": 0,
+          "magic_defense": 4,
+          "magic_defense_pct": 0,
+          "dexterity": 48,
+          "defense_pct": 0
+        },
+        "elemental_modifiers": [
+          {
+            "element": "Lightning",
+            "modifier": 200
+          }
+        ]
+      },
+      {
+        "uid": 6,
+        "status_immunities": [
+          "Darkness",
+          "Fury",
+          "Poison",
+          "Small",
+          "Sadness",
+          "Sleep",
+          "Death-sentence",
+          "Frog",
+          "Paralyzed"
+        ],
+        "version": "Normal",
+        "rewards": {
+          "ap": 3,
+          "gil": 30,
+          "exp": 27
+        },
+        "items": [
+          {
+            "item_name": "Potion",
+            "get_method": "Morph"
+          }
+        ],
+        "stats": {
+          "attack": 18,
+          "mp": 0,
+          "luck": 1,
+          "defense": 20,
+          "hp": 140,
+          "level": 8,
+          "magic_attack": 0,
+          "magic_defense": 4,
+          "magic_defense_pct": 0,
+          "dexterity": 48,
+          "defense_pct": 0
+        },
+        "elemental_modifiers": [
+          {
+            "element": "Lightning",
+            "modifier": 200
+          }
+        ]
+      }
+    ],
+    "description": "A gun-toting robot that serves as the heavy trooper of the No. 1 Reactor. Adorned with drills also, but doesn't use them in combat."
+  }
+]

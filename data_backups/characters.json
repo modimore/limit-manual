@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Cloud",
+    "uid": 1,
+    "intro": {
+      "height": "5'7\"",
+      "blood_type": "AB",
+      "full_name": "Cloud Strife",
+      "birthdate": "August 19",
+      "birthplace": "Nibelheim",
+      "job": "Mercenary (ex-member of SOLDIER)",
+      "age": 21,
+      "weapon": "Sword",
+      "description": "The main character in Final Fantasy VII. Originally a member of SOLDIER, he is now a mercenary who will take any job. After being hired by AVALANCHE, he gradually gets caught up in a massive struggle for the life of the planet. His enormous sword can cut almost anything in two."
+    }
+  },
+  {
+    "name": "Aeris",
+    "uid": 2,
+    "intro": {
+      "height": "5'3\"",
+      "blood_type": "O",
+      "full_name": "Aeris Gainsborough",
+      "birthdate": "February 7",
+      "birthplace": "unknown",
+      "job": "Flower Merchant",
+      "age": 22,
+      "weapon": "Rod",
+      "description": "Young, beautiful, and somewhat mysterious, Aeris met Cloud while selling flowers on the streets of Midgar. She decided to join him soon after. Her unusual abilities enable her to use magic, but she seems more interested in deepening the love triangle between herself, Cloud and Tifa."
+    }
+  },
+  {
+    "name": "Tifa",
+    "uid": 3,
+    "intro": {
+      "height": "5'4\"",
+      "blood_type": "B",
+      "full_name": "Tifa Lockheart",
+      "birthdate": "May 3",
+      "birthplace": "Nibelheim",
+      "job": "Bar Hostess, AVALANCHE member",
+      "age": 20,
+      "weapon": "Glove",
+      "description": "Bright and optimistic, Tifa alwats cheers up the others when they're down. But don't let her looks fool you, she can decimate almost any enemy with her fists. She is one of the main members of AVALANCHE. She and Cloud were childhood friends, and although she has strong feelings for him, she would never admit it."
+    }
+  },
+  {
+    "name": "Barret",
+    "uid": 4,
+    "intro": {
+      "height": "6'4\"",
+      "blood_type": "O",
+      "full_name": "Barret Wallace",
+      "birthdate": "December 15",
+      "birthplace": "Corel Village",
+      "job": "Leader of AVALANCHE",
+      "age": 35,
+      "weapon": "Gun-arm",
+      "description": "Head of the underground resistance movement, AVALANCHE, Barret is fighting the mega-conglomerate Shinra, Inc. which has monopolized Mako energy by building special reactors to suck it out of the planet. Barret depends on brute strength and his \"Gun-arm\" to see him through. His wife died in an accident several years ago, and he now lives with his daughter Marlene."
+    }
+  },
+  {
+    "name": "Red XIII",
+    "uid": 5,
+    "intro": {
+      "height": "3'9\"",
+      "blood_type": "unknown",
+      "full_name": "Red XIII",
+      "birthdate": "unknown",
+      "birthplace": "Cosmo Canyon",
+      "job": "Beast",
+      "age": 48,
+      "weapon": "Headdress",
+      "description": "Just as his name implies, he is an animal with fire-red fur. But under his fierce exterior is an intelligence surpassing that of any human's. His sharp claws and fangs make him good at close-range fighting, but other than that, not much is known about him. It's not even certain that \"Red XIII is his real name. A real enigma."
+    }
+  },
+  {
+    "name": "Cid",
+    "uid": 6,
+    "intro": {
+      "height": "5'8\"",
+      "blood_type": "B",
+      "full_name": "Cid Highwind",
+      "birthdate": "February 22",
+      "birthplace": "unknown",
+      "job": "Pilot",
+      "age": 32,
+      "weapon": "Spear",
+      "description": "Cid is a tough-talking, warm-hearted old pilot who hasn't forgotten his dreams. There's no better pilot by air or sea. He believes someday he'll fly to the ends of the universe. With his handmade spear and knowledge of machinery, he throws himself into any attack regardless of the danger."
+    }
+  },
+  {
+    "name": "Sephiroth",
+    "uid": 7,
+    "intro": {
+      "height": "6'1\"",
+      "blood_type": "unknown",
+      "full_name": "Sephiroth",
+      "birthdate": "unknown",
+      "birthplace": "unknown",
+      "job": "Top ranking SOLDIER officer",
+      "age": "unknown",
+      "weapon": "Long Sword",
+      "description": "Even amongst the elite troops of SOLDIER, Sephiroth is known to be the best. His past is locked away in a confidential file held by Shinra, Inc. His giant sword, which only he can handle, has extremely destructive power. Said to have disappeared in a battle years ago, his current whereabouts are unknown."
+    }
+  },
+  {
+    "name": "Yuffie",
+    "uid": 8,
+    "intro": {
+      "height": "5'2\"",
+      "blood_type": "A",
+      "full_name": "Yuffie Kisaragi",
+      "birthdate": "November 20",
+      "birthplace": "Wutai",
+      "job": "Materia Hunter, Ninja",
+      "age": 16,
+      "weapon": "Knife, boomerang, origami (for throwing)",
+      "description": "Although you'd never know it by looking at her, Yuffie comes from a long line of Ninja. She forced herself into the group just to get a 'certain something'. She's sneaky, arrogant, and \"way\" selfish. But with her super shuriken and her special skills, there isn't anyone else you'd rather have on your side in a fight."
+    }
+  },
+  {
+    "name": "Cait Sith",
+    "uid": 9,
+    "intro": {
+      "height": "3'2\"",
+      "blood_type": "unknown",
+      "full_name": "Cait Sith",
+      "birthdate": "unknown",
+      "birthplace": "unknown",
+      "job": "Toysaurus",
+      "age": "unknown",
+      "weapon": "Megaphone",
+      "description": "Cait Sith rides around on the back of a huge stuffed Mog he magically brought to life. Megaphone in hand, he's always shouting orders and creating dopey attacks. When his slot machine attack works, the enemy lines look like an overturned toy box. His hobby is fortune-telling, but like his personality, it's pretty unreliable."
+    }
+  },
+  {
+    "name": "Vincent",
+    "uid": 10,
+    "intro": {
+      "height": "6'",
+      "blood_type": "A",
+      "full_name": "Vincent Valentine",
+      "birthdate": "October 13",
+      "birthplace": "unknown",
+      "job": "Unemployed",
+      "age": 27,
+      "weapon": "Gun",
+      "description": "A mystical man, stern and upright while at the same time dark and mysterious. His past connection with Shinra, Inc. is what made him join Cloud and the others. He may seem frail at first glance, but hidden inside his body lurks a fearsome power."
+    }
+  }
+]

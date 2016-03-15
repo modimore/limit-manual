@@ -10,6 +10,13 @@ class Item(db.Model):
     def __repr__(self):
         return '<Item: {0!s}>'.format(self.name)
 
+'''
+class ItemSubclass(db.Model):
+    uid = db.Column(db.Integer, db.ForeignKey('item.uid'),
+                    primary_key=True)
+    name = db.Column(db.String(20))
+'''
+
 class Weapon(db.Model):
     # Basic info
     uid = db.Column(db.Integer, db.ForeignKey('item.uid'),
@@ -76,3 +83,25 @@ class Armor(db.Model):
         self.linked_slots = linked_slots
         self.single_slots = single_slots
         self.growth_rate = growth_rate
+
+    def __repr__(self):
+        return '<Armor {0!s}>'.format(self.name)
+
+'''
+class Restorative(db.Model):
+    uid = db.Column(db.Integer, db.ForeignKey('item.uid'),
+                    primary_key=True)
+    name = db.Column(db.String(20))
+    item = db.relationship('Item', backref=db.backref('restorative', lazy='Dynamic'))
+    stat = db.Column(db.String(2), primary_key=True)
+    amt = db.Column(db.Integer)
+
+    def __init__(self, item_id, name, stat, amt):
+        self.uid = item_id
+        self.name = name
+        self.stat = stat
+        self.amt = amt
+
+    def __repr__(self):
+        return '<Restorative {0!s} {1!s}>'.format(self.name,self.stat)
+'''

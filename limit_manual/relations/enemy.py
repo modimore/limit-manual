@@ -1,6 +1,6 @@
 from flask import render_template, request
 
-from .. import db
+from .. import app, db
 
 # Bare-bones template for a specific enemy sub-type
 # Contains a name, image, and description
@@ -32,8 +32,7 @@ class Enemy(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     base_id = db.Column(db.Integer, db.ForeignKey('enemy_base.uid'),
                         nullable=False)
-    base = db.relationship('EnemyBase',
-                           backref=db.backref('enemy_version', lazy='dynamic'))
+    base = db.relationship('EnemyBase', backref=db.backref('enemy_version', lazy='dynamic'))
     version = db.Column(db.String(40))
     # stats
     level = db.Column(db.Integer)

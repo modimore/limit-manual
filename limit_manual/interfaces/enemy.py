@@ -6,26 +6,60 @@ from ..relations import enemy as EnemyRelations
 class EnemyBase(object):
     @staticmethod
     def db_reference(name):
-        return EnemyRelations.EnemyBase.query.filter_by(name=name).one()
+        return EnemyRelations.EnemyBase.query.filter_by(name=name).one_or_none()
 
     def __init__(self,name):
         self.name = name
-        this_enemy = self.db_reference(self.name)
+        this_enemy = EnemyBase.db_reference(self.name)
         self.uid = this_enemy.uid
 
+    def __repr__(self):
+        return '<Enemy Base: {0}>'.format(self.name)
+
     def all_versions(self):
-        db_versions = EnemyRelations.Enemy.query.filter_by(base=self.db_reference(self.name))
+        db_versions = EnemyRelations.Enemy.query.filter_by(base=EnemyBase.db_reference(self.name))
         return { v.version for v in db_versions }
+
+    def extract(self, with_uid=False):
+        db_ref = EnemyBase.db_reference(self.name)
+        result = {
+            'name'  : self.name,
+            'description': db_ref.description,
+            # not currently including image path
+            'default_version' : db_ref.default_version,
+            'versions': []
+        }
+
+        if with_uid: result['uid'] = db_ref.uid
+
+        for version in self.all_versions():
+            result['versions'].append(Enemy(self.name,version).extract(with_uid))
+
+        return result
+
+    @staticmethod
+    def extract_all(with_uid=False):
+        all_enemies = []
+        for e in EnemyRelations.EnemyBase.query.all():
+            all_enemies.append( EnemyBase(e.name).extract(with_uid) )
+        return all_enemies
+
 
 # Template interface for an enemy
 class Enemy(EnemyBase):
+    @staticmethod
+    def db_reference(base,version):
+        return EnemyRelations.Enemy.query.filter_by(base=base)\
+                                         .filter_by(version=version)\
+                                         .one_or_none()
+
     def __init__(self,name,version=None):
         EnemyBase.__init__(self,name)
         self.version = version
 
         # Find description, image(, and version if not provided)
         base = EnemyBase.db_reference(self.name)
-        if version == None: base.default_version
+        if version == None: self.version = base.default_version
 
         self.description = base.description
         self.image = base.image
@@ -34,7 +68,7 @@ class Enemy(EnemyBase):
         versions = EnemyRelations.Enemy.query.filter_by(base=base)
 
         # Get stats and rewards from table for this specific version
-        this_v = versions.filter_by(version=version).one()
+        this_v = Enemy.db_reference(base,self.version)
         self.uid = this_v.uid
         self.stats = {
             'level' : this_v.level,
@@ -77,12 +111,40 @@ class Enemy(EnemyBase):
         stat_imms = EnemyRelations.EnemyStatusImmunity.query.filter_by(enemy=this_v).all()
         self.status_immunities = { imm.status for imm in stat_imms }
 
+    def __repr__(self):
+        return '<Enemy: {0}; Version: {1}>'.format(self.name,self.version)
+
     def get_formations(self):
         from ..relations.formation import get_formation_ids
         from ..relations.formation import get_formation
 
         formation_ids = get_formation_ids(self.uid)
         return [ get_formation(fid) for fid in formation_ids ]
+
+    def extract(self, with_uid=False):
+        result = {
+            'version'   : self.version,
+            'stats' : self.stats,
+            'rewards'   : self.rewards,
+            'items' : [],
+            'status_immunities': [ s for s in self.status_immunities ],
+            'elemental_modifiers': self.elemental_modifiers
+        }
+
+        if with_uid: result['uid'] = self.uid
+
+        for item in self.items['drop']:
+            item_out = { 'item_name': item[0], 'get_method': 'Drop', 'get_chance': item[1] }
+            result['items'].append(item_out)
+        for item in self.items['steal']:
+            item_out = { 'item_name': item[0], 'get_method': 'Steal', 'get_chance': item[1] }
+            result['items'].append(item_out)
+        if self.items['morph'] != None:
+            item_out = { 'item_name': self.items['morph'] , 'get_method': 'Morph' }
+            result['items'].append(item_out)
+
+        return result
+
 
 # Route declaration for specific enemy pages
 @app.route('/enemies/<name>')

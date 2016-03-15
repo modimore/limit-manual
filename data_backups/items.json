@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Potion",
+    "uid": 1
+  },
+  {
+    "name": "Hi-Potion",
+    "uid": 2
+  },
+  {
+    "name": "X-Potion",
+    "uid": 3
+  },
+  {
+    "name": "Ether",
+    "uid": 4
+  },
+  {
+    "name": "Turbo Ether",
+    "uid": 5
+  },
+  {
+    "name": "Elixir",
+    "uid": 6
+  },
+  {
+    "name": "Megalixir",
+    "uid": 7
+  },
+  {
+    "name": "Tent",
+    "uid": 8
+  },
+  {
+    "name": "Antidote",
+    "uid": 9
+  },
+  {
+    "name": "Soft",
+    "uid": 10
+  },
+  {
+    "name": "Echo Screen",
+    "uid": 11
+  },
+  {
+    "name": "Cornucopia",
+    "uid": 12
+  },
+  {
+    "name": "Maiden's Kiss",
+    "uid": 13
+  },
+  {
+    "name": "Eye drop",
+    "uid": 14
+  },
+  {
+    "name": "Remedy",
+    "uid": 15
+  },
+  {
+    "name": "Vaccine",
+    "uid": 16
+  },
+  {
+    "name": "Hyper",
+    "uid": 17
+  },
+  {
+    "name": "Tranquilizer",
+    "uid": 18
+  },
+  {
+    "name": "Buster Sword",
+    "uid": 19
+  },
+  {
+    "name": "Mythril Saber",
+    "uid": 20
+  },
+  {
+    "name": "Bronze Bangle",
+    "uid": 21
+  },
+  {
+    "name": "Iron Bangle",
+    "uid": 22
+  },
+  {
+    "name": "Titan Bangle",
+    "uid": 23
+  },
+  {
+    "name": "Mythril Armlet",
+    "uid": 24
+  },
+  {
+    "name": "Carbon Bangle",
+    "uid": 25
+  },
+  {
+    "name": "Gatling Gun",
+    "uid": 26
+  },
+  {
+    "name": "Leather Glove",
+    "uid": 27
+  }
+]

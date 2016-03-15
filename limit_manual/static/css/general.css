@@ -1,6 +1,9 @@
 body {
   background-color: #324;
   color: aliceblue;
+
+  background-image: url('/static/images/ffvii-midgar.jpg');
+  background-size: cover;
 }
 
 .content-box {

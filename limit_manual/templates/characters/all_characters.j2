@@ -5,7 +5,7 @@
 {% endblock page_styles %}
 
 {% block content %}
-  <div class="content-box character-colors">
+  <div class="content-box default-colors">
     <table>
       <thead>
         <tr><th>Characters</th></tr>
@@ -16,7 +16,7 @@
       <tbody>
         {% for character in characters %}
           <tr>
-            <td>{{ character.name }}</td>
+            <td><a href="/characters/{{ character.name }}">{{ character.name }}</a></td>
           </tr>
         {% endfor %}{# characters #}
       </tbody>

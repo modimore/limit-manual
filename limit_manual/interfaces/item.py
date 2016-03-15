@@ -1,7 +1,6 @@
 from flask import render_template
 
 from .. import app, db
-
 from ..relations import item as ItemRelations
 
 # Representation of the basic item type
@@ -12,6 +11,7 @@ class Item(object):
 
     def __init__(self,name,uid=None):
         self.name = name
+        db_ref = Item.db_reference(self.name)
         self.uid = uid if uid != None else self.db_reference(self.name).uid
 
     @staticmethod
@@ -26,6 +26,18 @@ class Item(object):
         for name in names:
             db.session.add(ItemRelations.Item(name))
         db.session.commit()
+
+    def extract(self, with_uid=False):
+        result = { 'name': self.name }
+        if with_uid: result['uid'] = self.uid
+        return result
+
+    @staticmethod
+    def extract_all(with_uid=False):
+        all_items = []
+        for item in ItemRelations.Item.query.all():
+            all_items.append(Item(item.name,item.uid).extract(with_uid))
+        return all_items
 
 # Representation of a weapon
 class Weapon(Item):

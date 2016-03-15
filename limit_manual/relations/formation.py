@@ -1,6 +1,6 @@
 from flask import render_template, request
 
-from .. import app, db
+from .. import db
 from .enemy import EnemyBase, Enemy
 
 # A relation to track enemy formations
@@ -10,8 +10,7 @@ class FormationEnemy(db.Model):
     row_num = db.Column(db.Integer, primary_key=True)
     position = db.Column(db.Integer, primary_key=True)
     enemy_id = db.Column(db.Integer, db.ForeignKey('enemy.uid'))
-    enemy = db.relationship('Enemy',
-                            backref=db.backref('formation', lazy='dynamic'))
+    enemy = db.relationship('Enemy', backref=db.backref('formation', lazy='dynamic'))
 
     def __init__(self,formation_id,row_num,position,enemy):
         self.formation_id = formation_id
