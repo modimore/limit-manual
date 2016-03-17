@@ -1,14 +1,29 @@
- #intro .left {
-   float: left;
-   width: 200px;
-   margin-right: 10px;
- }
+.character-colors {
+  background-color: #d70000;
+  color: #eddf36;
+}
 
- #intro .left>* {
-   width: 100%;
-   margin-top: 10px;
- }
+#intro {
+  position: relative;
+}
 
- #intro .left>*:first-child {
-   margin-top: 0px;
- }
+#intro>.sizing-reference {
+  position: relative;
+  float: left;
+}
+
+#intro-table {
+  position: relative;
+  z-index: 1;
+  float: right;
+  margin-left: 200px;
+
+  background-color: #f06464;
+  background-color: rgba(240,100,100,0.4)
+}
+
+.portrait {
+  position: absolute;
+  z-index: 0;
+  height: 100%;
+}
