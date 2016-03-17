@@ -2,6 +2,7 @@ from flask import render_template
 
 from .. import app, db
 from ..relations import item as ItemRelations
+from ..relations.miscellaneous import get_description
 
 # Representation of the basic item type
 class Item(object):
@@ -12,23 +13,26 @@ class Item(object):
     def __init__(self,name,uid=None):
         self.name = name
         db_ref = Item.db_reference(self.name)
+        self.item_type = db_ref.item_type
         self.uid = uid if uid != None else self.db_reference(self.name).uid
 
+        self.description = get_description(db_ref.descr_id,'item',self.uid)
+
     @staticmethod
-    def create(name):
-        new_item = ItemRelations.Item(name)
+    def create(name,item_type):
+        new_item = ItemRelations.Item(name,item_type)
         db.session.add(new_item)
         db.session.commit()
         return new_item.uid
 
     @staticmethod
-    def create_many(names):
-        for name in names:
-            db.session.add(ItemRelations.Item(name))
+    def create_many(items):
+        for item in items:
+            db.session.add(ItemRelations.Item(item['name'],item['type']))
         db.session.commit()
 
     def extract(self, with_uid=False):
-        result = { 'name': self.name }
+        result = { 'name': self.name, 'type': self.item_type }
         if with_uid: result['uid'] = self.uid
         return result
 
@@ -130,7 +134,21 @@ class Armor(Item):
 @app.route('/items')
 @app.route('/items/all')
 def all_items():
-    items = [ Item(item.name,item.uid) for item in ItemRelations.Item.query.all() ]
+    all_items = [ Item(item.name,item.uid) for item in ItemRelations.Item.query.all() ]
+
+    items = {
+        'general': [],
+        'weapons': [],
+        'armor': []
+    }
+
+    for item in all_items:
+        if item.item_type == 'Weapon':
+            items['weapons'].append(item)
+        elif item.item_type == 'Armor':
+            items['armor'].append(item)
+        else:
+            items['general'].append(item)
 
     return render_template('items/all_items.j2', items=items)
 
@@ -138,8 +156,8 @@ def all_items():
 @app.route('/weapons')
 def all_weapons():
     _weapons = ItemRelations.Weapon.query.with_entities(ItemRelations.Weapon.name)\
-                                         .order_by(ItemRelations.Weapon.wielder)\
-                                         .all()
+                              .order_by(ItemRelations.Weapon.wielder)\
+                              .all()
     weapons = [ Weapon(wp.name) for wp in _weapons ]
 
     return render_template('items/weapons.j2', weapons=weapons)

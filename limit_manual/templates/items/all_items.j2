@@ -6,20 +6,34 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/item.css') }}">
 {% endblock page_styles %}
 
+{% macro item_table(items,table_name,table_id,with_type=false) -%}
+  <table id="{{ table_id }}">
+    <thead>
+      <tr><th colspan="3">{{ table_name }}</th></tr>
+      <tr>
+        <th>Name</th>
+        {% if with_type %}<th>Type</th>{% endif %}
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr id="{{ item.name }}">
+          <td>{{item.uid}} {{ item.name }}</td>
+          {% if with_type %}<td>{{ item.item_type }}</td>{% endif %}
+          <td>{{ item.description }}</td>
+        </tr>
+      {% endfor %}{# items #}
+    </tbody>
+  </table>
+{%- endmacro %}{# item_table #}
 {% block content %}
   <div class="content-box item-colors">
-    <table>
-      <thead>
-        <tr><th>Items</th></tr>
-        <tr><th>Name</th></tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-          <tr>
-            <td>{{ item.name }}</td>
-          </tr>
-        {% endfor %}{# items #}
-      </tbody>
-    </table>
+    {# Table for general items #}
+    {{ item_table(items.general,'General Items','general',true) }}
+    {# Table for weapons #}
+    {{ item_table(items.weapons,'Weapons','weapons') }}
+    {# Table for armor #}
+    {{ item_table(items.armor,'Armor','armor') }}
   </div>
 {% endblock content %}

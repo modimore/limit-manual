@@ -1,21 +1,19 @@
 from .. import db
+from .miscellaneous import DescriptionFormat
 
 class Item(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
+    item_type = db.Column(db.String(20))
+    descr_id = db.Column(db.Integer, db.ForeignKey('description_format.uid'))
 
-    def __init__(self,name):
+    def __init__(self,name,item_type,descr_id=1):
         self.name = name
+        self.item_type = item_type
+        self.descr_id = descr_id
 
     def __repr__(self):
         return '<Item: {0!s}>'.format(self.name)
-
-'''
-class ItemSubclass(db.Model):
-    uid = db.Column(db.Integer, db.ForeignKey('item.uid'),
-                    primary_key=True)
-    name = db.Column(db.String(20))
-'''
 
 class Weapon(db.Model):
     # Basic info
@@ -86,22 +84,3 @@ class Armor(db.Model):
 
     def __repr__(self):
         return '<Armor {0!s}>'.format(self.name)
-
-'''
-class Restorative(db.Model):
-    uid = db.Column(db.Integer, db.ForeignKey('item.uid'),
-                    primary_key=True)
-    name = db.Column(db.String(20))
-    item = db.relationship('Item', backref=db.backref('restorative', lazy='Dynamic'))
-    stat = db.Column(db.String(2), primary_key=True)
-    amt = db.Column(db.Integer)
-
-    def __init__(self, item_id, name, stat, amt):
-        self.uid = item_id
-        self.name = name
-        self.stat = stat
-        self.amt = amt
-
-    def __repr__(self):
-        return '<Restorative {0!s} {1!s}>'.format(self.name,self.stat)
-'''

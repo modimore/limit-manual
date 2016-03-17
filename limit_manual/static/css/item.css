@@ -3,8 +3,14 @@
   color: #f9ec86;
 }
 
-table {
+.content-box>* {
+  width: 100%;
   margin: auto;
+  margin-top: 10px;
+}
+
+.content-box>*:first-child {
+  margin-top: 0px;
 }
 
 table, th, td {
