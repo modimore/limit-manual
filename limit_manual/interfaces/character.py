@@ -60,7 +60,6 @@ class Character(object):
 @app.route('/characters')
 @app.route('/characters/all')
 def all_characters():
-    names = ['Cloud','Barret','Tifa','Aeris']
     characters = [ Character(c.name) for c in CharacterRelations.Character.query.all() ]
 
     return render_template('characters/all_characters.j2',

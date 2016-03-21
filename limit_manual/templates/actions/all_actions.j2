@@ -1,0 +1,24 @@
+{% extends 'layout.j2' %}
+
+{% block page_styles %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/action.css') }}">
+{% endblock page_styles %}
+
+{% macro action_format(action) -%}
+  <tr>
+    <td>{{ action.name }}</td>
+    <td>{{ action.category }}</td>
+  </tr>
+{%- endmacro %}
+
+{% block content %}
+  <div class="content-box default-colors">
+    <table>
+      <tbody>
+        {% for action in actions %}
+          {{ action_format(action) }}
+        {% endfor %}{# actions #}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}
