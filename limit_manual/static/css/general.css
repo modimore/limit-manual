@@ -21,6 +21,10 @@ body {
   color: #eddf36;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .menu {
   background-color: #0000b0;
   border: 5px solid #eee;

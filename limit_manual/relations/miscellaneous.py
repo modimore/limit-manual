@@ -3,9 +3,14 @@ from .. import db
 class DescriptionFormat(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     format_string = db.Column(db.String(80), nullable=False)
+    num_slots = db.Column(db.Integer)
 
-    def __init__(self, format_string):
+    def __init__(self, format_string,slots=None):
         self.format_string = format_string
+        if num_slots == None:
+            self.num_slots = min(format_string.count('{'),format_string.count('}'))
+        else:
+            self.num_slots = slots
 
     def __repr__(self):
         return self.format_string
