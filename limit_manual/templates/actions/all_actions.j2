@@ -12,18 +12,23 @@
 {% endmacro %}
 
 {% macro action_format(action) %}
-  {% set is_spell = (action.category in ['Spell','Summon','Enemy Skill']) %}
-  {% set rowspan = 3 if is_spell else 2 %}
+  {% set is_magic = (action.category in ['Spell','Summon','Enemy Skill']) %}
+  {% set rowspan = 3 if is_magic else 2 %}
   <tr>
     <td rowspan="{{ rowspan }}" class="action-name">{{ action.name }}</td>
-    <td>{{ action.category }}</td>
+    <td>
+      {{ action.category }}
+      {% if action.category == 'Spell' %}
+        ({{ action.spell_info.subcategory }})
+      {% endif %}
+    </td>
     <td>{{ action.description }}</td>
   </tr>
-  {% if is_spell %}
+  {% if is_magic %}
     <tr>
       <td colspan="2">MP Cost: {{ action.spell_info.mp_cost }}</td>
     </tr>
-  {% endif %}{# is_spell #}
+  {% endif %}{# is_magic #}
   <tr>
     <td colspan="2">
       <dl>

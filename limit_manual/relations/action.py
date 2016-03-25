@@ -17,11 +17,14 @@ class Action(db.Model):
 class SpellInfo(db.Model):
     action_id = db.Column(db.Integer, db.ForeignKey('action.uid'),
                           primary_key=True)
+    spell_type = db.Column(db.String(12))
     mp_cost = db.Column(db.Integer)
     reflectable = db.Column(db.Boolean)
 
-    def __init__(self,action_id,mp_cost,reflectable=False):
+
+    def __init__(self,action_id,mp_cost,spell_type='Unassigned',reflectable=False):
         self.action_id = action_id
+        self.spell_type = spell_type
         self.mp_cost = mp_cost
         self.reflectable = reflectable
 

@@ -12,6 +12,7 @@ class Action(object):
     def get_spell_properties(self):
         spell_info_r = ActionRelations.SpellInfo.query.filter_by(action_id=self.uid).one()
         self.spell_info = {
+            'subcategory': spell_info_r.spell_type,
             'mp_cost': spell_info_r.mp_cost,
             'reflectable': spell_info_r.reflectable
         }
