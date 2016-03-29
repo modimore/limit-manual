@@ -134,3 +134,9 @@ class EnemyStatusImmunity(db.Model):
 
     def __repr__(self):
         return '<StatusImmunity {0!r}:{1!s}>'.format(self.enemy,self.status)
+
+class EnemyAction(db.Model):
+    enemy_id = db.Column(db.Integer, db.ForeignKey('enemy_base.uid'),primary_key=True)
+    action = db.Column(db.String(20))
+    name_hidden = db.Column(db.Boolean)
+    manipulate = db.Column(db.Boolean)

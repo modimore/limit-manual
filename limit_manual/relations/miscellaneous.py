@@ -7,7 +7,7 @@ class DescriptionFormat(db.Model):
 
     def __init__(self, format_string,slots=None):
         self.format_string = format_string
-        if num_slots == None:
+        if slots == None:
             self.num_slots = min(format_string.count('{'),format_string.count('}'))
         else:
             self.num_slots = slots

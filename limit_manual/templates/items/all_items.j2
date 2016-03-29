@@ -19,7 +19,7 @@
     <tbody>
       {% for item in items %}
         <tr id="{{ item.name }}">
-          <td>{{item.uid}} {{ item.name }}</td>
+          <td>{{ item.name }}</td>
           {% if with_type %}<td>{{ item.item_type }}</td>{% endif %}
           <td>{{ item.description }}</td>
         </tr>

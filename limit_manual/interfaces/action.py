@@ -1,107 +1,56 @@
 from flask import render_template
 
 from .. import app
-from ..relations import action as ActionRelations
+from ..relations import action as AbilityRelations
 from ..relations.miscellaneous import get_description
 
-class Action(object):
+class Ability(object):
     @staticmethod
     def db_reference(name):
-        return ActionRelations.Action.query.filter_by(name=name).one_or_none()
-
-    def get_spell_properties(self):
-        spell_info_r = ActionRelations.SpellInfo.query.filter_by(action_id=self.uid).one()
-        self.spell_info = {
-            'subcategory': spell_info_r.spell_type,
-            'mp_cost': spell_info_r.mp_cost,
-            'reflectable': spell_info_r.reflectable
-        }
-
-    def get_effects(self):
-        result = []
-
-        ordered_effects = ActionRelations.ActionEffect.query.filter_by(action_id=self.uid).order_by(ActionRelations.ActionEffect.effect_order.desc()).all()
-
-        for effect in ordered_effects:
-            if effect.effect_type == "damage":
-                damage_row = ActionRelations.ActionDamage.query.filter_by(action_id=self.uid).filter_by(effect_order=effect.effect_order).one()
-                result.append({
-                    'type': 'damage',
-                    'num_targets': effect.num_targets,
-                    'info': {
-                        'damage_type': damage_row.damage_type,
-                        'power': damage_row.power,
-                        'element': damage_row.element,
-                        'split': damage_row.split
-                    }
-                })
-            elif effect.effect_type == "status":
-                status_rows = ActionRelations.ActionStatus.query.filter_by(action_id=self.uid).filter_by(effect_order=effect.effect_order).all()
-                this_status = {
-                    'type': 'status',
-                    'statuses': [ row.status for row in status_rows ],
-                    'num_targets': effect.num_targets,
-                    'info': {
-                        'mode': status_rows[0].mode,
-                        'accuracy': status_rows[0].accuracy
-                    }
-                }
-                result.append(this_status)
-
-        self.effects = result
+        return AbilityRelations.Ability.query.filter_by(name=name).one_or_none()
 
     def __init__(self,name):
         self.name = name
-        db_ref = Action.db_reference(self.name)
+        db_ref = Ability.db_reference(self.name)
         self.uid = db_ref.uid
         self.category = db_ref.category
+        self.hit_formula = db_ref.hit_formula
+        self.element = db_ref.element
 
-        if self.category in ["Spell", "Summon", "Enemy Skill"]:
-            self.get_spell_properties()
-
-        self.get_effects()
+        self.description = get_description(db_ref.description_id,"Ability",self.uid)
 
     @staticmethod
-    def create(actionspec):
+    def create(act_in):
         from .. import db
-        action_r = {
-            'name': actionspec['name'],
-            'category': actionspec['category']
-        }
-        new_action = ActionRelations.Action(**action_r)
+        new_action = AbilityRelations.Ability(act_in['name'],act_in['category'],**act_in['basic_info'])
         db.session.add(new_action)
         db.session.commit()
         act_id = new_action.uid
 
-        if new_action.category in [ "Spell", "Enemy Skill", "Summon" ]:
-            db.session.add(ActionRelations.SpellInfo(act_id,**actionspec['spell_info']))
+        if new_action.category == "Magic":
+            db.session.add(AbilityRelations.MagicInfo(act_id,**act_in['magic_info']))
 
-        for i in range(len(actionspec['effects'])):
-            effect = actionspec['effects'][i]
-            if 'num_targets' in effect:
-                effect_row = ActionRelations.ActionEffect(act_id,i,effect['type'],effect['num_targets'])
-            else:
-                effect_row = ActionRelations.ActionEffect(act_id,i,effect['type'])
-            db.session.add(effect_row)
+        if new_action.num_statuses > 0:
+            for status in act_in['statuses']['list']:
+                db.session.add(AbilityRelations.AbilityStatus(act_id,status,act_in['statuses']['mode'],act_in['statuses']['accuracy']))
 
-            if (effect['type'] == 'damage'):
-                db.session.add(ActionRelations.ActionDamage(effect_row, **effect['info']))
-            elif (effect['type'] == 'status'):
-                for status in effect['statuses']:
-                    db.session.add(ActionRelations.ActionStatus(effect_row, status, **effect['info']))
+        if new_action.has_damage:
+            db.session.add(AbilityRelations.AbilityDamage(act_id,**act_in['damage']))
 
         db.session.commit()
 
 
     def extract(self, with_uid=False):
+        basic_info = {
+            'hit_formula': self.hit_formula,
+            'element': self.element
+        }
+
         result = {
             'name': self.name,
             'category': self.category,
-            'effects': self.effects
+            'basic_info': basic_info
         }
-
-        if self.category in [ "Spell", "Summon", "Enemy Skill" ]:
-            result['spell_info'] = self.spell_info
 
         if with_uid: result['uid'] = self.uid
 
@@ -110,13 +59,13 @@ class Action(object):
     @staticmethod
     def extract_all(with_uid=False):
         actions = []
-        for a in ActionRelations.Action.query.all():
+        for a in AbilityRelations.Action.query.all():
             actions.append( Action(a.name).extract(with_uid) )
         return actions
 
 @app.route('/actions')
 @app.route('/actions/all')
 def all_actions():
-    actions = [ Action(a.name) for a in ActionRelations.Action.query.all() ]
+    abilities = [ Ability(a.name) for a in AbilityRelations.Ability.query.all() ]
     return render_template('actions/all_actions.j2',
-                           actions=actions)
+                           abilities=abilities)
