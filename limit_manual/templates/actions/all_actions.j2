@@ -1,43 +1,87 @@
 {% extends 'layout.j2' %}
 
 {% block page_styles %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/action.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ability.css') }}">
 {% endblock page_styles %}
 
 {% macro damage_format(damage) %}
-{% endmacro %}
+  <tr>
+    <th>Formula</th>
+    <th>Power</th>
+    <th>Physical</th>
+    <th>Piercing</th>
+  </tr>
+  <tr>
+    <td>{{ damage.formula }}</td>
+    <td>{{ damage.power }}</td>
+    <td>{{ damage.physical }}</td>
+    <td>{{ damage.piercing }}</td>
+  </tr>
+{% endmacro %}{# damage_format #}
 
-{% macro ability_format(ability) %}
+{% macro status_format(status_list,mode,chance) %}
+  <tr>
+    <th colspan="2">Statuses</th>
+    <th>Mode</th>
+    <th>Accuracy</th>
+  </tr>
+  <tr>
+    <td colspan="2" class="statuses">{{ status_list | join(', ') }}</td>
+    <td>{{ mode }}</td>
+    <td>{{ chance }}</td>
+  </tr>
+{% endmacro %}{# status_format #}
+
+{% macro magic_format(spell) %}
   {# determine how many rows you need in this table #}
-  {% set num_rows = 3 %}
-  {% set num_columns = 4 %}
+  {% set has_statuses = (spell.statuses) %}
+  {% set has_damage = (spell.damage != None) %}
+  {% set num_rows = 5+(2 if has_damage else 0)+(2 if has_statuses else 0) %}
+  {% set num_columns = 5 %}
 
-  <tr>
-    <th rowspan="{{ num_rows }}">{{ ability.name }}</th>
-    <td colspan="{{ num_columns-1 }}">{{ ability.description }}</td>
+  <tr class="boundary">
+    <th rowspan="{{ num_rows }}">{{ spell.name }}</th>
+    <td colspan="{{ num_columns-1 }}" class="description">{{ spell.description }}</td>
   </tr>
   <tr>
-    <th>Category</th>
-    <th>Hit Formula</th>
+    <th>Spell Type</th>
+    <th>MP Cost</th>
+    <th>Reflectable</th>
+    <th>Split Effect</th>
+  </tr>
+  <tr>
+    <td>{{ spell.spell_type }}</td>
+    <td>{{ spell.mp_cost }}</td>
+    <td>{{ spell.reflectable }}</td>
+    <td>{{ spell.split }}</td>
+  </tr>
+  <tr>
     <th>Element</th>
+    <th>Accuracy</th>
+    <th>Num. Targets</th>
+    <th>Suggested Target</th>
   </tr>
   <tr>
-    <td>{{ ability.category }}</td>
-    <td>{{ ability.hit_formula }}</td>
-    <td>{{ ability.element }}</td>
+    <td>{{ spell.element }}</td>
+    <td>{{ spell.accuracy }}</td>
+    <td>{{ spell.num_targets }}</td>
+    <td>{{ spell.default_target_group }}</td>
   </tr>
+
+  {% if has_statuses %}{{ status_format(spell.statuses.list, spell.statuses.mode, spell.statuses.chance) }}{% endif %}
+  {% if has_damage %}{{ damage_format(spell.damage) }}{% endif %}
 {% endmacro %}
 
 {% block content %}
-  <div class="content-box action-colors">
+  <div class="content-box ability-colors">
     <table class="full-width">
       <thead>
-        <tr><th colspan="4">All Abilities</th></tr>
+        <tr><th colspan="5">Magic</th></tr>
       </thead>
       <tbody>
-        {% for ability in abilities %}
-          {{ ability_format(ability) }}
-        {% endfor %}{# abilitys #}
+        {% for spell in spells %}
+          {{ magic_format(spell) }}
+        {% endfor %}{# spell #}
       </tbody>
     </table>
   </div>

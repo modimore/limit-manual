@@ -1,0 +1,28 @@
+.ability-colors {
+  background-color: #070900;
+  color: #c7a0a0;
+}
+
+table {
+  border-color: #545428;
+}
+
+tr, th, td {
+  border-color: #343408;
+}
+
+tr.boundary {
+  border-top: 2px solid #545428;
+}
+
+th, td {
+  text-align: center;
+}
+
+td.description {
+  text-align: left;
+}
+
+.statuses {
+  max-width: 250px;
+}

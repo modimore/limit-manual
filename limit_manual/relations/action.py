@@ -13,13 +13,13 @@ class Ability(db.Model):
     default_target_group = db.Column(db.String(8))
     num_targets = db.Column(db.Integer)
     split = db.Column(db.Boolean)
-    num_statuses = db.Column(db.Integer)
+    has_statuses = db.Column(db.Boolean)
     has_damage = db.Column(db.Boolean)
 
     def __init__(self, name, category, description_id=1,
                  hit_formula='Magical', accuracy=255,
                  default_target_group='Enemies', num_targets=1, split=True,
-                 element='', num_statuses=0, has_damage=True):
+                 element='', has_statuses=False, has_damage=True):
         self.name = name
         self.category = category
         self.description_id = description_id
@@ -28,7 +28,7 @@ class Ability(db.Model):
         self.default_target_group = default_target_group
         self.num_targets = num_targets
         self.split = split
-        self.num_statuses = num_statuses
+        self.has_statuses = has_statuses
         self.has_damage = has_damage
 
 class MagicInfo(db.Model):
@@ -57,15 +57,22 @@ class AbilityDamage(db.Model):
         self.power = power
         self.piercing = piercing
 
-class AbilityStatus(db.Model):
+class AbilityStatusInfo(db.Model):
+    action_id = db.Column(db.Integer, db.ForeignKey('ability.uid'),
+                          primary_key=True)
+    mode = db.Column(db.String(8))
+    chance = db.Column(db.Integer)
+
+    def __init__(self,mode,chance):
+        self.action_id = action_id
+        self.mode = mode
+        self.chance = chance
+
+class AbilityStatusList(db.Model):
     action_id = db.Column(db.Integer, db.ForeignKey('ability.uid'),
                           primary_key=True)
     status = db.Column(db.String(25), primary_key=True)
-    mode = db.Column(db.String(8))
-    accuracy = db.Column(db.Integer)
 
-    def __init__(self,action_id,status,mode="Grant",accuracy=255):
+    def __init__(self,action_id,status):
         self.action_id = action_id
         self.status = status
-        self.mode = mode
-        self.accuracy = accuracy
