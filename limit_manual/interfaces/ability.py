@@ -1,7 +1,7 @@
 from flask import render_template
 
 from .. import app
-from ..relations import action as AbilityRelations
+from ..relations import ability as AbilityRelations
 from ..relations.miscellaneous import get_description
 
 class Ability(object):
@@ -93,10 +93,10 @@ class Ability(object):
 
     @staticmethod
     def extract_all(with_uid=False):
-        actions = []
+        abilities = []
         for a in AbilityRelations.Action.query.all():
-            actions.append( Action(a.name).extract(with_uid) )
-        return actions
+            abilities.append( Action(a.name).extract(with_uid) )
+        return abilities
 
 class Spell(Ability):
     def get_magic_info(self):
@@ -110,8 +110,8 @@ class Spell(Ability):
         self.spell_type = magic_info.spell_type
         self.reflectable = magic_info.reflectable
 
-@app.route('/actions')
-@app.route('/actions/all')
+@app.route('/abilities')
+@app.route('/abilities/all')
 def all_actions():
     _abilities = AbilityRelations.Ability.query.all()
 
@@ -121,5 +121,5 @@ def all_actions():
         if ability.category == "Magic":
             spells.append(Spell(ability.name))
 
-    return render_template('actions/all_actions.j2',
+    return render_template('abilities/all_abilities.j2',
                            spells=spells)

@@ -14,4 +14,4 @@ def welcome():
 from .interfaces import enemy
 from .interfaces import item
 from .interfaces import character
-from .interfaces import action
+from .interfaces import ability
