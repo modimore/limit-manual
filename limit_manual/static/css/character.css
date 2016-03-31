@@ -7,7 +7,7 @@
   position: relative;
 }
 
-#intro>.sizing-reference {
+#intro > .sizing-reference {
   position: relative;
   float: left;
 }

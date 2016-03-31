@@ -28,7 +28,7 @@
   <tr>
     <td colspan="2" class="statuses">{{ status_list | join(', ') }}</td>
     <td>{{ mode }}</td>
-    <td>{{ chance }}</td>
+    <td>{{ chance if chance != 256 else "Auto" }}</td>
   </tr>
 {% endmacro %}{# status_format #}
 
@@ -58,13 +58,13 @@
   <tr>
     <th>Element</th>
     <th>Accuracy</th>
-    <th>Num. Targets</th>
+    <th>Targets</th>
     <th>Suggested Target</th>
   </tr>
   <tr>
     <td>{{ spell.element }}</td>
-    <td>{{ spell.accuracy }}</td>
-    <td>{{ spell.num_targets }}</td>
+    <td>{{ spell.accuracy if spell.accuracy != 256 else "Auto Hit" }}</td>
+    <td>{{ spell.num_targets if spell.num_targets != 0 else "All" }}</td>
     <td>{{ spell.default_target_group }}</td>
   </tr>
 

@@ -65,7 +65,7 @@ class Ability(object):
             db.session.add(AbilityRelations.MagicInfo(act_id,**act_in['magic_info']))
 
         if new_action.has_statuses:
-            db.session.add(AbilityRelations.AbilityStatusInfo(act_id,act_in['statuses']['mode'],act_in['statuses']['accuracy']))
+            db.session.add(AbilityRelations.AbilityStatusInfo(act_id,**act_in['statuses']['info']))
             for status in act_in['statuses']['list']:
                 db.session.add(AbilityRelations.AbilityStatusList(act_id,status))
 

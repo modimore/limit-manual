@@ -17,7 +17,7 @@ class Ability(db.Model):
     has_damage = db.Column(db.Boolean)
 
     def __init__(self, name, category, description_id=1,
-                 hit_formula='Magical', accuracy=255,
+                 hit_formula='Magical', accuracy=256,
                  default_target_group='Enemies', num_targets=1, split=True,
                  element='', has_statuses=False, has_damage=True):
         self.name = name
@@ -63,7 +63,7 @@ class AbilityStatusInfo(db.Model):
     mode = db.Column(db.String(8))
     chance = db.Column(db.Integer)
 
-    def __init__(self,mode,chance):
+    def __init__(self,action_id,mode,chance=256):
         self.action_id = action_id
         self.mode = mode
         self.chance = chance

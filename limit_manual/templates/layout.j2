@@ -7,18 +7,23 @@
   </head>
 
   <body>
-    <div class="banner menu">
-      <img src="{{ url_for('static', filename='images/ffvii-logo-banner.png') }}">
-      <h1>Limit Manual</h1>
-      <ul class="menu-nav">
-        <li><a href="/characters">Characters</a></li>
-        <li><a href="/enemies">Enemies</a></li>
-        <li><a href="/abilities">Abilities</a></li>
-        <li><a href="/items">Items</a></li>
-        <li><a href="#materia">Materia</a></li>
-        <li><a href="#mechanics">Mechanics</a></li>
-      </ul>
+    <div id="background">
+      <img src="{{ url_for('static', filename='images/ffvii-midgar.jpg') }}">
     </div>
-    <div id="content">{% block content %}{% endblock content %}</div>
+    <div id="foreground">
+      <div class="banner menu">
+        <img src="{{ url_for('static', filename='images/ffvii-logo-banner.png') }}">
+        <h1>Limit Manual</h1>
+        <ul class="menu-nav">
+          <li><a href="/characters">Characters</a></li>
+          <li><a href="/enemies">Enemies</a></li>
+          <li><a href="/abilities">Abilities</a></li>
+          <li><a href="/items">Items</a></li>
+          <li><a href="#materia">Materia</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+        </ul>
+      </div>
+      <div id="content">{% block content %}{% endblock content %}</div>
+    </div>
   </body>
 </html>
