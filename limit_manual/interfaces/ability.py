@@ -123,3 +123,28 @@ def all_actions():
 
     return render_template('abilities/all_abilities.j2',
                            spells=spells)
+
+@app.route('/abilities/magic')
+@app.route('/abilities/spells')
+def all_magic():
+    _spells = AbilityRelations.Ability.query.filter_by(category="Magic").all()
+
+    restore = []
+    attack = []
+    indirect = []
+    other = []
+
+    for _spell in _spells:
+        spell = Spell(_spell.name)
+        if spell.spell_type == "Restore":
+            restore.append(spell)
+        elif spell.spell_type == "Attack":
+            attack.append(spell)
+        elif spell.spell_type == "Indirect":
+            indirect.append(spell)
+        else:
+            other.append(spell)
+
+    return render_template('abilities/magic.j2',
+                           restore=restore, attack=attack,
+                           indirect=indirect, other=other)

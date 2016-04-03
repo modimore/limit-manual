@@ -1,12 +1,13 @@
 body {
-  background-color: #324;
-  color: aliceblue;
+  background-color: #0000b0;
+  color: white;
   margin: 0px;
 }
 
+/* primary page content formatting */
 .content-box {
   overflow: auto;
-  width: 600px;
+  width: 800px;
   padding: 10px;
   margin: auto;
 
@@ -14,15 +15,16 @@ body {
   border-radius: 10px;
 }
 
-.default-colors {
-  background-color: #d70000;
-  color: #eddf36;
-}
-
-.full-width {
+.content-box>* {
+  margin-top: 10px;
   width: 100%;
 }
 
+.content-box>*:first-child {
+  margin-top: auto;
+}
+
+/* global site midgar background */
 #background {
   position: fixed;
   z-index: -1;
@@ -35,6 +37,7 @@ body {
   height: 100%;
 }
 
+/* global site foreground spacing */
 #foreground {
   padding: 5px;
 }
@@ -47,23 +50,29 @@ body {
   margin-bottom: 0px;
 }
 
-.menu {
+/* site banner */
+.menu-colors, .default-colors {
   background-color: #0000b0;
+  color: white;
+}
+
+.menu {
   border: 5px solid #eee;
   border-radius: 10px;
-  color: white;
   font-family: Verdana, sans-serif;
 }
 
-.menu.ulc { background-color: #0000B0; } /* blue = 176 = 128 + 32 + 16 = 0b10110000 */
-.menu.llc { background-color: #000050; } /* blue = 80 = 64 + 16 = 0b01010000 */
-.menu.urc { background-color: #000080; } /* blue = 128 = 128 = 0b10000000 */
+/* unused as of now, being kept so I can remember these color codes */
+.menu-ulc { background-color: #0000B0; } /* blue = 176 = 128 + 32 + 16 = 0b10110000 */
+.menu-llc { background-color: #000050; } /* blue = 80 = 64 + 16 = 0b01010000 */
+.menu-urc { background-color: #000080; } /* blue = 128 = 128 = 0b10000000 */
 .menu-lrc { background-color: #000040; } /* blue = 32 = 32 = 0b00100000 */
 
 .banner {
   overflow: auto;
 }
-.banner img {
+
+.banner > img {
   height: 80px;
   float: left;
 }
@@ -81,17 +90,16 @@ ul.menu-nav {
   height: 20px;
   margin: 30px 10px;
 }
-
 ul.menu-nav > li {
   display: inline;
   margin: 0px 3px;
 }
-
 ul.menu-nav a {
   color: #eee;
   text-decoration: none;
 }
 
+/* common table properties */
 table {
   border-collapse: collapse;
   border: 2px solid #eddf36;

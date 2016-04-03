@@ -3,8 +3,21 @@
   color: #c7a0a0;
 }
 
+/*.ability-colors .emphasis {
+  background-color: #071910;
+}*/
+
+.ability-colors .section-header {
+  background-color: #1b2100;
+}
+
+.ability-colors tr.data>* {
+  background-color: #14160b;
+}
+
 table {
   border-color: #545428;
+  margin-top: 10px;
 }
 
 tr, th, td {

@@ -10,8 +10,10 @@
     <div id="background">
       <img src="{{ url_for('static', filename='images/ffvii-midgar.jpg') }}">
     </div>
+
     <div id="foreground">
-      <div class="banner menu">
+      {# page banner #}
+      <div class="banner menu menu-colors">
         <img src="{{ url_for('static', filename='images/ffvii-logo-banner.png') }}">
         <h1>Limit Manual</h1>
         <ul class="menu-nav">
@@ -23,7 +25,8 @@
           <li><a href="#mechanics">Mechanics</a></li>
         </ul>
       </div>
-      <div id="content">{% block content %}{% endblock content %}</div>
+      {# page content #}
+      {% block content %}{% endblock content %}
     </div>
   </body>
 </html>

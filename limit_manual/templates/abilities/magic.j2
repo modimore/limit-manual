@@ -1,0 +1,10 @@
+{% extends 'abilities/ability_layout.j2' %}
+
+{% block content %}
+  <div class="content-box ability-colors">
+    {{ spell_group('Restore', restore) }}
+    {{ spell_group('Attack', attack) }}
+    {{ spell_group('Indirect', indirect) }}
+    {{ spell_group('Other', other) }}
+  </div>
+{% endblock content %}
