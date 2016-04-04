@@ -10,7 +10,6 @@ class Ability(object):
         return AbilityRelations.Ability.query.filter_by(name=name).one_or_none()
 
     def get_statuses(self):
-        print(self.name)
         info = AbilityRelations.AbilityStatusInfo.query.filter_by(action_id=self.uid).one()
         status_list = [ r.status for r in AbilityRelations.AbilityStatusList.query.filter_by(action_id=self.uid).all() ]
 
