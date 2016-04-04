@@ -1,5 +1,7 @@
 {% extends 'abilities/ability_layout.j2' %}
 
+{% import 'abilities/magic/simple_spells.j2' as simple %}
+
 {% block content %}
   <div class="content-box ability-colors">
     {{ spell_group('Restore', restore) }}

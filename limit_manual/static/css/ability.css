@@ -32,10 +32,23 @@ th, td {
   text-align: center;
 }
 
-td.description {
-  text-align: left;
-}
-
 .statuses {
   max-width: 250px;
+}
+
+.simple td {
+  width: 75px;
+}
+
+.simple td:last-child {
+  text-align: right;
+  width: auto;
+}
+
+.in-game-descr {
+  font-style: italic;
+}
+
+ul {
+  list-style-type: none;
 }

@@ -29,6 +29,34 @@ class Ability(object):
             'physical': damage.formula == 'Physical'
         }
 
+        self.get_damage_string()
+
+    def get_damage_string(self):
+        if self.damage['formula'] == 'Max HP%':
+            if self.damage['power'] == 32:
+                self.damage_text = 'Restore HP to full'
+            else:
+                self.damage_text = 'Heal damage equal to {0}% of Max HP'.format(100*self.damage['power']//32)
+        elif self.damage['formula'] == 'Cure':
+            if self.damage['power'] < 20: level = 'light'
+            elif self.damage['power'] < 40: level = 'moderate'
+            else: level = 'major'
+
+            self.damage_text = 'Heal a {0} amount of damage'.format(level)
+        elif self.damage['formula'] == 'HP%':
+            self.damage_text = 'Deal damage equal to {0}% of target\'s current HP'.format(100*self.damage['power']//32)
+        else:
+            damage_properties = []
+            if self.damage['power'] < 20: damage_properties.append('light')
+            elif self.damage['power'] < 40: damage_properties.append('moderate')
+            elif self.damage['power'] < 80: damage_properties.append('high')
+            else: damage_properties.append('heavy')
+
+            if self.element != 'None':
+                damage_properties.append('{0}-elemental'.format(self.element))
+
+            self.damage_text = 'Deal {0} damage'.format(' '.join(damage_properties).lower())
+
     def __init__(self,name):
         self.name = name
         db_ref = Ability.db_reference(self.name)
@@ -50,7 +78,7 @@ class Ability(object):
             self.get_damage()
         else: self.damage = None
 
-        self.description = get_description(db_ref.description_id,"Ability",self.uid)
+        self.in_game_description = get_description(db_ref.description_id,"Ability",self.uid)
 
     @staticmethod
     def create(act_in):
@@ -120,8 +148,11 @@ def all_actions():
         if ability.category == "Magic":
             spells.append(Spell(ability.name))
 
+    spell_content = render_template('abilities/magic/simple_spells.j2',
+                                    spells=spells)
+
     return render_template('abilities/all_abilities.j2',
-                           spells=spells)
+                           spell_content=spell_content)
 
 @app.route('/abilities/magic')
 @app.route('/abilities/spells')
