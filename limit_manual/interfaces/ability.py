@@ -127,30 +127,6 @@ class Ability(object):
 
         db.session.commit()
 
-
-    def extract(self, with_uid=False):
-        basic_info = {
-            'hit_formula': self.hit_formula,
-            'element': self.element
-        }
-
-        result = {
-            'name': self.name,
-            'category': self.category,
-            'basic_info': basic_info
-        }
-
-        if with_uid: result['uid'] = self.uid
-
-        return result
-
-    @staticmethod
-    def extract_all(with_uid=False):
-        abilities = []
-        for a in AbilityRelations.Action.query.all():
-            abilities.append( Action(a.name).extract(with_uid) )
-        return abilities
-
 class Spell(Ability):
     def get_magic_info(self):
         return AbilityRelations.MagicInfo.query.filter_by(ability_id=self.uid).one()

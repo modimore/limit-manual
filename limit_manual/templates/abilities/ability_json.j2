@@ -1,0 +1,32 @@
+{% macro spell_object(spell,with_uid=false) -%}
+  {
+    {% if with_uid -%}"uid": {{ spell.uid }},{%- endif -%}
+    "name": "{{ spell.name }}",
+    "category": "Magic",
+    "basic_info": {
+      "hit_formula": "{{ spell.hit_formula }}",
+      "element": "{{ spell.element }}",
+      "friendly": {{ spell.friendly }},
+      "num_attacks": {{ spell.num_attacks }},
+      "has_notes": {{ spell.has_notes }},
+      "has_statuses": {{ spell.has_statuses }},
+      "has_damage": {{ spell.has_damage }}
+    }{%- if spell.has_statuses -%},
+    "magic_info": {
+      "spell_type": "{{ spell.spell_type }}",
+      "mp_cost": {{ spell.mp_cost }},
+      "reflectable": {{ spell.reflectable }}
+    }{%- endif -%}{%- if spell.has_damage -%},
+    "damage": {
+      "formula": "{{ spell.damage.formula }}",
+      "power": {{ spell.damage.power }},
+      "piercing": {{ spell.damage.piercing }}
+    }{%- endif -%}{# has_damage #}
+  }
+{%- endmacro -%}{# spell_object #}
+
+[
+  {% for spell in spell_list -%}
+    {{ spell_object(spell) }}{%- if not loop.last -%},{%- endif %}
+  {% endfor %}{# spell_list #}
+]
