@@ -10,8 +10,8 @@ class Ability(object):
         return AbilityRelations.Ability.query.filter_by(name=name).one_or_none()
 
     def get_statuses(self):
-        info = AbilityRelations.AbilityStatusInfo.query.filter_by(action_id=self.uid).one()
-        status_list = [ r.status for r in AbilityRelations.AbilityStatusList.query.filter_by(action_id=self.uid).all() ]
+        info = AbilityRelations.AbilityStatusInfo.query.filter_by(ability_id=self.uid).one()
+        status_list = [ r.status for r in AbilityRelations.AbilityStatusList.query.filter_by(ability_id=self.uid).all() ]
 
         self.statuses = {
             'list': status_list,
@@ -20,7 +20,7 @@ class Ability(object):
         }
 
     def get_damage(self):
-        damage = AbilityRelations.AbilityDamage.query.filter_by(action_id=self.uid).one()
+        damage = AbilityRelations.AbilityDamage.query.filter_by(ability_id=self.uid).one()
 
         self.damage = {
             'formula': damage.formula,
@@ -55,7 +55,10 @@ class Ability(object):
             if self.element != 'None':
                 damage_properties.append('{0}-elemental'.format(self.element))
 
-            self.damage_text = 'Deal {0} damage'.format(' '.join(damage_properties).lower())
+            self.damage_text = 'Deals {0} damage'.format(' '.join(damage_properties).lower())
+
+            if self.target_all or self.num_attacks > 1:
+                self.damage_text = self.damage_text + ' to each target'
 
     def __init__(self,name):
         self.name = name
@@ -66,8 +69,10 @@ class Ability(object):
         self.hit_formula = db_ref.hit_formula
         self.accuracy = db_ref.accuracy
         self.element = db_ref.element
-        self.default_target_group = db_ref.default_target_group
-        self.num_targets = db_ref.num_targets
+        self.friendly = db_ref.friendly
+        self.target_all = db_ref.target_all
+        self.target_random = db_ref.target_random
+        self.num_attacks = db_ref.num_attacks
         self.split = db_ref.split
 
         if db_ref.has_statuses:
@@ -77,6 +82,27 @@ class Ability(object):
         if db_ref.has_damage:
             self.get_damage()
         else: self.damage = None
+
+        ability_notes = []
+        if db_ref.has_notes:
+            for _note in AbilityRelations.AbilityNotes.query.filter_by(ability_id=self.uid).all():
+                ability_notes.append(_note.note_text)
+
+        if self.target_all:
+            ability_notes.append('targets entire party')
+        elif self.target_random:
+            if self.num_attacks == 1:
+                ability_notes.append('selects one target randomly')
+            else:
+                ability_notes.append('selects a random target {0} times'.format(self.num_attacks))
+
+        if self.split == False:
+            ability_notes.append('does not split effects')
+
+        if len(ability_notes) > 0:
+            self.notes_string = ','.join(ability_notes)
+        else:
+            self.notes_string = None
 
         self.in_game_description = get_description(db_ref.description_id,"Ability",self.uid)
 
@@ -127,7 +153,7 @@ class Ability(object):
 
 class Spell(Ability):
     def get_magic_info(self):
-        return AbilityRelations.MagicInfo.query.filter_by(action_id=self.uid).one()
+        return AbilityRelations.MagicInfo.query.filter_by(ability_id=self.uid).one()
 
     def __init__(self,name):
         Ability.__init__(self,name)

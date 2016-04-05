@@ -1,5 +1,8 @@
 {% macro spell_effect(spell) %}
   <ul>
+    {% if spell.notes_string %}
+      <li>{{ spell.notes_string | capitalize }}</li>
+    {% endif %}
     {% if spell.statuses %}
       <li>
         {{ spell.statuses.mode }} {{ spell.statuses.list | join(', ') }}

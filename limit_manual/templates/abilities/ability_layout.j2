@@ -59,14 +59,14 @@
     <tr class="label">
       <th>Element</th>
       <th>Accuracy</th>
-      <th>Targets</th>
-      <th>Suggested Target</th>
+      <th># Attacks</th>
+      <th>Friendly</th>
     </tr>
     <tr class="data">
       <td>{{ spell.element }}</td>
       <td>{{ spell.accuracy if spell.accuracy != 256 else "Auto Hit" }}</td>
-      <td>{{ spell.num_targets if spell.num_targets != 0 else "All" }}</td>
-      <td>{{ spell.default_target_group }}</td>
+      <td>{{ spell.num_attacks if spell.num_attacks != 0 else "None" }}</td>
+      <td>{{ spell.friendly }}</td>
     </tr>
 
     {% if has_statuses %}{{ status_format(spell.statuses.list, spell.statuses.mode, spell.statuses.chance) }}{% endif %}
