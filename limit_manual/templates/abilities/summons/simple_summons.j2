@@ -1,0 +1,54 @@
+{% macro attack_effect(attack) %}
+  <ul>
+    {% if attack.notes_string %}
+      <li>{{ attack.notes_string | capitalize }}</li>
+    {% endif %}
+    {% if attack.statuses %}
+      <li>
+        {{ attack.statuses.mode }} {{ attack.statuses.list | join(', ') }}
+        {% if attack.statuses.mode in ['Inflict'] %}[{{ (attack.statuses.chance*100)//256 }}%]{% endif %}
+      </li>
+    {% endif %}{# has_statuses #}
+    {% if attack.damage_text %}
+      <li>{{ attack.damage_text }}</li>
+    {% endif %}{# has_damage #}
+  </dl>
+{% endmacro %}{# attack_effect #}
+
+{% macro simple_summon(summon) %}
+  {% set num_rows = 2 + (summon.attacks | length ) %}
+  <tbody id="{{ summon.name }}">
+    <tr>
+      <td rowspan="{{ num_rows }}">{{ summon.name }}</td>
+      <td rowspan="{{ num_rows }}">{{ summon.mp_cost }}</td>
+      <td class="in-game-descr" colspan="2">{{ summon.in_game_description }}</td>
+    </tr>
+    <tr>
+      <td colspan="2">Summons {{ summon.name }} to use {{ summon.attacks | map(attribute='name') | join(' or ') }}</td>
+    </tr>
+    {% for attack in summon.attacks %}
+      <tr>
+        <td>{{ attack.name }}</td>
+        <td>{{ attack_effect(attack) }}</td>
+      </tr>
+    {% endfor %}{# summon_attacks #}
+  </tbody>
+{% endmacro %}{# simple_summon #}
+
+{% macro summon_table(summon_list) %}
+  <table id="Summons" class="simple">
+    <thead>
+      <tr><th colspan="4">Summons</th></tr>
+      <tr>
+        <th>Name</th>
+        <th>MP Cost</th>
+        <th colspan="2">Description and Attacks</th>
+      </tr>
+    </thead>
+    {% for summon in summon_list %}
+      {{ simple_summon(summon) }}
+    {% endfor %}{# summon_list #}
+  </table>
+{% endmacro %}{# summon_table #}
+
+{{ summon_table(summons) }}

@@ -72,16 +72,21 @@ body {
   overflow: auto;
 }
 
-.banner > img {
+.banner>a>img {
   height: 80px;
   float: left;
 }
-.banner h1 {
+.banner>a>h1 {
   float: left;
   font-size: 44px;
   font-weight: normal;
   height: 50px;
   margin: 15px auto;
+}
+
+.banner a {
+  color: #eee;
+  text-decoration: none;
 }
 
 ul.menu-nav {
@@ -93,10 +98,6 @@ ul.menu-nav {
 ul.menu-nav > li {
   display: inline;
   margin: 0px 3px;
-}
-ul.menu-nav a {
-  color: #eee;
-  text-decoration: none;
 }
 
 /* common table properties */

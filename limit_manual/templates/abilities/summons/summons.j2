@@ -1,8 +1,9 @@
 {% extends 'abilities/ability_layout.j2' %}
 
+{% from 'abilities/summons/simple_summons.j2' import summon_table %}
+
 {% block content %}
   <div class="content-box ability-colors">
-    {{ spell_content }}
-    {{ summon_content }}
+    {{ summon_table(summons) }}
   </div>
 {% endblock content %}

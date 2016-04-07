@@ -105,10 +105,10 @@ class Ability(object):
                     ability_notes.append('selects a random target {0} times'.format(self.num_attacks))
 
             if self.split == False:
-                ability_notes.append('does not split effects')
+                ability_notes.append('full power multi-target')
 
         if len(ability_notes) > 0:
-            self.notes_string = ','.join(ability_notes)
+            self.notes_string = ', '.join(ability_notes)
         else:
             self.notes_string = None
 
@@ -167,10 +167,10 @@ class Spell(Ability):
 
 class Summon(Ability):
     def get_summon_info(self):
-        return AbilityRelations.SummonInfo.filter_by(ability_id=self.uid).one()
+        return AbilityRelations.SummonInfo.query.filter_by(ability_id=self.uid).one()
 
     def get_attacks(self):
-        attack_ids = [ row.attack_id in AbilityRelations.SummonAttack.filter_by(summon_id=self.uid).all() ]
+        attack_ids = [ row.attack_id for row in AbilityRelations.SummonAttacks.query.filter_by(summon_id=self.uid).all() ]
 
         return [ Ability(uid=a_id) for a_id in attack_ids ]
 
@@ -181,7 +181,7 @@ class Summon(Ability):
         summon_info = self.get_summon_info()
 
         self.mp_cost = summon_info.mp_cost
-        self.attacks = get_attacks()
+        self.attacks = self.get_attacks()
 
 
 @app.route('/abilities')
@@ -190,23 +190,29 @@ def all_actions():
     _abilities = AbilityRelations.Ability.query.all()
 
     spells = []
+    summons = []
 
     for ability in _abilities:
         if ability.category == "Magic":
             spells.append(Spell(ability.name))
+        elif ability.category == "Summon":
+            summons.append(Summon(ability.name))
 
     spell_content = render_template('abilities/magic/simple_spells.j2',
                                     spells=spells)
+    summon_content = render_template('abilities/summons/simple_summons.j2',
+                                     summons=summons)
 
     return render_template('abilities/all_abilities.j2',
-                           spell_content=spell_content)
+                           spell_content=spell_content,
+                           summon_content=summon_content)
 
 @app.route('/abilities/magic')
 @app.route('/abilities/spells')
 def all_magic():
     detail = (request.args.get('display',None) in ['Detail','detail'])
 
-    _spells = AbilityRelations.Ability.query.filter_by(category="Magic").all()
+    _spells = AbilityRelations.Ability.query.filter_by(category='Magic').all()
 
     restore = []
     attack = []
@@ -227,3 +233,12 @@ def all_magic():
     return render_template('abilities/magic/magic.j2', detail=detail,
                            restore=restore, attack=attack,
                            indirect=indirect, other=other)
+
+@app.route('/abilities/summons')
+def all_summons():
+    _summons = AbilityRelations.Ability.query.filter_by(category='Summon').all()
+
+    summons = [ Summon(_summon.name) for _summon in _summons ]
+
+    return render_template('abilities/summons/summons.j2',
+                           summons=summons)

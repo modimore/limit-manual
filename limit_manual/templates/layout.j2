@@ -14,8 +14,10 @@
     <div id="foreground">
       {# page banner #}
       <div class="banner menu menu-colors">
-        <img src="{{ url_for('static', filename='images/ffvii-logo-banner.png') }}">
-        <h1>Limit Manual</h1>
+        <a href="/">
+          <img src="{{ url_for('static', filename='images/ffvii-logo-banner.png') }}">
+          <h1>Limit Manual</h1>
+        </a>
         <ul class="menu-nav">
           <li><a href="/characters">Characters</a></li>
           <li><a href="/enemies">Enemies</a></li>
