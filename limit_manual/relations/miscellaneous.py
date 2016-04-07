@@ -44,3 +44,18 @@ def get_description(descr_id,referent_type,referent_id):
         format_fillers.append('{no filler}')
 
     return format_string.format(*format_fillers)
+
+def add_description(action_type,action_id,format='',fillers=[]):
+    descrs = DescriptionFormat.query.filter_by(format_string=format).all()
+    if len(descrs) == 0:
+        descr = DescriptionFormat(format,len(fillers))
+        db.session.add(descr)
+        descr_id = descr.uid
+        db.session.commit()
+    else: descr_id = descrs[0].uid
+
+    for i in range(len(fillers)):
+        db.session.add(DescriptionFiller(action_type,action_id,i,fillers[i]))
+    db.session.commit()
+
+    return descr_id

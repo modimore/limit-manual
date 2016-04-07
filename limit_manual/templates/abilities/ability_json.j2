@@ -3,12 +3,12 @@
     {% if with_uid -%}"uid": {{ spell.uid }},{%- endif -%}
     "name": "{{ spell.name }}",
     "category": "Magic",
+    "has_notes": {{ spell.has_notes }},
     "basic_info": {
       "hit_formula": "{{ spell.hit_formula }}",
       "element": "{{ spell.element }}",
       "friendly": {{ spell.friendly }},
       "num_attacks": {{ spell.num_attacks }},
-      "has_notes": {{ spell.has_notes }},
       "has_statuses": {{ spell.has_statuses }},
       "has_damage": {{ spell.has_damage }}
     }{%- if spell.has_statuses -%},

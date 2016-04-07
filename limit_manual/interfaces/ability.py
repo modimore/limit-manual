@@ -1,13 +1,18 @@
-from flask import render_template
+from flask import render_template, request
 
 from .. import app
 from ..relations import ability as AbilityRelations
-from ..relations.miscellaneous import get_description
+from ..relations.miscellaneous import get_description, add_description
 
 class Ability(object):
     @staticmethod
-    def db_reference(name):
-        return AbilityRelations.Ability.query.filter_by(name=name).one_or_none()
+    def db_reference(name=None,uid=None):
+        if uid != None:
+            return AbilityRelations.Ability.query.filter_by(uid=uid).one_or_none()
+        elif name != None:
+            return AbilityRelations.Ability.query.filter_by(name=name).one_or_none()
+        else:
+            return None
 
     def get_statuses(self):
         info = AbilityRelations.AbilityStatusInfo.query.filter_by(ability_id=self.uid).one()
@@ -60,69 +65,90 @@ class Ability(object):
             if self.target_all or self.num_attacks > 1:
                 self.damage_text = self.damage_text + ' to each target'
 
-    def __init__(self,name):
-        self.name = name
-        db_ref = Ability.db_reference(self.name)
+    def __init__(self,name=None,uid=None):
+        base_ref = Ability.db_reference(name=name,uid=uid)
         # common attributes of all abilities
-        self.uid = db_ref.uid
-        self.category = db_ref.category
-        self.hit_formula = db_ref.hit_formula
-        self.accuracy = db_ref.accuracy
-        self.element = db_ref.element
-        self.friendly = db_ref.friendly
-        self.target_all = db_ref.target_all
-        self.target_random = db_ref.target_random
-        self.num_attacks = db_ref.num_attacks
-        self.split = db_ref.split
-
-        if db_ref.has_statuses:
-            self.get_statuses()
-        else: self.statuses = None
-
-        if db_ref.has_damage:
-            self.get_damage()
-        else: self.damage = None
+        self.name = base_ref.name
+        self.uid = base_ref.uid
+        self.category = base_ref.category
 
         ability_notes = []
-        if db_ref.has_notes:
+        if base_ref.has_notes:
             for _note in AbilityRelations.AbilityNotes.query.filter_by(ability_id=self.uid).all():
                 ability_notes.append(_note.note_text)
 
-        if self.target_all:
-            ability_notes.append('targets entire party')
-        elif self.target_random:
-            if self.num_attacks == 1:
-                ability_notes.append('selects one target randomly')
-            else:
-                ability_notes.append('selects a random target {0} times'.format(self.num_attacks))
+        if base_ref.has_info:
+            info_ref = AbilityRelations.AbilityInfo.query.filter_by(uid=self.uid).one()
+            self.hit_formula = info_ref.hit_formula
+            self.accuracy = info_ref.accuracy
+            self.element = info_ref.element
+            self.friendly = info_ref.friendly
+            self.target_all = info_ref.target_all
+            self.target_random = info_ref.target_random
+            self.num_attacks = info_ref.num_attacks
+            self.split = info_ref.split
 
-        if self.split == False:
-            ability_notes.append('does not split effects')
+            if info_ref.has_statuses:
+                self.get_statuses()
+            else: self.statuses = None
+
+            if info_ref.has_damage:
+                self.get_damage()
+            else: self.damage = None
+
+            if self.target_all:
+                ability_notes.append('targets entire party')
+            elif self.target_random:
+                if self.num_attacks == 1:
+                    ability_notes.append('selects one target randomly')
+                else:
+                    ability_notes.append('selects a random target {0} times'.format(self.num_attacks))
+
+            if self.split == False:
+                ability_notes.append('does not split effects')
 
         if len(ability_notes) > 0:
             self.notes_string = ','.join(ability_notes)
         else:
             self.notes_string = None
 
-        self.in_game_description = get_description(db_ref.description_id,"Ability",self.uid)
+        self.in_game_description = get_description(base_ref.description_id,"Ability",self.uid)
 
     @staticmethod
     def create(act_in):
         from .. import db
-        new_action = AbilityRelations.Ability(act_in['name'],act_in['category'],**act_in['basic_info'])
+        new_action = AbilityRelations.Ability(act_in['name'],act_in['category'],has_info=('info' in act_in.keys()),has_notes=('notes' in act_in.keys()))
         db.session.add(new_action)
         db.session.commit()
         act_id = new_action.uid
 
+        if 'notes' in act_in.keys():
+            for i in range(len(act_in['notes'])):
+                db.session.add(AbilityRelations.AbilityNotes(act_id,i,act_in['notes'][i]))
+
+        if 'info' in act_in.keys():
+            db.session.add(AbilityRelations.AbilityInfo(act_id,**act_in['info']))
+
         if new_action.category == "Magic":
             db.session.add(AbilityRelations.MagicInfo(act_id,**act_in['magic_info']))
+        elif new_action.category == "Summon":
+            db.session.add(AbilityRelations.SummonInfo(act_id,act_in['summon_info']['mp_cost'],len(act_in['summon_info']['attacks'])))
+            for attack in act_in['summon_info']['attacks']:
+                Ability.create(attack)
+                attack_id = Ability(attack['name']).uid
+                db.session.add(AbilityRelations.SummonAttacks(act_id,attack_id))
+                db.session.commit()
 
-        if new_action.has_statuses:
+        if 'description' in act_in:
+            new_action.descr_id = add_description('Ability',act_id,**act_in['description'])
+
+
+        if 'statuses' in act_in.keys():
             db.session.add(AbilityRelations.AbilityStatusInfo(act_id,**act_in['statuses']['info']))
             for status in act_in['statuses']['list']:
                 db.session.add(AbilityRelations.AbilityStatusList(act_id,status))
 
-        if new_action.has_damage:
+        if 'damage' in act_in.keys():
             db.session.add(AbilityRelations.AbilityDamage(act_id,**act_in['damage']))
 
         db.session.commit()
@@ -138,6 +164,25 @@ class Spell(Ability):
         self.mp_cost = magic_info.mp_cost
         self.spell_type = magic_info.spell_type
         self.reflectable = magic_info.reflectable
+
+class Summon(Ability):
+    def get_summon_info(self):
+        return AbilityRelations.SummonInfo.filter_by(ability_id=self.uid).one()
+
+    def get_attacks(self):
+        attack_ids = [ row.attack_id in AbilityRelations.SummonAttack.filter_by(summon_id=self.uid).all() ]
+
+        return [ Ability(uid=a_id) for a_id in attack_ids ]
+
+
+    def __init__(self,name):
+        Ability.__init__(self,name)
+
+        summon_info = self.get_summon_info()
+
+        self.mp_cost = summon_info.mp_cost
+        self.attacks = get_attacks()
+
 
 @app.route('/abilities')
 @app.route('/abilities/all')
@@ -159,6 +204,8 @@ def all_actions():
 @app.route('/abilities/magic')
 @app.route('/abilities/spells')
 def all_magic():
+    detail = (request.args.get('display',None) in ['Detail','detail'])
+
     _spells = AbilityRelations.Ability.query.filter_by(category="Magic").all()
 
     restore = []
@@ -177,6 +224,6 @@ def all_magic():
         else:
             other.append(spell)
 
-    return render_template('abilities/magic.j2',
+    return render_template('abilities/magic/magic.j2', detail=detail,
                            restore=restore, attack=attack,
                            indirect=indirect, other=other)

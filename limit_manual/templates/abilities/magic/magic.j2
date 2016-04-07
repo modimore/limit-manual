@@ -1,0 +1,16 @@
+{% extends 'abilities/ability_layout.j2' %}
+
+{% if detail %}
+  {% from 'abilities/magic/detail_spells.j2' import spell_table %}
+{% else %}
+  {% from 'abilities/magic/simple_spells.j2' import spell_table %}
+{% endif %}
+
+{% block content %}
+  <div class="content-box ability-colors">
+    {{ spell_table('Restore', restore) }}
+    {{ spell_table('Attack', attack) }}
+    {{ spell_table('Indirect', indirect) }}
+    {{ spell_table('Other', other) }}
+  </div>
+{% endblock content %}
