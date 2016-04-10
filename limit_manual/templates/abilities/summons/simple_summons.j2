@@ -24,7 +24,12 @@
       <td class="in-game-descr" colspan="2">{{ summon.in_game_description }}</td>
     </tr>
     <tr>
-      <td colspan="2">Summons {{ summon.name }} to use {{ summon.attacks | map(attribute='name') | join(' or ') }}</td>
+      <td colspan="2">
+        <ul>
+          <li>Summons {{ summon.name }} to use {{ summon.attacks | map(attribute='name') | join(' or ') }}</li>
+          {% if summon.notes_string %}<li>{{ summon.notes_string }}</li>{% endif %}
+        </ul>
+      </td>
     </tr>
     {% for attack in summon.attacks %}
       <tr>

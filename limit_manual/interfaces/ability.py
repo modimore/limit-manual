@@ -127,7 +127,7 @@ class Ability(object):
                 db.session.add(AbilityRelations.AbilityNotes(act_id,i,act_in['notes'][i]))
 
         if 'info' in act_in.keys():
-            db.session.add(AbilityRelations.AbilityInfo(act_id,**act_in['info']))
+            db.session.add(AbilityRelations.AbilityInfo(act_id,has_damage=('damage' in act_in.keys()),**act_in['info']))
 
         if new_action.category == "Magic":
             db.session.add(AbilityRelations.MagicInfo(act_id,**act_in['magic_info']))
@@ -139,7 +139,7 @@ class Ability(object):
                 db.session.add(AbilityRelations.SummonAttacks(act_id,attack_id))
                 db.session.commit()
 
-        if 'description' in act_in:
+        if 'description' in act_in.keys():
             new_action.descr_id = add_description('Ability',act_id,**act_in['description'])
 
 
