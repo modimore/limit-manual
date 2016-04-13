@@ -1,6 +1,8 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
+from .database.connection import get_connection
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/limit_manual.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # deactivate explicitly later
