@@ -1,37 +1,40 @@
 from flask import render_template, request
 
-from .. import app
-from ..relations import ability as AbilityRelations
+from .. import app, get_connection
 from ..relations.miscellaneous import get_description, add_description
 
 class Ability(object):
-    @staticmethod
-    def db_reference(name=None,uid=None):
-        if uid != None:
-            return AbilityRelations.Ability.query.filter_by(uid=uid).one_or_none()
-        elif name != None:
-            return AbilityRelations.Ability.query.filter_by(name=name).one_or_none()
-        else:
-            return None
-
     def get_statuses(self):
-        info = AbilityRelations.AbilityStatusInfo.query.filter_by(ability_id=self.uid).one()
-        status_list = [ r.status for r in AbilityRelations.AbilityStatusList.query.filter_by(ability_id=self.uid).all() ]
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT mode, chance FROM ability_status_info
+                          WHERE ability_id=?''', (self.uid,))
+        info = cur.fetchone()
+        cur.execute('''SELECT status FROM ability_status_list
+                          WHERE ability_id=?''', (self.uid,))
+        status_list = [ row[0] for row in cur.fetchall() ]
+        conn.close()
 
         self.statuses = {
             'list': status_list,
-            'mode': info.mode,
-            'chance': info.chance
+            'mode': info[0],
+            'chance': info[1]
         }
 
     def get_damage(self):
-        damage = AbilityRelations.AbilityDamage.query.filter_by(ability_id=self.uid).one()
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT formula, power, piercing
+                          FROM ability_damage
+                          WHERE ability_id=?''', (self.uid,))
+        damage = cur.fetchone()
+        conn.close()
 
         self.damage = {
-            'formula': damage.formula,
-            'power': damage.power,
-            'piercing': damage.piercing,
-            'physical': damage.formula == 'Physical'
+            'formula': damage[0],
+            'power': damage[1],
+            'piercing': damage[2],
+            'physical': damage[0] == 'Physical'
         }
 
         self.get_damage_string()
@@ -66,33 +69,41 @@ class Ability(object):
                 self.damage_text = self.damage_text + ' to each target'
 
     def __init__(self,name=None,uid=None):
-        base_ref = Ability.db_reference(name=name,uid=uid)
+        conn = get_connection()
+        cur = conn.cursor()
+        if uid != None:
+            cur.execute("SELECT * FROM abilities WHERE uid=?", (uid,))
+        else:
+            cur.execute("SELECT * FROM abilities WHERE name=?", (name,))
+        ability_row = cur.fetchone()
         # common attributes of all abilities
-        self.name = base_ref.name
-        self.uid = base_ref.uid
-        self.category = base_ref.category
+        self.uid = ability_row[0]
+        self.name = ability_row[1]
+        self.category = ability_row[3]
 
         ability_notes = []
-        if base_ref.has_notes:
-            for _note in AbilityRelations.AbilityNotes.query.filter_by(ability_id=self.uid).all():
-                ability_notes.append(_note.note_text)
+        if ability_row[4]: #has_notes
+            cur.execute('''SELECT note_text FROM ability_notes
+                           WHERE ability_id=?''', (self.uid,))
+            ability_notes.extend([ row[0] for row in cur.fetchall() ])
 
-        if base_ref.has_info:
-            info_ref = AbilityRelations.AbilityInfo.query.filter_by(uid=self.uid).one()
-            self.hit_formula = info_ref.hit_formula
-            self.accuracy = info_ref.accuracy
-            self.element = info_ref.element
-            self.friendly = info_ref.friendly
-            self.target_all = info_ref.target_all
-            self.target_random = info_ref.target_random
-            self.num_attacks = info_ref.num_attacks
-            self.split = info_ref.split
+        if ability_row[5]: # has_info
+            cur.execute("SELECT * FROM ability_info WHERE uid=?", (self.uid,))
+            info_row = cur.fetchone()
+            self.hit_formula = info_row[1]
+            self.accuracy = info_row[2]
+            self.element = info_row[3]
+            self.friendly = info_row[4]
+            self.target_all = info_row[5]
+            self.target_random = info_row[6]
+            self.num_attacks = info_row[7]
+            self.split = info_row[8]
 
-            if info_ref.has_statuses:
+            if info_row[9]: # has_statuses
                 self.get_statuses()
             else: self.statuses = None
 
-            if info_ref.has_damage:
+            if info_row[10]: # has_damage
                 self.get_damage()
             else: self.damage = None
 
@@ -112,91 +123,56 @@ class Ability(object):
         else:
             self.notes_string = None
 
-        self.in_game_description = get_description(base_ref.description_id,"Ability",self.uid)
+        self.in_game_description = get_description(ability_row[2],"Ability",self.uid)
 
-    @staticmethod
-    def create(act_in):
-        from .. import db
-        new_action = AbilityRelations.Ability(act_in['name'],act_in['category'],has_info=('info' in act_in.keys()),has_notes=('notes' in act_in.keys()))
-        db.session.add(new_action)
-        db.session.commit()
-        act_id = new_action.uid
-
-        if 'notes' in act_in.keys():
-            for i in range(len(act_in['notes'])):
-                db.session.add(AbilityRelations.AbilityNotes(act_id,i,act_in['notes'][i]))
-
-        if 'info' in act_in.keys():
-            db.session.add(AbilityRelations.AbilityInfo(act_id,has_damage=('damage' in act_in.keys()),**act_in['info']))
-
-        if new_action.category == "Magic":
-            db.session.add(AbilityRelations.MagicInfo(act_id,**act_in['magic_info']))
-        elif new_action.category == "Summon":
-            db.session.add(AbilityRelations.SummonInfo(act_id,act_in['summon_info']['mp_cost'],len(act_in['summon_info']['attacks'])))
-            for attack in act_in['summon_info']['attacks']:
-                Ability.create(attack)
-                attack_id = Ability(attack['name']).uid
-                db.session.add(AbilityRelations.SummonAttacks(act_id,attack_id))
-                db.session.commit()
-
-        if 'description' in act_in.keys():
-            new_action.descr_id = add_description('Ability',act_id,**act_in['description'])
-
-
-        if 'statuses' in act_in.keys():
-            db.session.add(AbilityRelations.AbilityStatusInfo(act_id,**act_in['statuses']['info']))
-            for status in act_in['statuses']['list']:
-                db.session.add(AbilityRelations.AbilityStatusList(act_id,status))
-
-        if 'damage' in act_in.keys():
-            db.session.add(AbilityRelations.AbilityDamage(act_id,**act_in['damage']))
-
-        db.session.commit()
+        conn.close()
 
 class Spell(Ability):
-    def get_magic_info(self):
-        return AbilityRelations.MagicInfo.query.filter_by(ability_id=self.uid).one()
-
     def __init__(self,name):
         Ability.__init__(self,name)
 
-        magic_info = self.get_magic_info()
-        self.mp_cost = magic_info.mp_cost
-        self.spell_type = magic_info.spell_type
-        self.reflectable = magic_info.reflectable
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM magic_info
+                       WHERE ability_id=?''', (self.uid,))
+        row = cur.fetchone()
+        self.mp_cost = row[1]
+        self.spell_type = row[2]
+        self.reflectable = row[3]
+        conn.close()
 
 class Summon(Ability):
-    def get_summon_info(self):
-        return AbilityRelations.SummonInfo.query.filter_by(ability_id=self.uid).one()
-
-    def get_attacks(self):
-        attack_ids = [ row.attack_id for row in AbilityRelations.SummonAttacks.query.filter_by(summon_id=self.uid).all() ]
-
-        return [ Ability(uid=a_id) for a_id in attack_ids ]
-
-
     def __init__(self,name):
         Ability.__init__(self,name)
 
-        summon_info = self.get_summon_info()
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM summon_info
+                       WHERE ability_id=?''', (self.uid,))
+        info_row = cur.fetchone()
+        self.mp_cost = info_row[1]
 
-        self.mp_cost = summon_info.mp_cost
-        self.attacks = self.get_attacks()
+        cur.execute('''SELECT attack_id FROM summon_attacks
+                       WHERE summon_id=?''', (self.uid,))
+        self.attacks = [ Ability(uid=r[0]) for r in cur.fetchmany(info_row[2]) ]
+        conn.close()
 
 
 @app.route('/abilities')
 @app.route('/abilities/all')
 def all_actions():
-    _abilities = AbilityRelations.Ability.query.all()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT name, category FROM abilities;")
 
     spells = []
     summons = []
 
-    for ability in _abilities:
-        if ability.category == "Magic":
-            spells.append(Spell(ability.name))
-        elif ability.category == "Summon":
-            summons.append(Summon(ability.name))
+    for row in cur.fetchall():
+        if row[1] == "Magic":
+            spells.append(Spell(row[0]))
+        elif row[1] == "Summon":
+            summons.append(Summon(row[0]))
 
     spell_content = render_template('abilities/magic/simple_spells.j2',
                                     spells=spells)
@@ -212,15 +188,17 @@ def all_actions():
 def all_magic():
     detail = (request.args.get('display',None) in ['Detail','detail'])
 
-    _spells = AbilityRelations.Ability.query.filter_by(category='Magic').all()
-
     restore = []
     attack = []
     indirect = []
     other = []
 
-    for _spell in _spells:
-        spell = Spell(_spell.name)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM abilities WHERE category=?",("Magic",))
+
+    for _spell in [ r[0] for r in cur.fetchall() ]:
+        spell = Spell(_spell)
         if spell.spell_type == "Restore":
             restore.append(spell)
         elif spell.spell_type == "Attack":
@@ -236,9 +214,11 @@ def all_magic():
 
 @app.route('/abilities/summons')
 def all_summons():
-    _summons = AbilityRelations.Ability.query.filter_by(category='Summon').all()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM abilities WHERE category=?",("Summon",))
 
-    summons = [ Summon(_summon.name) for _summon in _summons ]
+    summons = [ Summon(r[0]) for r in cur.fetchall() ]
 
     return render_template('abilities/summons/summons.j2',
                            summons=summons)
