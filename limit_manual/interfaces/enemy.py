@@ -1,92 +1,65 @@
 from flask import render_template, request
 
-from .. import app
-from ..relations import enemy as EnemyRelations
+from .. import app, get_connection
 
+# Gather basic information on an enemy
+# that is not related to any version specifically
 class EnemyBase(object):
-    @staticmethod
-    def db_reference(name):
-        return EnemyRelations.EnemyBase.query.filter_by(name=name).one_or_none()
-
-    def __init__(self,name):
+    def __init__(self,name,conn):
         self.name = name
-        this_enemy = EnemyBase.db_reference(self.name)
-        self.uid = this_enemy.uid
+        cur = conn.cursor()
+        cur.execute('''SELECT base_id,description,image FROM enemies
+                       WHERE name=?''', (name,))
+        result = cur.fetchone()
+        self.base_id = result[0]
+        self.description = result[1]
+        self.image = result[2]
 
     def __repr__(self):
         return '<Enemy Base: {0}>'.format(self.name)
 
     def all_versions(self):
-        db_versions = EnemyRelations.Enemy.query.filter_by(base=EnemyBase.db_reference(self.name))
-        return { v.version for v in db_versions }
-
-    def extract(self, with_uid=False):
-        db_ref = EnemyBase.db_reference(self.name)
-        result = {
-            'name'  : self.name,
-            'description': db_ref.description,
-            # not currently including image path
-            'default_version' : db_ref.default_version,
-            'versions': []
-        }
-
-        if with_uid: result['uid'] = db_ref.uid
-
-        for version in self.all_versions():
-            result['versions'].append(Enemy(self.name,version).extract(with_uid))
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT ver_name FROM enemy_versions
+                       WHERE base_id=?''', (self.base_id,))
+        result = { r[0] for r in cur.fetchall() }
+        conn.close()
 
         return result
 
-    @staticmethod
-    def extract_all(with_uid=False):
-        all_enemies = []
-        for e in EnemyRelations.EnemyBase.query.all():
-            all_enemies.append( EnemyBase(e.name).extract(with_uid) )
-        return all_enemies
-
-
-# Template interface for an enemy
+# Version-specific info about an enemy
+# Includes location, stats, formations, items, ...
 class Enemy(EnemyBase):
-    @staticmethod
-    def db_reference(base,version):
-        return EnemyRelations.Enemy.query.filter_by(base=base)\
-                                         .filter_by(version=version)\
-                                         .one_or_none()
+    def __init__(self,enemy_name,ver_name,conn):
+        EnemyBase.__init__(self,enemy_name,conn)
 
-    def __init__(self,name,version=None):
-        EnemyBase.__init__(self,name)
-        self.version = version
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM enemy_versions
+                       WHERE base_id=? AND ver_name=?''', (self.base_id,ver_name))
+        result = cur.fetchone()
 
-        # Find description, image(, and version if not provided)
-        base = EnemyBase.db_reference(self.name)
-        if version == None: self.version = base.default_version
+        self.version = ver_name
 
-        self.description = base.description
-        self.image = base.image
+        self.ver_id = result[1]
 
-        # Query for list of all versions of this enemy
-        versions = EnemyRelations.Enemy.query.filter_by(base=base)
-
-        # Get stats and rewards from table for this specific version
-        this_v = Enemy.db_reference(base,self.version)
-        self.uid = this_v.uid
         self.stats = {
-            'level' : this_v.level,
-            'hp'    : this_v.hp,
-            'mp'    : this_v.mp,
-            'attack'    : this_v.attack,
-            'defense'   : this_v.defense,
-            'magic_attack'  : this_v.magic_attack,
-            'magic_defense' : this_v.magic_defense,
-            'defense_pct'       : this_v.defense_pct,
-            'magic_defense_pct' : this_v.magic_defense_pct,
-            'dexterity' : this_v.dexterity,
-            'luck'      : this_v.luck
+            'level' : result[3],
+            'hp'    : result[4],
+            'mp'    : result[5],
+            'attack'    : result[6],
+            'defense'   : result[7],
+            'magic_attack'  : result[8],
+            'magic_defense' : result[9],
+            'defense_pct'       : result[10],
+            'magic_defense_pct' : result[11],
+            'dexterity' : result[12],
+            'luck'      : result[13]
         }
         self.rewards = {
-            'exp'   : this_v.exp,
-            'ap'    : this_v.ap,
-            'gil'   : this_v.gil
+            'exp'   : result[14],
+            'ap'    : result[15],
+            'gil'   : result[16]
         }
 
         # Find the names of all other versions of this enemy
@@ -94,79 +67,76 @@ class Enemy(EnemyBase):
 
         # Fill list of items that can be gotten from this enemy
         self.items = { 'drop': [], 'steal': [], 'morph': None }
-        items = EnemyRelations.EnemyItem.query.filter_by(enemy=this_v).all()
-        for item in items:
-            if item.get_method == 'drop':
-                self.items['drop'].append( (item.item_name, item.get_chance) )
-            elif item.get_method == 'steal':
-                self.items['steal'].append( (item.item_name, item.get_chance) )
+        cur.execute('''SELECT get_method, item_name, get_chance
+                       FROM enemy_items
+                       WHERE enemy_ver_id=?''', (self.ver_id,))
+        for item in cur.fetchall():
+            if item[0] == 'drop':
+                self.items['drop'].append( (item[1], item[2]) )
+            elif item[0] == 'steal':
+                self.items['steal'].append( (item[1], item[2]) )
             else:
-                self.items['morph'] = item.item_name
+                self.items['morph'] = item[1]
 
         self.elemental_modifiers = []
-        elem_mods = EnemyRelations.EnemyElementalModifier.query.filter_by(enemy=this_v).all()
-        for mod in elem_mods:
-            self.elemental_modifiers.append( { 'element': mod.element, 'modifier': mod.modifier } )
+        cur.execute('''SELECT element, modifier
+                       FROM enemy_elemental_modifiers
+                       WHERE enemy_ver_id=?''', (self.ver_id,))
+        for mod in cur.fetchall():
+            self.elemental_modifiers.append( { 'element': mod[0], 'modifier': mod[1] } )
 
-        stat_imms = EnemyRelations.EnemyStatusImmunity.query.filter_by(enemy=this_v).all()
-        self.status_immunities = { imm.status for imm in stat_imms }
+        cur.execute('''SELECT status
+                       FROM enemy_status_immunities
+                       WHERE enemy_ver_id=?''', (self.ver_id,))
+        self.status_immunities = { r[0] for r in cur.fetchall() }
 
     def __repr__(self):
         return '<Enemy: {0}; Version: {1}>'.format(self.name,self.version)
 
     def get_formations(self):
-        from ..relations.formation import get_formation_ids
-        from ..relations.formation import get_formation
+        #from ..relations.formation import get_formation_ids
+        #from ..relations.formation import get_formation
 
-        formation_ids = get_formation_ids(self.uid)
-        return [ get_formation(fid) for fid in formation_ids ]
+        #formation_ids = get_formation_ids(self.uid)
+        #return [ get_formation(fid) for fid in formation_ids ]
 
-    def extract(self, with_uid=False):
-        result = {
-            'version'   : self.version,
-            'stats' : self.stats,
-            'rewards'   : self.rewards,
-            'items' : [],
-            'status_immunities': [ s for s in self.status_immunities ],
-            'elemental_modifiers': self.elemental_modifiers
-        }
-
-        if with_uid: result['uid'] = self.uid
-
-        for item in self.items['drop']:
-            item_out = { 'item_name': item[0], 'get_method': 'Drop', 'get_chance': item[1] }
-            result['items'].append(item_out)
-        for item in self.items['steal']:
-            item_out = { 'item_name': item[0], 'get_method': 'Steal', 'get_chance': item[1] }
-            result['items'].append(item_out)
-        if self.items['morph'] != None:
-            item_out = { 'item_name': self.items['morph'] , 'get_method': 'Morph' }
-            result['items'].append(item_out)
-
-        return result
-
+        # formations are out of the picture for now because I have not changed how they work for the db2 api
+        return []
 
 # Route declaration for specific enemy pages
 @app.route('/enemies/<name>')
 def enemy(name):
     version_name = request.args.get('version', None)
-    enemy = Enemy(name,version_name)
+
+    if version_name == None: version_name = "Normal"
+
+    conn = get_connection()
+    enemy = Enemy(name,version_name,conn)
+    conn.close()
 
     return render_template('enemies/enemy.j2',
                            enemy=enemy,
                            formations=enemy.get_formations())
 
+# Route declation for the list of all enemies
 @app.route('/enemies')
 @app.route('/enemies/all')
 def all_enemies():
-    from ..relations.formation import get_formation_ids, get_locations
+    # from ..relations.formation import get_formation_ids, get_locations
+
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT base_id, name FROM enemies")
+    results = cur.fetchall()
 
     enemies = []
 
-    for db_base in EnemyRelations.EnemyBase.query.add_columns(EnemyRelations.EnemyBase.uid,EnemyRelations.EnemyBase.name).all():
-        info = { 'name': db_base.name }
-        info['versions'] = EnemyBase(db_base.name).all_versions()
+    for result in results:
+        info = { 'name': result[1] }
+        cur.execute("SELECT ver_name FROM enemy_versions WHERE base_id=?", (result[0],))
+        info['versions'] = { row[0] for row in cur.fetchall() }
 
         enemies.append(info)
 
+    conn.close()
     return render_template('enemies/all_enemies.j2', enemies=enemies)
