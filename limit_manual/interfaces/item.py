@@ -1,7 +1,7 @@
 from flask import render_template
 
 from .. import app, get_connection
-from ..relations.miscellaneous import get_description
+from .common_relations import get_description
 
 # Representation of the basic item type
 class Item(object):

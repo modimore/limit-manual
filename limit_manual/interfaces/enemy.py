@@ -127,6 +127,7 @@ class Enemy(EnemyBase):
 
             formations.append(this_f)
 
+        conn.close()
         return formations
 
 # Route declaration for specific enemy pages

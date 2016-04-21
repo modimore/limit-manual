@@ -2,7 +2,6 @@ from flask import render_template
 
 from .. import app, get_connection
 
-
 class Character(object):
     def __init__(self,name):
         self.name = name

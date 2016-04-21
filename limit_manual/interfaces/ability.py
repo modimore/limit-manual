@@ -1,7 +1,7 @@
 from flask import render_template, request
 
 from .. import app, get_connection
-from ..relations.miscellaneous import get_description, add_description
+from .common_relations import get_description
 
 class Ability(object):
     def get_statuses(self):
