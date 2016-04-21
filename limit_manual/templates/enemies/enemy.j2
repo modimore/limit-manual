@@ -172,16 +172,16 @@
               <tr>
                 <td><dl>
                   {% for location in formation.locations %}
-                    <dt>{{ location.name }}</dt>
-                    <dd>{{ location.areas | join(', ') }}</dd>
+                    <dt>{{ location }}</dt>
+                    <dd>{{ formation.locations[locations] | join(', ') }}</dd>
                   {% endfor %}{# locations #}
                 </dl></td>
                 <td>
                   {# improve this display setup #}
                   <ul>
-                    {% for row in formation.enemy_rows %}
+                    {% for row_num in formation.enemy_rows %}
                       <li>
-                        {% for enemy in row.enemies %}{{ enemy_link(enemy.name, enemy.version) }} {% endfor %}
+                        {% for enemy in formation.enemy_rows[row_num] %}{{ enemy_link(enemy[0], enemy[1]) }} {% endfor %}
                       </li>
                     {% endfor %}{# rows #}
                   </ul>

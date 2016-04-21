@@ -1,3 +1,7 @@
+.content-box {
+  width: 600px;
+}
+
 .enemy-colors {
   background-color: #740000;
   color: #decec1;

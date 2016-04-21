@@ -94,14 +94,40 @@ class Enemy(EnemyBase):
         return '<Enemy: {0}; Version: {1}>'.format(self.name,self.version)
 
     def get_formations(self):
-        #from ..relations.formation import get_formation_ids
-        #from ..relations.formation import get_formation
+        formations = []
 
-        #formation_ids = get_formation_ids(self.uid)
-        #return [ get_formation(fid) for fid in formation_ids ]
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''SELECT DISTINCT formation_id
+                       FROM formation_enemies
+                       WHERE enemy_ver_id=?''', (self.ver_id,))
+        formation_ids = [ row[0] for row in cur.fetchall() ]
 
-        # formations are out of the picture for now because I have not changed how they work for the db2 api
-        return []
+        for f_id in formation_ids:
+            this_f = { 'id': f_id, 'locations': {}, 'enemy_rows': {} }
+
+            cur.execute('''SELECT loc, sub_loc
+                           FROM formation_locations
+                           WHERE formation_id=?''', (f_id,))
+            for row in cur.fetchall():
+                if row[0] not in this_f['locations'].keys():
+                    this_f['locations'][row[0]] = []
+                this_f['locations'][row[0]].append(row[1])
+
+            cur.execute('''SELECT name, ver_name, row_num, position
+                           FROM formation_enemies JOIN
+                                (SELECT name, ver_name, ver_id
+                                 FROM enemies AS e JOIN enemy_versions AS ev ON e.base_id=ev.base_id) as enemy_info
+                                ON formation_enemies.enemy_ver_id=enemy_info.ver_id
+                           WHERE formation_id=?''', (f_id,))
+            for row in cur.fetchall():
+                if row[2] not in this_f['enemy_rows'].keys():
+                    this_f['enemy_rows'][row[2]] = []
+                this_f['enemy_rows'][row[2]].append((row[0],row[1]))
+
+            formations.append(this_f)
+
+        return formations
 
 # Route declaration for specific enemy pages
 @app.route('/enemies/<name>')

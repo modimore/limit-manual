@@ -4,10 +4,6 @@ from .. import app, get_connection
 
 
 class Character(object):
-    @staticmethod
-    def db_reference(name):
-        return CharacterRelations.Character.query.filter_by(name=name).one_or_none()
-
     def __init__(self,name):
         self.name = name
         with get_connection() as conn:
