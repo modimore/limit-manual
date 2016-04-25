@@ -4,8 +4,7 @@ from .. import app, get_connection
 from .common_relations import get_description
 
 class Ability(object):
-    def get_statuses(self):
-        conn = get_connection()
+    def get_statuses(self,conn):
         cur = conn.cursor()
         cur.execute('''SELECT mode, chance FROM ability_status_info
                           WHERE ability_id=?''', (self.uid,))
@@ -13,7 +12,6 @@ class Ability(object):
         cur.execute('''SELECT status FROM ability_status_list
                           WHERE ability_id=?''', (self.uid,))
         status_list = [ row[0] for row in cur.fetchall() ]
-        conn.close()
 
         self.statuses = {
             'list': status_list,
@@ -21,14 +19,12 @@ class Ability(object):
             'chance': info[1]
         }
 
-    def get_damage(self):
-        conn = get_connection()
+    def get_damage(self,conn):
         cur = conn.cursor()
         cur.execute('''SELECT formula, power, piercing
                           FROM ability_damage
                           WHERE ability_id=?''', (self.uid,))
         damage = cur.fetchone()
-        conn.close()
 
         self.damage = {
             'formula': damage[0],
@@ -68,14 +64,15 @@ class Ability(object):
             if self.target_all or self.num_attacks > 1:
                 self.damage_text = self.damage_text + ' to each target'
 
-    def __init__(self,name=None,uid=None):
-        conn = get_connection()
+    def __init__(self,conn,name=None,uid=None):
         cur = conn.cursor()
+
         if uid != None:
             cur.execute("SELECT * FROM abilities WHERE uid=?", (uid,))
         else:
             cur.execute("SELECT * FROM abilities WHERE name=?", (name,))
         ability_row = cur.fetchone()
+
         # common attributes of all abilities
         self.uid = ability_row[0]
         self.name = ability_row[1]
@@ -100,11 +97,11 @@ class Ability(object):
             self.split = info_row[8]
 
             if info_row[9]: # has_statuses
-                self.get_statuses()
+                self.get_statuses(conn)
             else: self.statuses = None
 
             if info_row[10]: # has_damage
-                self.get_damage()
+                self.get_damage(conn)
             else: self.damage = None
 
             if self.target_all:
@@ -125,13 +122,10 @@ class Ability(object):
 
         self.in_game_description = get_description(ability_row[2],"Ability",self.uid)
 
-        conn.close()
-
 class Spell(Ability):
-    def __init__(self,name):
-        Ability.__init__(self,name)
+    def __init__(self,conn,name):
+        Ability.__init__(self,conn,name)
 
-        conn = get_connection()
         cur = conn.cursor()
         cur.execute('''SELECT * FROM magic_info
                        WHERE ability_id=?''', (self.uid,))
@@ -139,13 +133,11 @@ class Spell(Ability):
         self.mp_cost = row[1]
         self.spell_type = row[2]
         self.reflectable = row[3]
-        conn.close()
 
 class Summon(Ability):
-    def __init__(self,name):
-        Ability.__init__(self,name)
+    def __init__(self,conn,name):
+        Ability.__init__(self,conn,name)
 
-        conn = get_connection()
         cur = conn.cursor()
         cur.execute('''SELECT * FROM summon_info
                        WHERE ability_id=?''', (self.uid,))
@@ -154,8 +146,19 @@ class Summon(Ability):
 
         cur.execute('''SELECT attack_id FROM summon_attacks
                        WHERE summon_id=?''', (self.uid,))
-        self.attacks = [ Ability(uid=r[0]) for r in cur.fetchmany(info_row[2]) ]
-        conn.close()
+        self.attacks = [ Ability(conn,uid=r[0]) for r in cur.fetchmany(info_row[2]) ]
+
+class EnemySkill(Ability):
+    def __init__(self,conn,name):
+        Ability.__init__(self,conn,name=name)
+
+        # cur = conn.cursor()
+        # cur.execute('''SELECT * FROM enemy_skill_info
+        #                WHERE ability_id=?''', (self.uid,))
+        # row = cur.fetchone()
+        # self.mp_cost = row[1]
+        # self.manip_only = row[2]
+        # self.missable = row[3]
 
 
 @app.route('/abilities')
@@ -170,18 +173,15 @@ def all_actions():
 
     for row in cur.fetchall():
         if row[1] == "Magic":
-            spells.append(Spell(row[0]))
+            spells.append(Spell(conn,name=row[0]))
         elif row[1] == "Summon":
-            summons.append(Summon(row[0]))
+            summons.append(Summon(conn,name=row[0]))
 
-    spell_content = render_template('abilities/magic/simple_spells.j2',
-                                    spells=spells)
-    summon_content = render_template('abilities/summons/simple_summons.j2',
-                                     summons=summons)
+    conn.close()
 
     return render_template('abilities/all_abilities.j2',
-                           spell_content=spell_content,
-                           summon_content=summon_content)
+                           spells=spells,
+                           summons=summons)
 
 @app.route('/abilities/magic')
 @app.route('/abilities/spells')
@@ -197,8 +197,8 @@ def all_magic():
     cur = conn.cursor()
     cur.execute("SELECT name FROM abilities WHERE category=?",("Magic",))
 
-    for _spell in [ r[0] for r in cur.fetchall() ]:
-        spell = Spell(_spell)
+    for spell_name in [ r[0] for r in cur.fetchall() ]:
+        spell = Spell(conn,name=spell_name)
         if spell.spell_type == "Restore":
             restore.append(spell)
         elif spell.spell_type == "Attack":
@@ -207,6 +207,8 @@ def all_magic():
             indirect.append(spell)
         else:
             other.append(spell)
+
+    conn.close()
 
     return render_template('abilities/magic/magic.j2', detail=detail,
                            restore=restore, attack=attack,
@@ -218,7 +220,9 @@ def all_summons():
     cur = conn.cursor()
     cur.execute("SELECT name FROM abilities WHERE category=?",("Summon",))
 
-    summons = [ Summon(r[0]) for r in cur.fetchall() ]
+    summons = [ Summon(conn,name=r[0]) for r in cur.fetchall() ]
+
+    conn.close()
 
     return render_template('abilities/summons/summons.j2',
                            summons=summons)
