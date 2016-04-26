@@ -63,7 +63,8 @@ CREATE TABLE character_intro (
 # GENERAL DESCRIPTIONS  ======================================
 CREATE TABLE description_format (
 	uid INTEGER NOT NULL,
-	format_string VARCHAR(80) NOT NULL, num_slots INTEGER,
+	format_string VARCHAR(80) NOT NULL,
+	num_slots INTEGER,
 	PRIMARY KEY (uid)
 );
 

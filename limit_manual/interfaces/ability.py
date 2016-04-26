@@ -152,13 +152,16 @@ class EnemySkill(Ability):
     def __init__(self,conn,name):
         Ability.__init__(self,conn,name=name)
 
-        # cur = conn.cursor()
-        # cur.execute('''SELECT * FROM enemy_skill_info
-        #                WHERE ability_id=?''', (self.uid,))
-        # row = cur.fetchone()
-        # self.mp_cost = row[1]
-        # self.manip_only = row[2]
-        # self.missable = row[3]
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM enemy_skill_info
+                       WHERE ability_id=?''', (self.uid,))
+        row = cur.fetchone()
+        self.mp_cost = row[1]
+        self.reflectable = row[2]
+        self.missable = row[3]
+        self.manip_only = row[4]
+
+        self.spell_type = "Enemy Skill"
 
 
 @app.route('/abilities')
@@ -176,6 +179,8 @@ def all_actions():
             spells.append(Spell(conn,name=row[0]))
         elif row[1] == "Summon":
             summons.append(Summon(conn,name=row[0]))
+        elif row[1] == "Enemy Skill":
+            spells.append(EnemySkill(conn,name=row[0]))
 
     conn.close()
 
