@@ -106,7 +106,11 @@ table {
   border: 2px solid #eddf36;
 }
 
-th, td {
+tbody {
+  border: 2px solid #eddf36;
+}
+
+tr, th, td {
   padding: 2px 5px;
   border: 1px solid #eddf36;
 }

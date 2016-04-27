@@ -1,0 +1,48 @@
+{% macro eskill_effect(eskill) %}
+  <ul>
+    {% if eskill.notes_string %}
+      <li>{{ eskill.notes_string | capitalize }}</li>
+    {% endif %}
+    {% if eskill.statuses %}
+      <li>
+        {{ eskill.statuses.mode }} {{ eskill.statuses.list | join(', ') }}
+        {% if eskill.statuses.mode in ['Inflict'] %}[{{ (eskill.statuses.chance*100)//256 }}%]{% endif %}
+      </li>
+    {% endif %}{# has_statuses #}
+    {% if eskill.damage_text %}
+      <li>{{ eskill.damage_text }}</li>
+    {% endif %}{# has_damage #}
+  </dl>
+{% endmacro %}{# eskill_effect #}
+
+{% macro simple_eskill(eskill) %}
+  <tbody id="{{ eskill.name }}">
+    <tr>
+      <td rowspan="3">{{ eskill.name }}</td>
+      <td rowspan="3">{{ eskill.mp_cost }}</td>
+      <td class="in-game-descr">{{ eskill.in_game_description }}</td>
+    </tr>
+    <tr>
+      <td>{{ eskill_effect(eskill) }}</td>
+    </tr>
+    <tr>
+      <td>Used by {{ eskill.users | join(', ') }}</td>
+    </tr>
+  </tbody>
+{% endmacro %}{# simple_eskill #}
+
+{% macro eskill_table(eskill_list) %}
+  <table id="Enemy Skills" class="simple">
+    <thead>
+      <tr><th colspan="3">Enemy Skills</th></tr>
+      <tr>
+        <th>Name</th>
+        <th>MP Cost</th>
+        <th>Effect</th>
+      </tr>
+    </thead>
+    {% for eskill in eskill_list %}
+      {{ simple_eskill(eskill) }}
+    {% endfor %}{# eskill_list #}
+  </table>
+{% endmacro %}{# eskill_table #}

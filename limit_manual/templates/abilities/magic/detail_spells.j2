@@ -31,12 +31,11 @@
   {% set has_statuses = (spell.statuses) %}
   {% set has_damage = (spell.damage != None) %}
   {% set num_rows = 5+(2 if has_damage else 0)+(2 if has_statuses else 0) %}
-  {% set num_columns = 5 %}
 
   <tbody id="{{ spell.name }}">
     <tr class="data">
       <th rowspan="{{ num_rows }}">{{ spell.name }}</th>
-      <td colspan="{{ num_columns-1 }}" class="in-game-descr">{{ spell.in_game_description }}</td>
+      <td colspan="4" class="in-game-descr">{{ spell.in_game_description }}</td>
     </tr>
     <tr class="label">
       <th>Spell Type</th>
@@ -80,5 +79,3 @@
     {% endfor %}{# spell #}
   </table>
 {% endmacro %}{# spell_table #}
-
-{{ spell_table('All Spells',spells,'Spells') }}

@@ -29,7 +29,7 @@ class Ability(object):
         self.damage = {
             'formula': damage[0],
             'power': damage[1],
-            'piercing': damage[2],
+            'piercing': damage[2] == 1,
             'physical': damage[0] == 'Physical'
         }
 
@@ -41,6 +41,8 @@ class Ability(object):
                 self.damage_text = 'Restore HP to full'
             else:
                 self.damage_text = 'Heal damage equal to {0}% of Max HP'.format(100*self.damage['power']//32)
+        elif self.damage['formula'] == 'Caster\'s HP':
+            self.damage_text = 'Heal damage equal to caster\'s current HP'
         elif self.damage['formula'] == 'Cure':
             if self.damage['power'] < 20: level = 'light'
             elif self.damage['power'] < 40: level = 'moderate'
@@ -90,11 +92,11 @@ class Ability(object):
             self.hit_formula = info_row[1]
             self.accuracy = info_row[2]
             self.element = info_row[3]
-            self.friendly = info_row[4]
-            self.target_all = info_row[5]
-            self.target_random = info_row[6]
+            self.friendly = info_row[4] == 1
+            self.target_all = info_row[5] == 1
+            self.target_random = info_row[6] == 1
             self.num_attacks = info_row[7]
-            self.split = info_row[8]
+            self.split = info_row[8] == 1
 
             if info_row[9]: # has_statuses
                 self.get_statuses(conn)
@@ -132,7 +134,7 @@ class Spell(Ability):
         row = cur.fetchone()
         self.mp_cost = row[1]
         self.spell_type = row[2]
-        self.reflectable = row[3]
+        self.reflectable = row[3] == 1
 
 class Summon(Ability):
     def __init__(self,conn,name):
@@ -161,7 +163,9 @@ class EnemySkill(Ability):
         self.missable = row[3]
         self.manip_only = row[4]
 
-        self.spell_type = "Enemy Skill"
+        cur.execute('''SELECT enemy_name FROM enemy_skill_users
+                       WHERE ability_id=?''', (self.uid,))
+        self.users = [ row[0] for row in cur.fetchall() ]
 
 
 @app.route('/abilities')
@@ -173,6 +177,7 @@ def all_actions():
 
     spells = []
     summons = []
+    eskills = []
 
     for row in cur.fetchall():
         if row[1] == "Magic":
@@ -180,13 +185,14 @@ def all_actions():
         elif row[1] == "Summon":
             summons.append(Summon(conn,name=row[0]))
         elif row[1] == "Enemy Skill":
-            spells.append(EnemySkill(conn,name=row[0]))
+            eskills.append(EnemySkill(conn,name=row[0]))
 
     conn.close()
 
     return render_template('abilities/all_abilities.j2',
                            spells=spells,
-                           summons=summons)
+                           summons=summons,
+                           eskills=eskills)
 
 @app.route('/abilities/magic')
 @app.route('/abilities/spells')
@@ -231,3 +237,17 @@ def all_summons():
 
     return render_template('abilities/summons/summons.j2',
                            summons=summons)
+
+@app.route('/abilities/enemy skills')
+@app.route('/abilities/eskills')
+def all_eskills():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM abilities WHERE category=?", ("Enemy Skill", ))
+
+    eskills = [ EnemySkill(conn,name=r[0]) for r in cur.fetchall() ]
+
+    conn.close()
+
+    return render_template('abilities/enemy_skills/eskills.j2',
+                           eskills=eskills)
