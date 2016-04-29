@@ -11,7 +11,7 @@
   color: #faeaed;
 }
 
-table, th, td { border-color: #decec1; }
+table, tbody, th, td { border-color: #decec1; }
 
 /* stat box left side layout */
 #stat-box .left {

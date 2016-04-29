@@ -65,8 +65,8 @@ def all_characters():
     characters = []
     conn = get_connection()
     c = conn.cursor()
-    cnames = [ r[0] for r in c.execute("SELECT name FROM character;").fetchall() ]
-    characters = [ Character(name) for name in cnames ]
+    cnames = [ r[0] for r in c.execute("SELECT name FROM character WHERE name != 'Sephiroth';").fetchall() ]
+    characters = [ {"name": name, "image": "{0}-field.png".format(name.lower().replace(" ","_")) } for name in cnames ]
     conn.close()
 
     return render_template('characters/all_characters.j2',

@@ -6,20 +6,15 @@
 
 {% block content %}
   <div class="content-box character-colors">
-    <table>
-      <thead>
-        <tr><th>Characters</th></tr>
-        <tr>
-          <th>Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for character in characters %}
-          <tr>
-            <td><a href="/characters/{{ character.name }}">{{ character.name }}</a></td>
-          </tr>
-        {% endfor %}{# characters #}
-      </tbody>
-    </table>
+    <h3>Playable Characters</h4>
+    <ul id="playable-characters" class="image-list">
+    {% for character in characters %}
+      <li id="{{ character.name }}">
+        <a href="/characters/{{ character.name }}">
+          <img src="{{ url_for('static', filename='images/characters/' + character.image) }}">
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
   </div>
 {% endblock content %}
