@@ -109,10 +109,10 @@ def all_weapons():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT name FROM weapons;")
-    weapons_names = [ row[0] for row in cur.fetchall() ]
+    weapon_names = [ row[0] for row in cur.fetchall() ]
     conn.close()
 
-    weapons = [ Weapon(name) for weapon in weapon_names ]
+    weapons = [ Weapon(name) for name in weapon_names ]
     return render_template('items/weapons.j2', weapons=weapons)
 
 @app.route('/items/armor')
@@ -124,5 +124,5 @@ def all_armor():
     armor_names = [ row[0] for row in cur.fetchall() ]
     conn.close()
 
-    weapons = [ Weapon(name) for weapon in weapon_names ]
-    return render_template('items/weapons.j2', weapons=weapons)
+    armor = [ Armor(name) for name in armor_names ]
+    return render_template('items/armor.j2', armor=armor)
