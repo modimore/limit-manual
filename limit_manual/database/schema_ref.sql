@@ -126,9 +126,11 @@ CREATE TABLE ability_damage (
 	ability_id INTEGER NOT NULL,
 	formula VARCHAR(12),
 	power INTEGER,
+	long_range BOOLEAN,
 	piercing BOOLEAN,
 	PRIMARY KEY (ability_id),
 	FOREIGN KEY(ability_id) REFERENCES ability (uid),
+	CHECK (long_range IN (0, 1)),
 	CHECK (piercing IN (0, 1))
 );
 

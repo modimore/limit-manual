@@ -1,0 +1,9 @@
+{% extends 'abilities/ability_layout.j2' %}
+
+{% from 'abilities/commands/simple_commands.j2' import command_table %}
+
+{% block content %}
+  <div class="content-box ability-colors">
+    {{ command_table(commands) }}
+  </div>
+{% endblock content %}

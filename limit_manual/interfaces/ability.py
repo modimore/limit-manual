@@ -53,7 +53,8 @@ class Ability(object):
             self.damage_text = 'Deal damage equal to {0}% of target\'s current HP'.format(100*self.damage['power']//32)
         else:
             damage_properties = []
-            if self.damage['power'] < 20: damage_properties.append('light')
+            if self.damage['power'] == None: damage_properties.append('weapon-based')
+            elif self.damage['power'] < 20: damage_properties.append('light')
             elif self.damage['power'] < 40: damage_properties.append('moderate')
             elif self.damage['power'] < 80: damage_properties.append('high')
             else: damage_properties.append('heavy')
@@ -167,6 +168,10 @@ class EnemySkill(Ability):
                        WHERE ability_id=?''', (self.uid,))
         self.users = [ row[0] for row in cur.fetchall() ]
 
+class Command(Ability):
+    def __init__(self,conn,name):
+        Ability.__init__(self,conn,name=name)
+
 
 @app.route('/abilities')
 @app.route('/abilities/all')
@@ -251,3 +256,16 @@ def all_eskills():
 
     return render_template('abilities/enemy_skills/eskills.j2',
                            eskills=eskills)
+
+@app.route('/abilities/commands')
+def all_commands():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM abilities WHERE category=?", ("Command",))
+
+    commands = [ Command(conn,name=r[0]) for r in cur.fetchall() ]
+
+    conn.close()
+
+    return render_template('abilities/commands/commands.j2',
+                           commands=commands)
