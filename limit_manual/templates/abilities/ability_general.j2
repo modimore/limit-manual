@@ -1,0 +1,16 @@
+{% macro ability_effect(ability) %}
+  <ul>
+    {% if ability.notes_string %}
+      <li>{{ ability.notes_string | capitalize }}</li>
+    {% endif %}
+    {% if ability.statuses %}
+      <li>
+        {{ ability.statuses.mode }} {{ ability.statuses.list | join(', ') }}
+        {% if ability.statuses.mode in ['Inflict'] %}[{{ (ability.statuses.chance*100)//256 }}%]{% endif %}
+      </li>
+    {% endif %}{# has_statuses #}
+    {% if ability.damage_text %}
+      <li>{{ ability.damage_text }}</li>
+    {% endif %}{# has_damage #}
+  </ul>
+{% endmacro %}{# ability_effect #}

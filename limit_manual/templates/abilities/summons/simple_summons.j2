@@ -1,19 +1,4 @@
-{% macro attack_effect(attack) %}
-  <ul>
-    {% if attack.notes_string %}
-      <li>{{ attack.notes_string | capitalize }}</li>
-    {% endif %}
-    {% if attack.statuses %}
-      <li>
-        {{ attack.statuses.mode }} {{ attack.statuses.list | join(', ') }}
-        {% if attack.statuses.mode in ['Inflict'] %}[{{ (attack.statuses.chance*100)//256 }}%]{% endif %}
-      </li>
-    {% endif %}{# has_statuses #}
-    {% if attack.damage_text %}
-      <li>{{ attack.damage_text }}</li>
-    {% endif %}{# has_damage #}
-  </dl>
-{% endmacro %}{# attack_effect #}
+{% from 'abilities/ability_general.j2' import ability_effect %}
 
 {% macro simple_summon(summon) %}
   {% set num_rows = 2 + (summon.attacks | length ) %}
@@ -34,7 +19,7 @@
     {% for attack in summon.attacks %}
       <tr>
         <td>{{ attack.name }}</td>
-        <td>{{ attack_effect(attack) }}</td>
+        <td>{{ ability_effect(attack) }}</td>
       </tr>
     {% endfor %}{# summon_attacks #}
   </tbody>

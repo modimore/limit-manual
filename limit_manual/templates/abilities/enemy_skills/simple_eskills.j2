@@ -1,19 +1,4 @@
-{% macro eskill_effect(eskill) %}
-  <ul>
-    {% if eskill.notes_string %}
-      <li>{{ eskill.notes_string | capitalize }}</li>
-    {% endif %}
-    {% if eskill.statuses %}
-      <li>
-        {{ eskill.statuses.mode }} {{ eskill.statuses.list | join(', ') }}
-        {% if eskill.statuses.mode in ['Inflict'] %}[{{ (eskill.statuses.chance*100)//256 }}%]{% endif %}
-      </li>
-    {% endif %}{# has_statuses #}
-    {% if eskill.damage_text %}
-      <li>{{ eskill.damage_text }}</li>
-    {% endif %}{# has_damage #}
-  </dl>
-{% endmacro %}{# eskill_effect #}
+{% from 'abilities/ability_general.j2' import ability_effect %}
 
 {% macro simple_eskill(eskill) %}
   <tbody id="{{ eskill.name }}">
@@ -23,7 +8,7 @@
       <td class="in-game-descr">{{ eskill.in_game_description }}</td>
     </tr>
     <tr>
-      <td>{{ eskill_effect(eskill) }}</td>
+      <td>{{ ability_effect(eskill) }}</td>
     </tr>
     <tr>
       <td>Used by {{ eskill.users | join(', ') }}</td>

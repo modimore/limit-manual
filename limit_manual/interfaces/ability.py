@@ -183,9 +183,12 @@ def all_actions():
     spells = []
     summons = []
     eskills = []
+    commands = []
 
     for row in cur.fetchall():
-        if row[1] == "Magic":
+        if row[1] == "Command":
+            commands.append(Command(conn,name=row[0]))
+        elif row[1] == "Magic":
             spells.append(Spell(conn,name=row[0]))
         elif row[1] == "Summon":
             summons.append(Summon(conn,name=row[0]))
@@ -195,6 +198,7 @@ def all_actions():
     conn.close()
 
     return render_template('abilities/all_abilities.j2',
+                           commands=commands,
                            spells=spells,
                            summons=summons,
                            eskills=eskills)

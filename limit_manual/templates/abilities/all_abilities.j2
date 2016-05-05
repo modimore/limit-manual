@@ -1,11 +1,13 @@
 {% extends 'abilities/ability_layout.j2' %}
 
+{% from 'abilities/commands/simple_commands.j2' import command_table %}
 {% from 'abilities/magic/simple_spells.j2' import spell_table %}
 {% from 'abilities/summons/simple_summons.j2' import summon_table %}
 {% from 'abilities/enemy_skills/simple_eskills.j2' import eskill_table %}
 
 {% block content %}
   <div class="content-box ability-colors">
+    {{ command_table(commands) }}
     {{ spell_table('All Spells',spells, 'Spells') }}
     {{ summon_table(summons) }}
     {{ eskill_table(eskills) }}

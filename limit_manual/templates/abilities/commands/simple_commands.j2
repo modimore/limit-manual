@@ -1,19 +1,4 @@
-{% macro command_effect(command) %}
-  <ul>
-    {% if command.notes_string %}
-      <li>{{ command.notes_string | capitalize }}</li>
-    {% endif %}
-    {% if command.statuses %}
-      <li>
-        {{ command.statuses.mode }} {{ command.statuses.list | join(', ') }}
-        {% if command.statuses.mode in ['Inflict'] %}[{{ (command.statuses.chance*100)//256 }}%]{% endif %}
-      </li>
-    {% endif %}{# has_statuses #}
-    {% if command.damage_text %}
-      <li>{{ command.damage_text }}</li>
-    {% endif %}{# has_damage #}
-  </dl>
-{% endmacro %}{# command_effect #}
+{% from 'abilities/ability_general.j2' import ability_effect %}
 
 {% macro simple_command(command) %}
   <tbody id="{{ command.name }}">
@@ -22,7 +7,7 @@
       <td class="in-game-descr">{{ command.in_game_description }}</td>
     </tr>
     <tr>
-      <td>{{ command_effect(command) }}</td>
+      <td>{{ ability_effect(command) }}</td>
     </tr>
   </tbody>
 {% endmacro %}{# simple_command #}
@@ -30,7 +15,7 @@
 {% macro command_table(command_list) %}
   <table id="Commands" class="simple">
     <thead>
-      <tr><th colspan="4">Commands</th></tr>
+      <tr><th colspan="2">Commands</th></tr>
       <tr>
         <th>Name</th>
         <th>Effect</th>
