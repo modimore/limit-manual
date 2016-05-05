@@ -3,15 +3,19 @@
 {% macro simple_eskill(eskill) %}
   <tbody id="{{ eskill.name }}">
     <tr>
-      <td rowspan="3">{{ eskill.name }}</td>
-      <td rowspan="3">{{ eskill.mp_cost }}</td>
+      <td rowspan="2">{{ eskill.name }}</td>
+      <td rowspan="2">{{ eskill.mp_cost }}</td>
+      <td rowspan="2">
+        <ul>
+          {% for user in eskill.users %}
+            <li>{{ user }}</li>
+          {% endfor %}{# eskill.users #}
+        </ul>
+      </td>
       <td class="in-game-descr">{{ eskill.in_game_description }}</td>
     </tr>
     <tr>
       <td>{{ ability_effect(eskill) }}</td>
-    </tr>
-    <tr>
-      <td>Used by {{ eskill.users | join(', ') }}</td>
     </tr>
   </tbody>
 {% endmacro %}{# simple_eskill #}
@@ -19,10 +23,11 @@
 {% macro eskill_table(eskill_list) %}
   <table id="Enemy Skills" class="simple">
     <thead>
-      <tr><th colspan="3">Enemy Skills</th></tr>
+      <tr><th colspan="4">Enemy Skills</th></tr>
       <tr>
         <th>Name</th>
         <th>MP Cost</th>
+        <th>Users</th>
         <th>Effect</th>
       </tr>
     </thead>
