@@ -9,31 +9,37 @@ class Ability(object):
         cur.execute('''SELECT mode, chance FROM ability_status_info
                           WHERE ability_id=?''', (self.uid,))
         info = cur.fetchone()
-        cur.execute('''SELECT status FROM ability_status_list
-                          WHERE ability_id=?''', (self.uid,))
-        status_list = [ row[0] for row in cur.fetchall() ]
+        if info == None:
+            self.statuses = None
+        else:
+            cur.execute('''SELECT status FROM ability_status_list
+                              WHERE ability_id=?''', (self.uid,))
+            status_list = [ row[0] for row in cur.fetchall() ]
 
-        self.statuses = {
-            'list': status_list,
-            'mode': info[0],
-            'chance': info[1]
-        }
+            self.statuses = {
+                'list': status_list,
+                'mode': info[0],
+                'chance': info[1]
+            }
 
     def get_damage(self,conn):
         cur = conn.cursor()
         cur.execute('''SELECT formula, power, piercing
                           FROM ability_damage
                           WHERE ability_id=?''', (self.uid,))
-        damage = cur.fetchone()
+        damage_row = cur.fetchone()
 
-        self.damage = {
-            'formula': damage[0],
-            'power': damage[1],
-            'piercing': damage[2] == 1,
-            'physical': damage[0] == 'Physical'
-        }
+        if damage_row == None:
+            self.damage = None
+        else:
+            self.damage = {
+                'formula': damage_row[0],
+                'power': damage_row[1],
+                'piercing': damage_row[2] == 1,
+                'physical': damage_row[0] == 'Physical'
+            }
 
-        self.get_damage_string()
+            self.get_damage_string()
 
     def get_damage_string(self):
         if self.damage['formula'] == 'Max HP%':
@@ -53,8 +59,7 @@ class Ability(object):
             self.damage_text = 'Deal damage equal to {0}% of target\'s current HP'.format(100*self.damage['power']//32)
         else:
             damage_properties = []
-            if self.damage['power'] == None: damage_properties.append('weapon-based')
-            elif self.damage['power'] < 20: damage_properties.append('light')
+            if self.damage['power'] < 20: damage_properties.append('light')
             elif self.damage['power'] < 40: damage_properties.append('moderate')
             elif self.damage['power'] < 80: damage_properties.append('high')
             else: damage_properties.append('heavy')
@@ -99,13 +104,9 @@ class Ability(object):
             self.num_attacks = info_row[7]
             self.split = info_row[8] == 1
 
-            if info_row[9]: # has_statuses
-                self.get_statuses(conn)
-            else: self.statuses = None
+            self.get_statuses(conn)
 
-            if info_row[10]: # has_damage
-                self.get_damage(conn)
-            else: self.damage = None
+            self.get_damage(conn)
 
             if self.target_all:
                 ability_notes.append('targets entire party')
@@ -116,7 +117,7 @@ class Ability(object):
                     ability_notes.append('selects a random target {0} times'.format(self.num_attacks))
 
             if self.split == False:
-                ability_notes.append('full power multi-target')
+                ability_notes.append('no split')
 
         if len(ability_notes) > 0:
             self.notes_string = ', '.join(ability_notes)

@@ -92,26 +92,40 @@ CREATE TABLE abilities (
 	CHECK (has_info IN (0,1))
 );
 
-CREATE TABLE ability_info (
-	uid INTEGER NOT NULL,
-	hit_formula VARCHAR(8),
-	accuracy INTEGER,
-	element VARCHAR(16),
-	friendly BOOLEAN,
-	target_all BOOLEAN,
-  target_random BOOLEAN,
-  num_attacks INTEGER,
-	split BOOLEAN,
-	has_statuses BOOLEAN,
-	has_damage BOOLEAN,
-	PRIMARY KEY (uid),
-	FOREIGN KEY (uid) REFERENCES ability(uid),
-  CHECK (friendly IN (0,1)),
-  CHECK (target_all IN (0,1)),
-  CHECK (target_random IN (0,1)),
-	CHECK (split IN (0, 1)),
-  CHECK (has_statuses IN (0,1)),
-	CHECK (has_damage IN (0, 1))
+# table deprecated -- statement kept for reference
+-- CREATE TABLE ability_info (
+-- 	uid INTEGER NOT NULL,
+-- 	hit_formula VARCHAR(8),
+-- 	accuracy INTEGER,
+-- 	element VARCHAR(16),
+-- 	friendly BOOLEAN,
+-- 	split BOOLEAN,
+-- 	target_all BOOLEAN,
+--   target_random BOOLEAN,
+--   num_attacks INTEGER,
+-- 	has_statuses BOOLEAN,
+-- 	has_damage BOOLEAN,
+-- 	PRIMARY KEY (uid),
+-- 	FOREIGN KEY (uid) REFERENCES ability(uid),
+--   CHECK (friendly IN (0,1)),
+--   CHECK (target_all IN (0,1)),
+--   CHECK (target_random IN (0,1)),
+-- 	CHECK (split IN (0, 1)),
+--   CHECK (has_statuses IN (0,1)),
+-- 	CHECK (has_damage IN (0, 1))
+-- );
+
+CREATE TABLE ability_property_map (
+	ability_id INTEGER NOT NULL,
+	type VARCHAR(16),
+	value VARCHAR(16),
+	PRIMARY KEY (ability_id, type, value)
+);
+
+CREATE TABLE ability_property_set (
+	ability_id INTEGER NOT NULL,
+	type VARCHAR(16),
+	PRIMARY KEY(ability_id, type)
 );
 
 CREATE TABLE ability_notes (
