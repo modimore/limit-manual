@@ -64,12 +64,16 @@ class Ability(object):
             elif self.damage['power'] < 80: damage_properties.append('high')
             else: damage_properties.append('heavy')
 
-            if self.element != 'None':
-                damage_properties.append('{0}-elemental'.format(self.element))
+            if len(self.elements) == 0:
+                pass
+            elif len(self.elements) == 1:
+                damage_properties.append('{0}-elemental'.format(self.elements[0]))
+            else:
+                damage_properties.append('multi-elemental')
 
             self.damage_text = 'Deals {0} damage'.format(' '.join(damage_properties).lower())
 
-            if self.target_all or self.num_attacks > 1:
+            if self.targeting_type == 'All' or self.repeat > 1:
                 self.damage_text = self.damage_text + ' to each target'
 
     def __init__(self,conn,name=None,uid=None):
@@ -86,6 +90,13 @@ class Ability(object):
         self.name = ability_row[1]
         self.category = ability_row[3]
 
+        self.elements = []
+        self.targeting_type = 'Choice'
+        self.repeat = 1
+
+        self.friendly = False
+        self.no_split = False
+
         ability_notes = []
         if ability_row[4]: #has_notes
             cur.execute('''SELECT note_text FROM ability_notes
@@ -93,31 +104,43 @@ class Ability(object):
             ability_notes.extend([ row[0] for row in cur.fetchall() ])
 
         if ability_row[5]: # has_info
-            cur.execute("SELECT * FROM ability_info WHERE uid=?", (self.uid,))
-            info_row = cur.fetchone()
-            self.hit_formula = info_row[1]
-            self.accuracy = info_row[2]
-            self.element = info_row[3]
-            self.friendly = info_row[4] == 1
-            self.target_all = info_row[5] == 1
-            self.target_random = info_row[6] == 1
-            self.num_attacks = info_row[7]
-            self.split = info_row[8] == 1
+            # cur.execute("SELECT * FROM ability_info WHERE uid=?", (self.uid,))
+            # info_row = cur.fetchone()
+            # self.hit_formula = info_row[1]
+            # self.accuracy = info_row[2]
+            # self.element = info_row[3]
+            # self.friendly = info_row[4] == 1
+            # self.target_all = info_row[5] == 1
+            # self.target_random = info_row[6] == 1
+            # self.num_attacks = info_row[7]
+            # self.split = info_row[8] == 1
+
+            cur.execute('''SELECT type, value FROM ability_property_map
+                           WHERE ability_id=?''', (self.uid,))
+            for row in cur.fetchall():
+                if row[0] == 'Hit Formula':
+                    self.hit_formula = row[1]
+                elif row[0] == 'Accuracy':
+                    self.accuracy = row[1]
+                elif row[0] == 'Element':
+                    self.elements.append(row[1])
+                elif row[0] == 'Target':
+                    self.targeting_type = row[1]
+                elif row[0] == 'Repeat':
+                    self.repeat = int(row[1])
+
+            cur.execute('''SELECT type FROM ability_property_set
+                           WHERE ability_id=?''', (self.uid,))
+
+            for row in cur.fetchall():
+                if row[0] == 'Friendly':
+                    self.friendly = True
+                elif row[0] == 'No-split':
+                    self.no_split = True
 
             self.get_statuses(conn)
 
             self.get_damage(conn)
-
-            if self.target_all:
-                ability_notes.append('targets entire party')
-            elif self.target_random:
-                if self.num_attacks == 1:
-                    ability_notes.append('selects one target randomly')
-                else:
-                    ability_notes.append('selects a random target {0} times'.format(self.num_attacks))
-
-            if self.split == False:
-                ability_notes.append('no split')
 
         if len(ability_notes) > 0:
             self.notes_string = ', '.join(ability_notes)

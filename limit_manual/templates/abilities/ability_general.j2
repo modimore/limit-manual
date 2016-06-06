@@ -1,5 +1,18 @@
 {% macro ability_effect(ability) %}
   <ul>
+    {% if ability.targeting_type != 'Choice' or ability.repeat > 1 %}
+      <li>
+        {% if ability.targeting_type == 'All' %}
+          [Target: Party]
+        {% elif ability.targeting_type == 'Random' %}
+          [Target: Random]
+        {% elif ability.targeting_type == 'Random/Field' %}
+          [Target: Random][Target: Any Party]
+        {% endif %}
+        {% if ability.repeat and (ability.repeat > 1) %}[Repeat: {{ ability.repeat }}]{% endif %}
+        {% if ability.no_split == true %}[No Split]{% endif %}
+      </li>
+    {% endif %}{# targeting #}
     {% if ability.notes_string %}
       <li>{{ ability.notes_string | capitalize }}</li>
     {% endif %}

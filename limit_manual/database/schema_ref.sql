@@ -83,8 +83,8 @@ CREATE TABLE abilities (
 	name VARCHAR(20) NOT NULL,
 	description_id INTEGER,
 	category VARCHAR(20),
-	has_notes BOOLEAN,
-	has_info BOOLEAN,
+	has_notes BOOLEAN, # plan to remove?
+	has_info BOOLEAN, # plan to remove?
 	PRIMARY KEY (uid),
 	UNIQUE (name),
 	FOREIGN KEY(description_id) REFERENCES description_format (uid),

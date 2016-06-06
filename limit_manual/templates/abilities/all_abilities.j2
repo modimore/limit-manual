@@ -6,6 +6,13 @@
 {% from 'abilities/enemy_skills/simple_eskills.j2' import eskill_table %}
 
 {% block content %}
+  <div class="content-box page-nav ability-colors">
+    <a href="#Commands">Commands</a>
+    <a href="#Spells">Spells</a>
+    <a href="#Summons">Summons</a>
+    <a href="#Enemy Skills">Enemy Skills</a>
+  </div>
+
   <div class="content-box ability-colors">
     {{ command_table(commands) }}
     {{ spell_table('All Spells',spells, 'Spells') }}
