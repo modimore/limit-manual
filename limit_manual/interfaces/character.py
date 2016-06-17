@@ -7,7 +7,7 @@ class Character(object):
         self.name = name
         with get_connection() as conn:
             c = conn.cursor()
-            c.execute("SELECT uid FROM character;")
+            c.execute("SELECT uid FROM character WHERE name=?", (self.name,))
             row = c.fetchone()
             self.uid = row[0]
             self.main_image = 'images/characters/{0}-intro.png'.format(name.lower().replace(' ','_'))
@@ -18,9 +18,12 @@ class Character(object):
             if row == None:
                 self.intro = None
             else:
-                month, day = (int(x) for x in row[6].split('/'))
-                months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
-                date_string = '{0} {1}'.format(months[month-1],day)
+                try:
+                    month, day = (int(x) for x in row[6].split('/'))
+                    months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
+                    date_string = '{0} {1}'.format(months[month-1],day)
+                except ValueError:
+                    date_string = row[6]
 
                 self.intro = {
                     'full_name' : row[1],
@@ -28,7 +31,7 @@ class Character(object):
                     'age'   : row[3] if row[3] != 0 else "unknown",
                     'weapon': row[4],
                     'height': row[5],
-                    'birthdate' : date_string,
+                    'birthdate' : date_string if date_string != "" else "unknown",
                     'birthplace': row[7] if row[7] != "" else "unknown",
                     'blood_type': row[8] if row[8] != "" else "unknown",
                     'description': row[9]

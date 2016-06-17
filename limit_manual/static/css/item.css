@@ -3,16 +3,6 @@
   color: #f9ec86;
 }
 
-.content-box>* {
-  width: 100%;
-  margin: auto;
-  margin-top: 10px;
-}
-
-.content-box>*:first-child {
-  margin-top: 0px;
-}
-
 table, th, td {
   border-color: #f9ec86;
 }

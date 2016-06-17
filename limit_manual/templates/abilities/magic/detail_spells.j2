@@ -41,24 +41,26 @@
       <th>Spell Type</th>
       <th>MP Cost</th>
       <th>Reflectable</th>
-      <th>Split Effect</th>
+      <th>No Split</th>
     </tr>
     <tr class="data">
       <td>{{ spell.spell_type }}</td>
       <td>{{ spell.mp_cost }}</td>
       <td>{{ spell.reflectable }}</td>
-      <td>{{ spell.split }}</td>
+      <td>{{ spell.no_split }}</td>
     </tr>
     <tr class="label">
-      <th>Element</th>
+      <th>Elements</th>
       <th>Accuracy</th>
-      <th># Attacks</th>
+      <th>Repeat</th>
       <th>Friendly</th>
     </tr>
     <tr class="data">
-      <td>{{ spell.element }}</td>
+      <td>
+        {{ spell.elements | join(", ") | default("None", boolean=true) }}
+      </td>
       <td>{{ spell.accuracy if spell.accuracy != 256 else "Auto Hit" }}</td>
-      <td>{{ spell.num_attacks if spell.num_attacks != 0 else "None" }}</td>
+      <td>{{ spell.repeat if spell.repeat != 1 else "1" }}</td>
       <td>{{ spell.friendly }}</td>
     </tr>
 

@@ -92,7 +92,7 @@ CREATE TABLE abilities (
 	CHECK (has_info IN (0,1))
 );
 
-# table deprecated -- statement kept for reference
+# table dropped -- statement kept for reference
 -- CREATE TABLE ability_info (
 -- 	uid INTEGER NOT NULL,
 -- 	hit_formula VARCHAR(8),
@@ -101,17 +101,17 @@ CREATE TABLE abilities (
 -- 	friendly BOOLEAN,
 -- 	split BOOLEAN,
 -- 	target_all BOOLEAN,
---   target_random BOOLEAN,
---   num_attacks INTEGER,
+--  target_random BOOLEAN,
+--  num_attacks INTEGER,
 -- 	has_statuses BOOLEAN,
 -- 	has_damage BOOLEAN,
 -- 	PRIMARY KEY (uid),
 -- 	FOREIGN KEY (uid) REFERENCES ability(uid),
---   CHECK (friendly IN (0,1)),
---   CHECK (target_all IN (0,1)),
---   CHECK (target_random IN (0,1)),
+--  CHECK (friendly IN (0,1)),
+--  CHECK (target_all IN (0,1)),
+--  CHECK (target_random IN (0,1)),
 -- 	CHECK (split IN (0, 1)),
---   CHECK (has_statuses IN (0,1)),
+--  CHECK (has_statuses IN (0,1)),
 -- 	CHECK (has_damage IN (0, 1))
 -- );
 

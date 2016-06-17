@@ -121,7 +121,7 @@ class Ability(object):
                 if row[0] == 'Hit Formula':
                     self.hit_formula = row[1]
                 elif row[0] == 'Accuracy':
-                    self.accuracy = row[1]
+                    self.accuracy = int(row[1])
                 elif row[0] == 'Element':
                     self.elements.append(row[1])
                 elif row[0] == 'Target':
