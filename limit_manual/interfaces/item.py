@@ -9,7 +9,7 @@ class Item(object):
         self.name = name
         conn = get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM items WHERE name=?;", (self.name,))
+        cur.execute("SELECT * FROM items WHERE name=%s;", (self.name,))
         row = cur.fetchone()
         self.uid = row[0]
         self.item_type = row[2]
@@ -37,7 +37,7 @@ class Weapon(Item):
 
         with get_connection() as conn:
             cur = conn.cursor()
-            cur.execute("SELECT * FROM weapons WHERE uid=?;", (self.uid,))
+            cur.execute("SELECT * FROM weapons WHERE uid=%s;", (self.uid,))
             row = cur.fetchone()
 
             # Weapon properties
@@ -60,7 +60,7 @@ class Armor(Item):
 
         with get_connection() as conn:
             cur = conn.cursor()
-            cur.execute("SELECT * FROM armor WHERE uid=?;", (self.uid,))
+            cur.execute("SELECT * FROM armor WHERE uid=%s;", (self.uid,))
             row = cur.fetchone()
 
             # Armor properties

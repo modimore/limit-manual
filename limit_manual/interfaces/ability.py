@@ -7,13 +7,13 @@ class Ability(object):
     def get_statuses(self,conn):
         cur = conn.cursor()
         cur.execute('''SELECT mode, chance FROM ability_status_info
-                          WHERE ability_id=?''', (self.uid,))
+                          WHERE ability_id=%s''', (self.uid,))
         info = cur.fetchone()
         if info == None:
             self.statuses = None
         else:
             cur.execute('''SELECT status FROM ability_status_list
-                              WHERE ability_id=?''', (self.uid,))
+                              WHERE ability_id=%s''', (self.uid,))
             status_list = [ row[0] for row in cur.fetchall() ]
 
             self.statuses = {
@@ -26,7 +26,7 @@ class Ability(object):
         cur = conn.cursor()
         cur.execute('''SELECT formula, power, piercing
                           FROM ability_damage
-                          WHERE ability_id=?''', (self.uid,))
+                          WHERE ability_id=%s''', (self.uid,))
         damage_row = cur.fetchone()
 
         if damage_row == None:
@@ -80,9 +80,9 @@ class Ability(object):
         cur = conn.cursor()
 
         if uid != None:
-            cur.execute("SELECT * FROM abilities WHERE uid=?", (uid,))
+            cur.execute("SELECT * FROM abilities WHERE uid=%s", (uid,))
         else:
-            cur.execute("SELECT * FROM abilities WHERE name=?", (name,))
+            cur.execute("SELECT * FROM abilities WHERE name=%s", (name,))
         ability_row = cur.fetchone()
 
         # common attributes of all abilities
@@ -100,11 +100,11 @@ class Ability(object):
         ability_notes = []
         if ability_row[4]: #has_notes
             cur.execute('''SELECT note_text FROM ability_notes
-                           WHERE ability_id=?''', (self.uid,))
+                           WHERE ability_id=%s''', (self.uid,))
             ability_notes.extend([ row[0] for row in cur.fetchall() ])
 
         if ability_row[5]: # has_info
-            # cur.execute("SELECT * FROM ability_info WHERE uid=?", (self.uid,))
+            # cur.execute("SELECT * FROM ability_info WHERE uid=%s", (self.uid,))
             # info_row = cur.fetchone()
             # self.hit_formula = info_row[1]
             # self.accuracy = info_row[2]
@@ -116,7 +116,7 @@ class Ability(object):
             # self.split = info_row[8] == 1
 
             cur.execute('''SELECT type, value FROM ability_property_map
-                           WHERE ability_id=?''', (self.uid,))
+                           WHERE ability_id=%s''', (self.uid,))
             for row in cur.fetchall():
                 if row[0] == 'Hit Formula':
                     self.hit_formula = row[1]
@@ -130,7 +130,7 @@ class Ability(object):
                     self.repeat = int(row[1])
 
             cur.execute('''SELECT type FROM ability_property_set
-                           WHERE ability_id=?''', (self.uid,))
+                           WHERE ability_id=%s''', (self.uid,))
 
             for row in cur.fetchall():
                 if row[0] == 'Friendly':
@@ -155,7 +155,7 @@ class Spell(Ability):
 
         cur = conn.cursor()
         cur.execute('''SELECT * FROM magic_info
-                       WHERE ability_id=?''', (self.uid,))
+                       WHERE ability_id=%s''', (self.uid,))
         row = cur.fetchone()
         self.mp_cost = row[1]
         self.spell_type = row[2]
@@ -167,12 +167,12 @@ class Summon(Ability):
 
         cur = conn.cursor()
         cur.execute('''SELECT * FROM summon_info
-                       WHERE ability_id=?''', (self.uid,))
+                       WHERE ability_id=%s''', (self.uid,))
         info_row = cur.fetchone()
         self.mp_cost = info_row[1]
 
         cur.execute('''SELECT attack_id FROM summon_attacks
-                       WHERE summon_id=?''', (self.uid,))
+                       WHERE summon_id=%s''', (self.uid,))
         self.attacks = [ Ability(conn,uid=r[0]) for r in cur.fetchmany(info_row[2]) ]
 
 class EnemySkill(Ability):
@@ -181,7 +181,7 @@ class EnemySkill(Ability):
 
         cur = conn.cursor()
         cur.execute('''SELECT * FROM enemy_skill_info
-                       WHERE ability_id=?''', (self.uid,))
+                       WHERE ability_id=%s''', (self.uid,))
         row = cur.fetchone()
         self.mp_cost = row[1]
         self.reflectable = row[2]
@@ -189,7 +189,7 @@ class EnemySkill(Ability):
         self.manip_only = row[4]
 
         cur.execute('''SELECT enemy_name FROM enemy_skill_users
-                       WHERE ability_id=?''', (self.uid,))
+                       WHERE ability_id=%s''', (self.uid,))
         self.users = [ row[0] for row in cur.fetchall() ]
 
 class Command(Ability):
@@ -239,7 +239,7 @@ def all_magic():
 
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT name FROM abilities WHERE category=?",("Magic",))
+    cur.execute("SELECT name FROM abilities WHERE category=%s",("Magic",))
 
     for spell_name in [ r[0] for r in cur.fetchall() ]:
         spell = Spell(conn,name=spell_name)
@@ -262,7 +262,7 @@ def all_magic():
 def all_summons():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT name FROM abilities WHERE category=?",("Summon",))
+    cur.execute("SELECT name FROM abilities WHERE category=%s",("Summon",))
 
     summons = [ Summon(conn,name=r[0]) for r in cur.fetchall() ]
 
@@ -276,7 +276,7 @@ def all_summons():
 def all_eskills():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT name FROM abilities WHERE category=?", ("Enemy Skill", ))
+    cur.execute("SELECT name FROM abilities WHERE category=%s", ("Enemy Skill", ))
 
     eskills = [ EnemySkill(conn,name=r[0]) for r in cur.fetchall() ]
 
@@ -289,7 +289,7 @@ def all_eskills():
 def all_commands():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT name FROM abilities WHERE category=?", ("Command",))
+    cur.execute("SELECT name FROM abilities WHERE category=%s", ("Command",))
 
     commands = [ Command(conn,name=r[0]) for r in cur.fetchall() ]
 

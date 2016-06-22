@@ -8,8 +8,8 @@ class EnemyBase(object):
     def __init__(self,name,conn):
         self.name = name
         cur = conn.cursor()
-        cur.execute('''SELECT base_id,description,image FROM enemies
-                       WHERE name=?''', (name,))
+        cur.execute('''SELECT base_id, description, image FROM enemies
+                       WHERE name=%s''', (name,))
         result = cur.fetchone()
         self.base_id = result[0]
         self.description = result[1]
@@ -22,7 +22,7 @@ class EnemyBase(object):
         conn = get_connection()
         cur = conn.cursor()
         cur.execute('''SELECT ver_name FROM enemy_versions
-                       WHERE base_id=?''', (self.base_id,))
+                       WHERE base_id=%s''', (self.base_id,))
         result = { r[0] for r in cur.fetchall() }
         conn.close()
 
@@ -36,7 +36,7 @@ class Enemy(EnemyBase):
 
         cur = conn.cursor()
         cur.execute('''SELECT * FROM enemy_versions
-                       WHERE base_id=? AND ver_name=?''', (self.base_id,ver_name))
+                       WHERE base_id=%s AND ver_name=%s''', (self.base_id,ver_name))
         result = cur.fetchone()
 
         self.version = ver_name
@@ -69,11 +69,11 @@ class Enemy(EnemyBase):
         self.items = { 'drop': [], 'steal': [], 'morph': None }
         cur.execute('''SELECT get_method, item_name, get_chance
                        FROM enemy_items
-                       WHERE enemy_ver_id=?''', (self.ver_id,))
+                       WHERE enemy_ver_id=%s''', (self.ver_id,))
         for item in cur.fetchall():
-            if item[0] == 'drop':
+            if item[0] == 'D':
                 self.items['drop'].append( (item[1], item[2]) )
-            elif item[0] == 'steal':
+            elif item[0] == 'S':
                 self.items['steal'].append( (item[1], item[2]) )
             else:
                 self.items['morph'] = item[1]
@@ -81,13 +81,13 @@ class Enemy(EnemyBase):
         self.elemental_modifiers = []
         cur.execute('''SELECT element, modifier
                        FROM enemy_elemental_modifiers
-                       WHERE enemy_ver_id=?''', (self.ver_id,))
+                       WHERE enemy_ver_id=%s''', (self.ver_id,))
         for mod in cur.fetchall():
             self.elemental_modifiers.append( { 'element': mod[0], 'modifier': mod[1] } )
 
         cur.execute('''SELECT status
                        FROM enemy_status_immunities
-                       WHERE enemy_ver_id=?''', (self.ver_id,))
+                       WHERE enemy_ver_id=%s''', (self.ver_id,))
         self.status_immunities = { r[0] for r in cur.fetchall() }
 
     def __repr__(self):
@@ -100,7 +100,7 @@ class Enemy(EnemyBase):
         cur = conn.cursor()
         cur.execute('''SELECT DISTINCT formation_id
                        FROM formation_enemies
-                       WHERE enemy_ver_id=?''', (self.ver_id,))
+                       WHERE enemy_ver_id=%s''', (self.ver_id,))
         formation_ids = [ row[0] for row in cur.fetchall() ]
 
         for f_id in formation_ids:
@@ -108,7 +108,7 @@ class Enemy(EnemyBase):
 
             cur.execute('''SELECT loc, sub_loc
                            FROM formation_locations
-                           WHERE formation_id=?''', (f_id,))
+                           WHERE formation_id=%s''', (f_id,))
             for row in cur.fetchall():
                 if row[0] not in this_f['locations'].keys():
                     this_f['locations'][row[0]] = []
@@ -119,7 +119,7 @@ class Enemy(EnemyBase):
                                 (SELECT name, ver_name, ver_id
                                  FROM enemies AS e JOIN enemy_versions AS ev ON e.base_id=ev.base_id) as enemy_info
                                 ON formation_enemies.enemy_ver_id=enemy_info.ver_id
-                           WHERE formation_id=?''', (f_id,))
+                           WHERE formation_id=%s''', (f_id,))
             for row in cur.fetchall():
                 if row[2] not in this_f['enemy_rows'].keys():
                     this_f['enemy_rows'][row[2]] = []
@@ -160,7 +160,7 @@ def all_enemies():
 
     for result in results:
         info = { 'name': result[1] }
-        cur.execute("SELECT ver_name FROM enemy_versions WHERE base_id=?", (result[0],))
+        cur.execute("SELECT ver_name FROM enemy_versions WHERE base_id=%s", (result[0],))
         info['versions'] = { row[0] for row in cur.fetchall() }
 
         enemies.append(info)

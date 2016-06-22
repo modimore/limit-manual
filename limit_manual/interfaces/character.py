@@ -7,12 +7,12 @@ class Character(object):
         self.name = name
         with get_connection() as conn:
             c = conn.cursor()
-            c.execute("SELECT uid FROM character WHERE name=?", (self.name,))
+            c.execute("SELECT uid FROM characters WHERE name=%s", (self.name,))
             row = c.fetchone()
             self.uid = row[0]
             self.main_image = 'images/characters/{0}-intro.png'.format(name.lower().replace(' ','_'))
 
-            c.execute("SELECT * FROM character_intro WHERE uid=?",(self.uid,))
+            c.execute("SELECT * FROM character_intros WHERE uid=%s",(self.uid,))
             row = c.fetchone()
 
             if row == None:
@@ -53,7 +53,7 @@ class Character(object):
 
         conn = get_connection()
         c = conn.cursor()
-        cnames = [ r[0] for r in c.execute("SELECT name FROM character;").fetchall() ]
+        cnames = [ r[0] for r in c.execute("SELECT name FROM characters;").fetchall() ]
         conn.close()
 
         for name in cnames:
@@ -65,10 +65,12 @@ class Character(object):
 @app.route('/characters')
 @app.route('/characters/all')
 def all_characters():
+    ''' Generate page to list all characters. '''
     characters = []
     conn = get_connection()
-    c = conn.cursor()
-    cnames = [ r[0] for r in c.execute("SELECT name FROM character WHERE name != 'Sephiroth';").fetchall() ]
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM characters WHERE name != 'Sephiroth'")
+    cnames = [ r[0] for r in cur.fetchall()]
     characters = [ {"name": name, "image": "{0}-field.png".format(name.lower().replace(" ","_")) } for name in cnames ]
     conn.close()
 
@@ -77,5 +79,6 @@ def all_characters():
 
 @app.route('/characters/<name>')
 def character(name):
+    ''' Generate page with information on a specific character '''
     return render_template('characters/character.j2',
                            character=Character(name))
