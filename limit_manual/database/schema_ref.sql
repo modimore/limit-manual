@@ -1,3 +1,20 @@
+# GENERAL DESCRIPTIONS  ======================================
+CREATE TABLE description_format (
+	uid INTEGER NOT NULL,
+	format_string VARCHAR(80) NOT NULL,
+	num_slots INTEGER,
+	PRIMARY KEY (uid)
+);
+
+CREATE TABLE description_filler (
+	referent_type VARCHAR(10) NOT NULL,
+	referent_id INTEGER NOT NULL,
+	place INTEGER NOT NULL,
+	content VARCHAR(20),
+	PRIMARY KEY (referent_type, referent_id, place)
+);
+# ============================================================
+
 # ITEMS  =====================================================
 CREATE TABLE items (
 	uid INTEGER NOT NULL,
@@ -57,23 +74,6 @@ CREATE TABLE character_intro (
 	description VARCHAR(365),
 	PRIMARY KEY (uid),
 	FOREIGN KEY(uid) REFERENCES character (uid)
-);
-# ============================================================
-
-# GENERAL DESCRIPTIONS  ======================================
-CREATE TABLE description_format (
-	uid INTEGER NOT NULL,
-	format_string VARCHAR(80) NOT NULL,
-	num_slots INTEGER,
-	PRIMARY KEY (uid)
-);
-
-CREATE TABLE description_filler (
-	referent_type VARCHAR(10) NOT NULL,
-	referent_id INTEGER NOT NULL,
-	place INTEGER NOT NULL,
-	content VARCHAR(20),
-	PRIMARY KEY (referent_type, referent_id, place)
 );
 # ============================================================
 

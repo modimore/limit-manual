@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from .database.connection import get_connection
 
 app = Flask(__name__)
+app.config.from_object('limit_manual.config.DevConfig')
 
 @app.route('/')
 def welcome():
