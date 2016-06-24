@@ -5,6 +5,8 @@ from flask import Flask, render_template
 app = Flask(__name__)
 app.config.from_object('limit_manual.config.DevConfig')
 
+from .assets import assets
+
 # Import function to connect to database (must be done after app is created)
 from .database.connection import get_connection
 

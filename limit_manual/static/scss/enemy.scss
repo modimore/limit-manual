@@ -1,0 +1,60 @@
+$enemy-color-1: #740000;
+$enemy-color-2: #decec1;
+
+.enemy-colors {
+  background-color: $enemy-color-1;
+  color: $enemy-color-2;
+
+  &.lighter, & .lighter {
+    color: lighten($enemy-color-2, 50%);
+  }
+}
+
+table, tbody, th, tr, td {
+  border-color: $enemy-color-2;
+}
+
+#stat-box {
+  .left {
+    float: left;
+    width: 200px;
+    margin-right: 10px;
+
+    > * {
+      width: 100%;
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+  }
+
+  .right {
+    display: inline-block;
+    width: 390px;
+
+    > * {
+      width: 100%;
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+  }
+
+  img { background-color: darken($enemy-color-2, 10%); }
+
+  tbody th { text-align: left; }
+  td { text-align: right; }
+
+  #other-versions td { text-align: center; }
+
+  #formations {
+    td { text-align: center; }
+    ul > li, dl > * { margin: 0px; }
+  }
+
+  #status-immunities td { text-align: left; }
+}

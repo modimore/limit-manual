@@ -1,0 +1,67 @@
+$character-color-1: #d70000;
+$character-color-2: #eddf36;
+
+$character-alpha-color: rgba( 240, 100, 100, 0.4);
+
+$image-row-width: 600px;
+$images-per-row: 3;
+
+.character-colors {
+  background-color: $character-color-1;
+  color: $character-color-2;
+}
+
+h3 {
+  text-align: center;
+}
+
+ul.image-list {
+  list-style-type: none;
+  width: $image-row-width;
+  margin: 0px;
+  padding: 0px;
+
+  > li {
+    float: left;
+    width: $image-row-width/$images-per-row;
+    height: 150px;
+    display: inline-block;
+
+    > a {
+      position: relative;
+      height: 100%;
+      width: 1%;
+    }
+
+    img {
+      display: block;
+      margin: 0px auto;
+      height: 100%;
+    }
+  }
+}
+
+#intro {
+  position: relative;
+
+  > .sizing-reference {
+    position: relative;
+    float: left;
+
+    > table {
+      position: relative;
+      z-index: 1;
+      float: right;
+      margin-left: 200px;
+
+      background-color: lighten($character-color-1, 5%);
+      background-color: $character-alpha-color;
+    }
+  }
+
+  .portrait {
+    position: absolute;
+    z-index: 0;
+    height: 100%;
+  }
+}

@@ -3,7 +3,9 @@
 {% block title %}<title>Enemy: {{ enemy.name }} - Limit Manual</title>{% endblock %}
 
 {% block page_styles %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/enemy.css') }}">
+  {% assets 'css_enemy' %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+  {% endassets %}
 {% endblock page_styles %}
 
 {% macro stat_kvp(stat, value) -%}

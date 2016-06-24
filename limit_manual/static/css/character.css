@@ -1,61 +1,42 @@
 .character-colors {
   background-color: #d70000;
-  color: #eddf36;
-}
+  color: #eddf36; }
 
-/* character listing page */
-h3 {
-  text-align: center;
-}
+  h3 {
+    text-align: center; }
 
-ul.image-list {
-  list-style-type: none;
-  width: 600px;
-  margin: 0px;
-  padding: 0px;
-}
+    ul.image-list {
+      list-style-type: none;
+      width: 600px;
+      margin: 0px;
+      padding: 0px; }
+      ul.image-list > li {
+        float: left;
+        width: 200px;
+        height: 150px;
+        display: inline-block; }
+        ul.image-list > li > a {
+          position: relative;
+          height: 100%;
+          width: 1%; }
+          ul.image-list > li img {
+            display: block;
+            margin: 0px auto;
+            height: 100%; }
 
-ul.image-list > li {
-  float: left;
-  width: 200px;
-  height: 150px;
-  display: inline-block;
-}
-
-ul.image-list > li > a {
-  position: relative;
-  height: 100%;
-  width: 1%;
-}
-
-ul.image-list > li img {
-  display: block;
-  margin: 0px auto;
-  height: 100%;
-}
-
-/* individual character pages */
 #intro {
-  position: relative;
-}
-
-#intro > .sizing-reference {
-  position: relative;
-  float: left;
-}
-
-#intro-table {
-  position: relative;
-  z-index: 1;
-  float: right;
-  margin-left: 200px;
-
-  background-color: #f06464;
-  background-color: rgba(240,100,100,0.4)
-}
-
-.portrait {
-  position: absolute;
-  z-index: 0;
-  height: 100%;
-}
+  position: relative; }
+  #intro > .sizing-reference {
+    position: relative;
+    float: left; }
+    #intro > .sizing-reference > table {
+      position: relative;
+      z-index: 1;
+      float: right;
+      margin-left: 200px;
+      background-color: #f00000;
+      background-color: rgba(240, 100, 100, 0.4); }
+  #intro .portrait {
+    position: absolute;
+    z-index: 0;
+    height: 100%; }

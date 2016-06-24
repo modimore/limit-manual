@@ -1,0 +1,19 @@
+.content-box {
+  width: $med-width;
+  margin: auto;
+  padding: 10px;
+  overflow: auto;
+  
+  &.small {
+    width: $sml-width;
+  }
+
+  > * {
+    margin-top: 10px;
+    width: 100%;
+
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+}

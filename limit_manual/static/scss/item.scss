@@ -1,0 +1,11 @@
+$item-color-1: #16065f;
+$item-color-2: #f9ec86;
+
+.item-colors {
+  background-color: $item-color-1;
+  color: $item-color-2;
+}
+
+table, th, td {
+  border-color: $item-color-2;
+}

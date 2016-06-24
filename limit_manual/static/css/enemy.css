@@ -1,53 +1,40 @@
 .enemy-colors {
   background-color: #740000;
-  color: #decec1;
-}
+  color: #decec1; }
+  .enemy-colors.lighter, .enemy-colors .lighter {
+    color: white; }
 
-.enemy-colors .lighter {
-  color: #faeaed;
-}
+table, tbody, th, tr, td {
+  border-color: #decec1; }
 
-table, tbody, th, td { border-color: #decec1; }
-
-/* stat box left side layout */
-#stat-box .left {
-  float: left;
-  width: 200px;
-  margin-right: 10px;
-}
-
-#stat-box .left>* {
-  width: 100%;
-  margin-top: 10px;
-}
-
-/* rest of stat box layout*/
-#stat-box .right {
-  display: inline-block;
-  width: 390px;
-}
-
-#stat-box .right>* {
-  width: 100%;
-  margin-top: 10px;
-}
-
-#stat-box .left>*:first-child,
-#stat-box .right>*:first-child {
-  margin-top: 0px;
-}
-
-/* stat box general elements */
-#stat-box img { background-color: #b99b91; }
-
-#stat-box tbody th { text-align: left; }
-#stat-box td { text-align: right; }
-
-#stat-box table#other-versions td { text-align: center; }
-
-#stat-box table#formations ul>li,
-#stat-box table#formations dl>*  {
-  margin: 0px;
-}
-
-#status-immunities td { text-align: left; }
+  #stat-box .left {
+    float: left;
+    width: 200px;
+    margin-right: 10px; }
+    #stat-box .left > * {
+      width: 100%;
+      margin-top: 10px; }
+      #stat-box .left > *:first-child {
+        margin-top: 0px; }
+  #stat-box .right {
+    display: inline-block;
+    width: 390px; }
+    #stat-box .right > * {
+      width: 100%;
+      margin-top: 10px; }
+      #stat-box .right > *:first-child {
+        margin-top: 0px; }
+  #stat-box img {
+    background-color: #ccb4a0; }
+    #stat-box tbody th {
+      text-align: left; }
+      #stat-box td {
+        text-align: right; }
+        #stat-box #other-versions td {
+          text-align: center; }
+          #stat-box #formations td {
+            text-align: center; }
+            #stat-box #formations ul > li, #stat-box #formations dl > * {
+              margin: 0px; }
+  #stat-box #status-immunities td {
+    text-align: left; }

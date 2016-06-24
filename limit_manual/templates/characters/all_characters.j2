@@ -1,7 +1,9 @@
 {% extends 'layout.j2' %}
 
 {% block page_styles %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/character.css') }}">
+  {% assets 'css_character' %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+  {% endassets %}
 {% endblock page_styles %}
 
 {% block content %}

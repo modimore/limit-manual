@@ -1,0 +1,51 @@
+$ability-color-1: #050800;
+$ability-color-2: #c7a0a0;
+
+.ability-colors {
+  background-color: $ability-color-1;
+  color: $ability-color-2;
+
+  table {
+    &, > tbody {
+      border-color: lighten($ability-color-1, 15%);
+    }
+
+    thead {
+      background-color: lighten($ability-color-1, 5%);
+    }
+
+    tr.data {
+      background-color: lighten($ability-color-1, 2.5%);
+    }
+
+    tr {
+      border-color: lighten($ability-color-1, 10%);
+    }
+
+    th, td {
+      text-align: center;
+      border-color: lighten($ability-color-1, 10%);
+    }
+  }
+}
+
+.statuses {
+  max-width: 250px;
+}
+
+.simple td {
+  width: 75px;
+
+  &:last-child {
+    text-align: right;
+    width: auto;
+  }
+}
+
+.in-game-descr {
+  font-style: italic;
+}
+
+ul {
+  list-style-type: none;
+}

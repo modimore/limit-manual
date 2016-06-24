@@ -1,53 +1,29 @@
 .ability-colors {
-  background-color: #070900;
-  color: #c7a0a0;
-}
-
-/*.ability-colors .emphasis {
-  background-color: #071910;
-}*/
-
-.ability-colors thead {
-  background-color: #1b2100;
-}
-
-.ability-colors tr.data>* {
-  background-color: #14160b;
-}
-
-table {
-  margin-top: 10px;
-}
-
-table, tbody {
-  border-color: #545428;
-}
-
-tr, th, td {
-  border-color: #343408;
-}
-
-th, td {
-  text-align: center;
-}
+  background-color: #050800;
+  color: #c7a0a0; }
+  .ability-colors table, .ability-colors table > tbody {
+    border-color: #355400; }
+    .ability-colors table thead {
+      background-color: #152200; }
+      .ability-colors table tr.data {
+        background-color: #0d1500; }
+        .ability-colors table tr {
+          border-color: #253b00; }
+          .ability-colors table th, .ability-colors table td {
+            text-align: center;
+            border-color: #253b00; }
 
 .statuses {
-  max-width: 250px;
-}
+  max-width: 250px; }
 
-.simple td {
-  width: 75px;
-}
-
-.simple td:last-child {
-  text-align: right;
-  width: auto;
-}
+  .simple td {
+    width: 75px; }
+    .simple td:last-child {
+      text-align: right;
+      width: auto; }
 
 .in-game-descr {
-  font-style: italic;
-}
+  font-style: italic; }
 
-ul {
-  list-style-type: none;
-}
+  ul {
+    list-style-type: none; }

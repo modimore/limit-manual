@@ -1,10 +1,6 @@
-{% extends 'layout.j2' %}
+{% extends 'items/item_layout.j2' %}
 
 {% block title %}<title>Items - Limit Manual</title>{% endblock %}
-
-{% block page_styles %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/item.css') }}">
-{% endblock page_styles %}
 
 {% macro item_table(items,table_name,table_id,with_type=false) -%}
   <table id="{{ table_id }}">
