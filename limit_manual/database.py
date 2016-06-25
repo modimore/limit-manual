@@ -1,4 +1,4 @@
-from .. import app
+from . import app
 
 def get_connection():
     import psycopg2

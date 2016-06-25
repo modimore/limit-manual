@@ -1,12 +1,19 @@
+'''
+Uses Flask-Assets package to monitor and compile "static" assets.
+'''
+
+
 from flask_assets import Environment, Bundle
 from . import app
 
 assets = Environment(app)
 
-css_main = Bundle('scss/main.scss',
-                   filters='pyscss',
-                   output='css/main.css'
-                  )
+css_main = Bundle('scss/main/general.scss',
+                  'scss/main/layout.scss',
+                  'scss/main/tables.scss',
+                  filters='pyscss',
+                  output='css/main.css'
+                 )
 assets.register('css_main', css_main)
 
 css_ability = Bundle('scss/ability.scss',

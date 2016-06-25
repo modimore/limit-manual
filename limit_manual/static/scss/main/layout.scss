@@ -1,9 +1,11 @@
+@import 'vars';
+
 .content-box {
   width: $med-width;
   margin: auto;
   padding: 10px;
   overflow: auto;
-  
+
   &.small {
     width: $sml-width;
   }

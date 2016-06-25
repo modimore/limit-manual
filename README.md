@@ -1,6 +1,7 @@
 # *Limit Manual*
 *Limit Manual* is a Flask application that aims to provide resources and information related to Final Fantasy VII.
 
+## *Mission Statement*
 Various sites offer a wealth of information about Final Fantasy VII, but due to limitations of the site format or the intention of the authors, have one or more of the following qualities:
 
 * Strong Focus on plot content (spoilers difficult to avoid when searching for specific info)

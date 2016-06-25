@@ -1,14 +1,15 @@
 # Basic Flask & Jinja2 related imports
 from flask import Flask, render_template
 
-# Create Application
+# Create application instance
 app = Flask(__name__)
 app.config.from_object('limit_manual.config.DevConfig')
 
+# Import asset management object
 from .assets import assets
 
-# Import function to connect to database (must be done after app is created)
-from .database.connection import get_connection
+# Import function to connect to database
+from .database import get_connection
 
 @app.route('/')
 def welcome():
