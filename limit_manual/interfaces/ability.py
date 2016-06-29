@@ -80,9 +80,15 @@ class Ability(object):
         cur = conn.cursor()
 
         if uid != None:
-            cur.execute("SELECT * FROM abilities WHERE uid=%s", (uid,))
+            cur.execute('''SELECT uid, name, description_id, category,
+                                  has_notes, has_info
+                           FROM abilities
+                           WHERE uid=%s''', (uid,))
         else:
-            cur.execute("SELECT * FROM abilities WHERE name=%s", (name,))
+            cur.execute('''SELECT uid, name, description_id, category,
+                                  has_notes, has_info
+                           FROM abilities
+                           WHERE name=%s''', (name,))
         ability_row = cur.fetchone()
 
         # common attributes of all abilities
@@ -154,39 +160,42 @@ class Spell(Ability):
         Ability.__init__(self,conn,name)
 
         cur = conn.cursor()
-        cur.execute('''SELECT * FROM magic_info
+        cur.execute('''SELECT mp_cost, spell_type, reflectable
+                       FROM magic_info
                        WHERE ability_id=%s''', (self.uid,))
         row = cur.fetchone()
-        self.mp_cost = row[1]
-        self.spell_type = row[2]
-        self.reflectable = row[3] == 1
+        self.mp_cost = row[0]
+        self.spell_type = row[1]
+        self.reflectable = row[2] == 1
 
 class Summon(Ability):
     def __init__(self,conn,name):
         Ability.__init__(self,conn,name)
 
         cur = conn.cursor()
-        cur.execute('''SELECT * FROM summon_info
+        cur.execute('''SELECT mp_cost, possible_attacks
+                       FROM summon_info
                        WHERE ability_id=%s''', (self.uid,))
         info_row = cur.fetchone()
-        self.mp_cost = info_row[1]
+        self.mp_cost = info_row[0]
 
         cur.execute('''SELECT attack_id FROM summon_attacks
                        WHERE summon_id=%s''', (self.uid,))
-        self.attacks = [ Ability(conn,uid=r[0]) for r in cur.fetchmany(info_row[2]) ]
+        self.attacks = [ Ability(conn,uid=r[0]) for r in cur.fetchmany(info_row[1]) ]
 
 class EnemySkill(Ability):
     def __init__(self,conn,name):
         Ability.__init__(self,conn,name=name)
 
         cur = conn.cursor()
-        cur.execute('''SELECT * FROM enemy_skill_info
+        cur.execute('''SELECT mp_cost, reflectable, missable, manip_only
+                       FROM enemy_skill_info
                        WHERE ability_id=%s''', (self.uid,))
         row = cur.fetchone()
-        self.mp_cost = row[1]
-        self.reflectable = row[2]
-        self.missable = row[3]
-        self.manip_only = row[4]
+        self.mp_cost = row[0]
+        self.reflectable = row[1]
+        self.missable = row[2]
+        self.manip_only = row[3]
 
         cur.execute('''SELECT enemy_name FROM enemy_skill_users
                        WHERE ability_id=%s''', (self.uid,))

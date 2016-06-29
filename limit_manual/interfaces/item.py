@@ -9,11 +9,13 @@ class Item(object):
         self.name = name
         conn = get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM items WHERE name=%s;", (self.name,))
+        cur.execute('''SELECT uid, item_type, descr_id
+                       FROM items
+                       WHERE name=%s;''', (self.name,))
         row = cur.fetchone()
         self.uid = row[0]
-        self.item_type = row[2]
-        descr_id = row[3]
+        self.item_type = row[1]
+        descr_id = row[2]
         conn.close()
 
         self.description = get_description(descr_id,'item',self.uid)
@@ -37,19 +39,22 @@ class Weapon(Item):
 
         with get_connection() as conn:
             cur = conn.cursor()
-            cur.execute("SELECT * FROM weapons WHERE uid=%s;", (self.uid,))
+            cur.execute('''SELECT growth_rate, linked_slots, single_slots,
+                           attack, hit_pct, magic_bonus, element, wielder
+                           FROM weapons
+                           WHERE uid=%s;''', (self.uid,))
             row = cur.fetchone()
 
-            # Weapon properties
-            self.wielder = row[9]
-            self.attack = row[5]
-            self.hit_pct = row[6]
-            self.magic_bonus = row[7]
-            self.element = row[8]
             # Materia-related properties
-            self.growth_rate = row[2]
-            self.linked_slots = row[3]
-            self.single_slots = row[4]
+            self.growth_rate = row[0]
+            self.linked_slots = row[1]
+            self.single_slots = row[2]
+            # Weapon properties
+            self.wielder = row[7]
+            self.attack = row[3]
+            self.hit_pct = row[4]
+            self.magic_bonus = row[5]
+            self.element = row[6]
 
     def __repr__(self):
         return '<{0}>'.format(self.name)
@@ -60,18 +65,21 @@ class Armor(Item):
 
         with get_connection() as conn:
             cur = conn.cursor()
-            cur.execute("SELECT * FROM armor WHERE uid=%s;", (self.uid,))
+            cur.execute('''SELECT growth_rate, linked_slots, single_slots,
+                                  defense, magic_defense,
+                                  defense_pct, magic_defense_pct
+                           FROM armor WHERE uid=%s;''', (self.uid,))
             row = cur.fetchone()
 
-            # Armor properties
-            self.defense = row[5]
-            self.magic_defense = row[6]
-            self.defense_pct = row[7]
-            self.magic_defense_pct = row[8]
             # Materia-related properties
-            self.growth_rate = row[2]
-            self.linked_slots = row[3]
-            self.single_slots = row[4]
+            self.growth_rate = row[0]
+            self.linked_slots = row[1]
+            self.single_slots = row[2]
+            # Armor properties
+            self.defense = row[3]
+            self.magic_defense = row[4]
+            self.defense_pct = row[5]
+            self.magic_defense_pct = row[6]
 
 
     def __repr__(self):

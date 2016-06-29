@@ -12,29 +12,32 @@ class Character(object):
             self.uid = row[0]
             self.main_image = 'images/characters/{0}-intro.png'.format(name.lower().replace(' ','_'))
 
-            c.execute("SELECT * FROM character_intros WHERE uid=%s",(self.uid,))
+            c.execute('''SELECT full_name, job, age, weapon, height,
+                                birthdate, birthplace, blood_type, description
+                         FROM character_intros
+                         WHERE uid=%s''', (self.uid,))
             row = c.fetchone()
 
             if row == None:
                 self.intro = None
             else:
                 try:
-                    month, day = (int(x) for x in row[6].split('/'))
+                    month, day = (int(x) for x in row[5].split('/'))
                     months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
                     date_string = '{0} {1}'.format(months[month-1],day)
                 except ValueError:
-                    date_string = row[6]
+                    date_string = row[5]
 
                 self.intro = {
-                    'full_name' : row[1],
-                    'job'   : row[2],
-                    'age'   : row[3] if row[3] != 0 else "unknown",
-                    'weapon': row[4],
-                    'height': row[5],
+                    'full_name' : row[0],
+                    'job'   : row[1],
+                    'age'   : row[2] if row[2] != 0 else "unknown",
+                    'weapon': row[3],
+                    'height': row[4],
                     'birthdate' : date_string if date_string != "" else "unknown",
-                    'birthplace': row[7] if row[7] != "" else "unknown",
-                    'blood_type': row[8] if row[8] != "" else "unknown",
-                    'description': row[9]
+                    'birthplace': row[6] if row[6] != "" else "unknown",
+                    'blood_type': row[7] if row[7] != "" else "unknown",
+                    'description': row[8]
                 }
 
     def extract(self, with_uid=False):

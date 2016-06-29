@@ -35,7 +35,14 @@ class Enemy(EnemyBase):
         EnemyBase.__init__(self,enemy_name,conn)
 
         cur = conn.cursor()
-        cur.execute('''SELECT * FROM enemy_versions
+        cur.execute('''SELECT base_id, ver_id, ver_name,
+                       level, hp, mp,
+                       attack, defense,
+                       magic_attack, magic_defense,
+                       defense_pct, magic_defense_pct,
+                       dexterity, luck,
+                       exp, ap, gil
+                       FROM enemy_versions
                        WHERE base_id=%s AND ver_name=%s''', (self.base_id,ver_name))
         result = cur.fetchone()
 
