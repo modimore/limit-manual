@@ -1,3 +1,5 @@
+@import "main/_base";
+
 $enemy-color-1: #740000;
 $enemy-color-2: #decec1;
 
@@ -10,7 +12,7 @@ $enemy-color-2: #decec1;
   }
 }
 
-table, tbody, th, tr, td {
+table, thead, tbody, th, tr, td {
   border-color: $enemy-color-2;
 }
 
@@ -18,30 +20,17 @@ table, tbody, th, tr, td {
   .left {
     float: left;
     width: 200px;
-    margin-right: 10px;
+    margin-right: $spacing-unit;
 
-    > * {
-      width: 100%;
-      margin-top: 10px;
-
-      &:first-child {
-        margin-top: 0px;
-      }
-    }
+    @extend %spaced;
   }
 
   .right {
     display: inline-block;
-    width: 390px;
+    float: right;
+    width: #{$sml-width - 3*$spacing-unit - 200px};
 
-    > * {
-      width: 100%;
-      margin-top: 10px;
-
-      &:first-child {
-        margin-top: 0px;
-      }
-    }
+    @extend %spaced;
   }
 
   img { background-color: darken($enemy-color-2, 10%); }

@@ -22,13 +22,18 @@
       {% endfor %}{# items #}
     </tbody>
   </table>
-{%- endmacro %}{# item_table #}
+{% endmacro %}{# item_table #}
+
 {% block content %}
-  <div class="content-box item-colors">
+  <div class="content-box packed">
     {# Table for general items #}
     {{ item_table(items.general,'General Items','general',true) }}
+  </div>
+  <div class="content-box packed">
     {# Table for weapons #}
     {{ item_table(items.weapons,'Weapons','weapons') }}
+  </div>
+  <div class="content-box packed">
     {# Table for armor #}
     {{ item_table(items.armor,'Armor','armor') }}
   </div>

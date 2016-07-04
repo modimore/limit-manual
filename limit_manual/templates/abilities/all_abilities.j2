@@ -13,10 +13,16 @@
     <a href="#Enemy Skills">Enemy Skills</a>
   </div>
 
-  <div class="content-box ability-colors">
+  <div class="content-box packed">
     {{ command_table(commands) }}
+  </div>
+  <div class="content-box packed">
     {{ spell_table('All Spells',spells, 'Spells') }}
+  </div>
+  <div class="content-box packed">
     {{ summon_table(summons) }}
+  </div>
+  <div class="content-box packed">
     {{ eskill_table(eskills) }}
   </div>
 {% endblock content %}

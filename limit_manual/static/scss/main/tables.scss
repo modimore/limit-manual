@@ -1,9 +1,11 @@
-@import 'vars';
+@import '_base';
 
 $table-border-color: #eddf36;
+$table-border-width: 1px;
 
 table {
   border-collapse: collapse;
+  border: 2*$table-border-width solid $table-border-color;
 
   ul, dl {
     padding: 0px;
@@ -13,11 +15,11 @@ table {
   }
 }
 
-table, tbody {
-  border: 2px solid $table-border-color;
+thead, tbody {
+  border: 2*$table-border-width solid $table-border-color;
 }
 
 tr, th, td {
   padding: 2px 5px;
-  border: 1px solid $table-border-color;
+  border: $table-border-width solid $table-border-color;
 }

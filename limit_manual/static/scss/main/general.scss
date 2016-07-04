@@ -1,4 +1,4 @@
-@import 'vars';
+@import '_base';
 
 body {
   background-color: $site-bg-color;
@@ -31,19 +31,13 @@ body {
   }
 }
 
-.content-box {
-  border: 5px solid $site-border-color;
-  border-radius: 10px;
-}
-
 .menu-colors, .default-colors {
   background-color: $site-bg-color;
   color: $site-text-color;
 }
 
 .menu {
-  border: 5px solid $site-border-color;
-  border-radius: 10px;
+  @extend %thick-border;
   font-family: Verdana, sans-serif;
 }
 

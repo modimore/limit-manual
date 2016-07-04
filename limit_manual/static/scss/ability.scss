@@ -1,31 +1,31 @@
 $ability-color-1: #050800;
 $ability-color-2: #c7a0a0;
 
-.ability-colors {
+.content-box {
   background-color: $ability-color-1;
   color: $ability-color-2;
+}
 
-  table {
-    &, > tbody {
-      border-color: lighten($ability-color-1, 15%);
-    }
+table {
+  &, > thead, > tbody {
+    border-color: lighten($ability-color-1, 15%);
+  }
 
-    thead {
-      background-color: lighten($ability-color-1, 5%);
-    }
+  thead {
+    background-color: lighten($ability-color-1, 5%);
+  }
 
-    tr.data {
-      background-color: lighten($ability-color-1, 2.5%);
-    }
+  tr.data {
+    background-color: lighten($ability-color-1, 2.5%);
+  }
 
-    tr {
-      border-color: lighten($ability-color-1, 10%);
-    }
+  tr {
+    border-color: lighten($ability-color-1, 10%);
+  }
 
-    th, td {
-      text-align: center;
-      border-color: lighten($ability-color-1, 10%);
-    }
+  th, td {
+    text-align: center;
+    border-color: lighten($ability-color-1, 10%);
   }
 }
 

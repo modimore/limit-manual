@@ -1,0 +1,29 @@
+$site-bg-color: #0000b0;
+$site-text-color: white;
+$site-border-color: #eee;
+
+$med-width: 800px;
+$sml-width: 600px;
+
+$spacing-unit: 10px;
+
+%spaced {
+  > * {
+    margin-top: $spacing-unit;
+    width: 100%;
+
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+}
+
+%thick-border {
+  border: $spacing-unit/2 solid $site-border-color;
+  border-radius: $spacing-unit;
+}
+
+%horiz-centered {
+  margin-left: auto;
+  margin-right: auto;
+}

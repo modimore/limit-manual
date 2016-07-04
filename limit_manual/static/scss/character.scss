@@ -1,10 +1,9 @@
+@import "main/_base";
+
 $character-color-1: #d70000;
 $character-color-2: #eddf36;
 
 $character-alpha-color: rgba( 240, 100, 100, 0.4);
-
-$image-row-width: 600px;
-$images-per-row: 3;
 
 .character-colors {
   background-color: $character-color-1;
@@ -16,9 +15,13 @@ h3 {
 }
 
 ul.image-list {
+  // image-row-width: #{$sml-width - $spacing-unit};
+  $image-row-width: 585px;
+  $images-per-row: 3;
   list-style-type: none;
+  display: block;
   width: $image-row-width;
-  margin: 0px;
+  margin: auto;
   padding: 0px;
 
   > li {

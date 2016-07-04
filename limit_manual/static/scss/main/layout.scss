@@ -1,21 +1,32 @@
-@import 'vars';
+@import '_base';
 
-.content-box {
+.content-area {
+  @extend %horiz-centered;
+  @extend %spaced;
   width: $med-width;
-  margin: auto;
-  padding: 10px;
   overflow: auto;
 
+}
+
+.content-box {
+  @extend %horiz-centered;
+  @extend %spaced;
+  @extend %thick-border;
+  overflow: auto;
+
+  padding: $spacing-unit/2;
+  width: #{$med-width - 2*$spacing-unit};
+
   &.small {
-    width: $sml-width;
+    width: #{$sml-width - 2*$spacing-unit};
   }
 
-  > * {
-    margin-top: 10px;
-    width: 100%;
+  &.packed {
+    padding: 0px;
+    width: #{$med-width - $spacing-unit};
 
-    &:first-child {
-      margin-top: 0px;
+    &.small {
+      width: #{$sml-width - $spacing-unit};
     }
   }
 }
