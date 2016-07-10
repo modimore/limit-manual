@@ -1,16 +1,15 @@
 @import '_base';
 
-.content-area {
+.content-wrapper {
   @extend %horiz-centered;
-  @extend %spaced;
+  @include spaced-column($spacing-unit);
   width: $med-width;
   overflow: auto;
-
 }
 
-.content-box {
+.content-area {
   @extend %horiz-centered;
-  @extend %spaced;
+  @include spaced-column($spacing-unit);
   @extend %thick-border;
   overflow: auto;
 

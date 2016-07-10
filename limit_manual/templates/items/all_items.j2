@@ -3,18 +3,18 @@
 {% block title %}<title>Items - Limit Manual</title>{% endblock %}
 
 {% macro item_table(items,table_name,table_id,with_type=false) -%}
-  <table id="{{ table_id }}">
+  <table id="{{ table_id }}" class="grid-wrapper">
     <thead>
       <tr><th colspan="3">{{ table_name }}</th></tr>
-      <tr>
-        <th>Name</th>
-        {% if with_type %}<th>Type</th>{% endif %}
+      <tr class="grid-size-control">
+        <th class="grid-size-2">Name</th>
+        {% if with_type %}<th class="grid-size-2">Type</th>{% endif %}
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       {% for item in items %}
-        <tr id="{{ item.name }}">
+        <tr id="{{ item.name }}" class="grid-row">
           <td>{{ item.name }}</td>
           {% if with_type %}<td>{{ item.item_type }}</td>{% endif %}
           <td>{{ item.description }}</td>
@@ -25,15 +25,15 @@
 {% endmacro %}{# item_table #}
 
 {% block content %}
-  <div class="content-box packed">
+  <div class="content-area packed">
     {# Table for general items #}
     {{ item_table(items.general,'General Items','general',true) }}
   </div>
-  <div class="content-box packed">
+  <div class="content-area packed">
     {# Table for weapons #}
     {{ item_table(items.weapons,'Weapons','weapons') }}
   </div>
-  <div class="content-box packed">
+  <div class="content-area packed">
     {# Table for armor #}
     {{ item_table(items.armor,'Armor','armor') }}
   </div>

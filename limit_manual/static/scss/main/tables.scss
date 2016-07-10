@@ -16,10 +16,40 @@ table {
 }
 
 thead, tbody {
-  border: 2*$table-border-width solid $table-border-color;
+  border-top: 2*$table-border-width solid $table-border-color;
+
+  &:first-child {
+    border-top: none;
+  }
 }
 
-tr, th, td {
+tr {
+  border-top: $table-border-width solid $table-border-color;
+
+  &:first-child {
+    border-top: none;
+
+    > th, td {
+      border-top: none;
+    }
+  }
+}
+
+th, td {
   padding: 2px 5px;
   border: $table-border-width solid $table-border-color;
+  border-bottom: none;
+
+  &:first-child {
+    border-left: none;
+  }
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.content-area.packed > table {
+  border: none;
+  width: 100%;
 }

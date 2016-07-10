@@ -1,0 +1,19 @@
+@mixin grid-size-x($sz, $max) {
+  width: $sz / $max * 100%;
+}
+
+$grid-max: 12;
+
+.grid-wrapper {
+  * {
+    box-sizing: border-box;
+  }
+
+  .grid-size-control {
+    @for $sz from 1 through $grid-max {
+      > .grid-size-#{$sz} {
+        @include grid-size-x($sz, $grid-max)
+      }
+    }
+  }
+}

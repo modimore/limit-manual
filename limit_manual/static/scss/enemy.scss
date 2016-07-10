@@ -3,13 +3,13 @@
 $enemy-color-1: #740000;
 $enemy-color-2: #decec1;
 
-.enemy-colors {
+.content-area {
   background-color: $enemy-color-1;
   color: $enemy-color-2;
+}
 
-  &.lighter, & .lighter {
-    color: lighten($enemy-color-2, 50%);
-  }
+.lighter {
+  color: lighten($enemy-color-2, 50%);
 }
 
 table, thead, tbody, th, tr, td {
@@ -22,7 +22,7 @@ table, thead, tbody, th, tr, td {
     width: 200px;
     margin-right: $spacing-unit;
 
-    @extend %spaced;
+    @include spaced-column($spacing-unit);
   }
 
   .right {
@@ -30,7 +30,7 @@ table, thead, tbody, th, tr, td {
     float: right;
     width: #{$sml-width - 3*$spacing-unit - 200px};
 
-    @extend %spaced;
+    @include spaced-column($spacing-unit);
   }
 
   img { background-color: darken($enemy-color-2, 10%); }

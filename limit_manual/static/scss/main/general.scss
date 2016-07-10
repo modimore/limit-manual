@@ -20,15 +20,8 @@ body {
 }
 
 #foreground {
-  padding: 5px;
-
-  > * {
-    margin-bottom: 5px;
-
-    &:last-child {
-      margin-bottom: 0px;
-    }
-  }
+  padding: $spacing-unit/2;
+  @include spaced-column($spacing-unit);
 }
 
 .menu-colors, .default-colors {

@@ -6,23 +6,23 @@
 {% from 'abilities/enemy_skills/simple_eskills.j2' import eskill_table %}
 
 {% block content %}
-  <div class="content-box page-nav ability-colors">
-    <a href="#Commands">Commands</a>
-    <a href="#Spells">Spells</a>
-    <a href="#Summons">Summons</a>
-    <a href="#Enemy Skills">Enemy Skills</a>
+  <div class="content-area page-nav ability-colors">
+    <a class="grid-size-3" href="#Commands">Commands</a>
+    <a class="grid-size-3" href="#Spells">Spells</a>
+    <a class="grid-size-3" href="#Summons">Summons</a>
+    <a class="grid-size-3" href="#Enemy Skills">Enemy Skills</a>
   </div>
 
-  <div class="content-box packed">
+  <div class="content-area packed">
     {{ command_table(commands) }}
   </div>
-  <div class="content-box packed">
+  <div class="content-area packed">
     {{ spell_table('All Spells',spells, 'Spells') }}
   </div>
-  <div class="content-box packed">
+  <div class="content-area packed">
     {{ summon_table(summons) }}
   </div>
-  <div class="content-box packed">
+  <div class="content-area packed">
     {{ eskill_table(eskills) }}
   </div>
 {% endblock content %}

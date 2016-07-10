@@ -2,15 +2,15 @@ $site-bg-color: #0000b0;
 $site-text-color: white;
 $site-border-color: #eee;
 
+$lrg-width: 960px;
 $med-width: 800px;
 $sml-width: 600px;
 
 $spacing-unit: 10px;
 
-%spaced {
+@mixin spaced-column($gap-size) {
   > * {
-    margin-top: $spacing-unit;
-    width: 100%;
+    margin-top: $gap-size;
 
     &:first-child {
       margin-top: 0px;

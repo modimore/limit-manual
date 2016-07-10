@@ -16,13 +16,13 @@
 
 {% macro spell_table(name,spell_list,html_id=none) %}
   {% set html_id = html_id if html_id is not none else name %}
-  <table id="{{html_id}}" class="simple">
+  <table id="{{html_id}}" class="grid-wrapper simple">
     <thead>
       <tr><th colspan="4">{{ name }}</th></tr>
-      <tr>
-        <th>Name</th>
-        <th>MP Cost</th>
-        <th>Spell Type</th>
+      <tr class="grid-size-control">
+        <th class="grid-size-2">Name</th>
+        <th class="grid-size-1">MP</th>
+        <th class="grid-size-1">Type</th>
         <th>Effect</th>
       </tr>
     </thead>

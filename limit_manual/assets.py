@@ -10,6 +10,7 @@ assets = Environment(app)
 
 css_main = Bundle('scss/main/general.scss',
                   'scss/main/layout.scss',
+                  'scss/main/grid.scss',
                   'scss/main/tables.scss',
                   filters='pyscss',
                   output='css/main.css'
