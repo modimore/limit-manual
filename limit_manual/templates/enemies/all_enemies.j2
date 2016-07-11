@@ -13,23 +13,25 @@
 {%- endmacro %}
 
 {% block content %}
-  <div class="content-area small packed">
-    <table>
-      <tr class="lighter">
-        <th>Name</th>
-        <th>Versions</th>
-      </tr>
-      {% for enemy in enemies %}
-        <tr>
-          <td>{{ enemy.name }}</td>
-          <td>
-            <ul>
-              {% for version in enemy.versions %}
-                <li>{{ enemy_link(enemy.name,version,version_link=true) }}</li>
-              {% endfor %}{# versions #}
-            </ul>
-          </td>
+  <div class="content-wrapper small">
+    <div class="content-area packed">
+      <table>
+        <tr class="lighter">
+          <th>Name</th>
+          <th>Versions</th>
         </tr>
-      {% endfor %}
+        {% for enemy in enemies %}
+          <tr>
+            <td>{{ enemy.name }}</td>
+            <td>
+              <ul>
+                {% for version in enemy.versions %}
+                  <li>{{ enemy_link(enemy.name,version,version_link=true) }}</li>
+                {% endfor %}{# versions #}
+              </ul>
+            </td>
+          </tr>
+        {% endfor %}
+    </div>
   </div>
 {% endblock %}{# content #}

@@ -5,7 +5,7 @@ $character-color-2: #eddf36;
 
 $character-alpha-color: rgba( 240, 100, 100, 0.4);
 
-.character-colors {
+.content-area {
   background-color: $character-color-1;
   color: $character-color-2;
 }
@@ -15,26 +15,13 @@ h3 {
 }
 
 ul.image-list {
-  // image-row-width: #{$sml-width - $spacing-unit};
-  $image-row-width: 585px;
-  $images-per-row: 3;
   list-style-type: none;
-  display: block;
-  width: $image-row-width;
-  margin: auto;
   padding: 0px;
+  display: block;
 
   > li {
-    float: left;
-    width: $image-row-width/$images-per-row;
     height: 150px;
     display: inline-block;
-
-    > a {
-      position: relative;
-      height: 100%;
-      width: 1%;
-    }
 
     img {
       display: block;

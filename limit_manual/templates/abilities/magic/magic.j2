@@ -6,7 +6,7 @@
   {% from 'abilities/magic/simple_spells.j2' import spell_table %}
 {% endif %}
 
-{% block content %}
+{% block ability_content %}
   <div class="content-area packed">
     {{ spell_table('Restore', restore) }}
   </div>
@@ -19,4 +19,4 @@
   <div class="content-area packed">
     {{ spell_table('Other', other) }}
   </div>
-{% endblock content %}
+{% endblock ability_content %}

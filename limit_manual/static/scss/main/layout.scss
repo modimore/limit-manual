@@ -1,10 +1,24 @@
 @import '_base';
 
+#foreground {
+  padding: $spacing-unit/2;
+  @include spaced-column($spacing-unit);
+}
+
 .content-wrapper {
   @extend %horiz-centered;
   @include spaced-column($spacing-unit);
-  width: $med-width;
   overflow: auto;
+
+  width: $med-width;
+
+  &.small {
+    width: $sml-width;
+  }
+
+  &.large {
+    width: $lrg-width;
+  }
 }
 
 .content-area {
@@ -14,18 +28,8 @@
   overflow: auto;
 
   padding: $spacing-unit/2;
-  width: #{$med-width - 2*$spacing-unit};
-
-  &.small {
-    width: #{$sml-width - 2*$spacing-unit};
-  }
 
   &.packed {
     padding: 0px;
-    width: #{$med-width - $spacing-unit};
-
-    &.small {
-      width: #{$sml-width - $spacing-unit};
-    }
   }
 }

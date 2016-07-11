@@ -5,12 +5,14 @@
 {% from 'abilities/summons/simple_summons.j2' import summon_table %}
 {% from 'abilities/enemy_skills/simple_eskills.j2' import eskill_table %}
 
-{% block content %}
-  <div class="content-area page-nav ability-colors">
-    <a class="grid-size-3" href="#Commands">Commands</a>
-    <a class="grid-size-3" href="#Spells">Spells</a>
-    <a class="grid-size-3" href="#Summons">Summons</a>
-    <a class="grid-size-3" href="#Enemy Skills">Enemy Skills</a>
+{% block ability_content %}
+  <div class="content-area page-nav ability-colors scaled-grid-12">
+    <div class="scaled-row-wrapper">
+      <a class="scale-12-3" href="#Commands">Commands</a>
+      <a class="scale-12-3" href="#Spells">Spells</a>
+      <a class="scale-12-3" href="#Summons">Summons</a>
+      <a class="scale-12-3" href="#Enemy Skills">Enemy Skills</a>
+    </div>
   </div>
 
   <div class="content-area packed">
@@ -25,4 +27,4 @@
   <div class="content-area packed">
     {{ eskill_table(eskills) }}
   </div>
-{% endblock content %}
+{% endblock ability_content %}

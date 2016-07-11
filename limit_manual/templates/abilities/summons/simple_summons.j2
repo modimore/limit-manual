@@ -17,8 +17,8 @@
       </td>
     </tr>
     {% for attack in summon.attacks %}
-      <tr class="grid-size-control">
-        <td class="grid-size-2">{{ attack.name }}</td>
+      <tr>
+        <td>{{ attack.name }}</td>
         <td>{{ ability_effect(attack) }}</td>
       </tr>
     {% endfor %}{# summon_attacks #}
@@ -26,13 +26,17 @@
 {% endmacro %}{# simple_summon #}
 
 {% macro summon_table(summon_list) %}
-  <table id="Summons" class="grid-wrapper simple">
+  <table id="Summons" class="scaled-grid-12 simple">
     <thead>
       <tr><th colspan="4">Summons</th></tr>
-      <tr class="grid-size-control">
-        <th class="grid-size-2">Name</th>
-        <th class="grid-size-1">MP</th>
-        <th colspan="2">Description and Attacks</th>
+      <tr>
+        <th rowspan="2" class="scale-12-2">Name</th>
+        <th rowspan="2" class="scale-12-1">MP</th>
+        <th colspan="2">Description</th>
+      </tr>
+      <tr>
+        <th class="scale-12-2">Attack Name</th>
+        <th>Attack Effect</th>
       </tr>
     </thead>
     {% for summon in summon_list %}

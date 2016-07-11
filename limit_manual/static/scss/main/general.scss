@@ -13,15 +13,10 @@ body {
   width: 100%;
   height: 100%;
 
-  > img {
+  img {
     width: 100%;
     height: 100%;
   }
-}
-
-#foreground {
-  padding: $spacing-unit/2;
-  @include spaced-column($spacing-unit);
 }
 
 .menu-colors, .default-colors {
@@ -41,8 +36,8 @@ body {
     color: $site-border-color;
     text-decoration: none;
 
-    > img {
-      height: 80px;
+    img {
+      height: 100%;
       float: left;
     }
 
@@ -50,7 +45,6 @@ body {
       float: left;
       font-size: 44px;
       font-weight: normal;
-      height: 50px;
       margin: 15px auto;
     }
   }

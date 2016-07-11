@@ -5,3 +5,9 @@
     <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
   {% endassets %}
 {% endblock page_styles %}
+
+{% block content %}
+  <div class="content-wrapper large">
+    {% block ability_content %}{% endblock %}
+  </div>
+{% endblock content %}
