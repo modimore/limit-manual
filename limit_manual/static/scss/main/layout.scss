@@ -1,4 +1,12 @@
 @import '_base';
+@import 'latticeworks/_core';
+
+@include latticeworks-init;
+@include lw-segments(12);
+@include lw-segments-tablefix(12);
+@include lw-bar(12);
+@include lattice(12);
+@include lattice-static(12, 1200px);
 
 #foreground {
   padding: $spacing-unit/2;
@@ -22,7 +30,6 @@
 }
 
 .content-area {
-  @extend %horiz-centered;
   @include spaced-column($spacing-unit);
   @extend %thick-border;
   overflow: auto;

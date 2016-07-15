@@ -1,0 +1,2510 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: limit_manual; Type: COMMENT; Schema: -; Owner: modimore
+--
+
+COMMENT ON DATABASE limit_manual IS 'A store for information on Final Fantasy VII.';
+
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: abilities; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE abilities (
+    uid smallint NOT NULL,
+    name character varying(20) NOT NULL,
+    description_id smallint,
+    category character varying(20),
+    has_notes boolean,
+    has_info boolean
+);
+
+
+ALTER TABLE abilities OWNER TO modimore;
+
+--
+-- Name: ability_damage; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE ability_damage (
+    ability_id smallint NOT NULL,
+    formula character varying(12),
+    power smallint,
+    long_range boolean,
+    piercing boolean
+);
+
+
+ALTER TABLE ability_damage OWNER TO modimore;
+
+--
+-- Name: ability_id_seq; Type: SEQUENCE; Schema: public; Owner: modimore
+--
+
+CREATE SEQUENCE ability_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE ability_id_seq OWNER TO modimore;
+
+--
+-- Name: ability_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: modimore
+--
+
+ALTER SEQUENCE ability_id_seq OWNED BY abilities.uid;
+
+
+--
+-- Name: ability_notes; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE ability_notes (
+    ability_id smallint NOT NULL,
+    note_id smallint NOT NULL,
+    note_text text
+);
+
+
+ALTER TABLE ability_notes OWNER TO modimore;
+
+--
+-- Name: ability_property_map; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE ability_property_map (
+    ability_id smallint NOT NULL,
+    type character varying(16) NOT NULL,
+    value character varying(16) NOT NULL
+);
+
+
+ALTER TABLE ability_property_map OWNER TO modimore;
+
+--
+-- Name: ability_property_set; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE ability_property_set (
+    ability_id smallint NOT NULL,
+    type character varying(16) NOT NULL
+);
+
+
+ALTER TABLE ability_property_set OWNER TO modimore;
+
+--
+-- Name: ability_status_info; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE ability_status_info (
+    ability_id smallint NOT NULL,
+    mode character varying(8),
+    chance smallint
+);
+
+
+ALTER TABLE ability_status_info OWNER TO modimore;
+
+--
+-- Name: ability_status_list; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE ability_status_list (
+    ability_id smallint NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE ability_status_list OWNER TO modimore;
+
+--
+-- Name: armor; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE armor (
+    uid smallint NOT NULL,
+    name character varying(20) NOT NULL,
+    growth_rate smallint,
+    linked_slots smallint,
+    single_slots smallint,
+    defense smallint,
+    magic_defense smallint,
+    defense_pct smallint,
+    magic_defense_pct smallint
+);
+
+
+ALTER TABLE armor OWNER TO modimore;
+
+--
+-- Name: character_categories; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE character_categories (
+    uid smallint NOT NULL,
+    name character varying(20)
+);
+
+
+ALTER TABLE character_categories OWNER TO modimore;
+
+--
+-- Name: character_intros; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE character_intros (
+    uid smallint NOT NULL,
+    full_name character varying(18) NOT NULL,
+    job character varying(33),
+    age smallint,
+    weapon character varying(40),
+    height smallint,
+    birthdate character varying(6),
+    birthplace character varying(13),
+    blood_type character varying(2),
+    description text
+);
+
+
+ALTER TABLE character_intros OWNER TO modimore;
+
+--
+-- Name: characters; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE characters (
+    uid smallint NOT NULL,
+    name character varying(30) NOT NULL,
+    category_id smallint DEFAULT 0
+);
+
+
+ALTER TABLE characters OWNER TO modimore;
+
+--
+-- Name: description_fillers; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE description_fillers (
+    referent_type character varying(10) NOT NULL,
+    referent_id smallint NOT NULL,
+    place smallint NOT NULL,
+    content character varying(30)
+);
+
+
+ALTER TABLE description_fillers OWNER TO modimore;
+
+--
+-- Name: description_formats; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE description_formats (
+    uid smallint NOT NULL,
+    format_string character varying(80) NOT NULL,
+    num_slots smallint DEFAULT 0
+);
+
+
+ALTER TABLE description_formats OWNER TO modimore;
+
+--
+-- Name: description_format_seq; Type: SEQUENCE; Schema: public; Owner: modimore
+--
+
+CREATE SEQUENCE description_format_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE description_format_seq OWNER TO modimore;
+
+--
+-- Name: description_format_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: modimore
+--
+
+ALTER SEQUENCE description_format_seq OWNED BY description_formats.uid;
+
+
+--
+-- Name: enemy_actions; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_actions (
+    enemy_ver_id smallint NOT NULL,
+    action character varying(20) NOT NULL,
+    name_hidden boolean,
+    manipulate boolean
+);
+
+
+ALTER TABLE enemy_actions OWNER TO modimore;
+
+--
+-- Name: enemy_bases; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_bases (
+    base_id smallint NOT NULL,
+    name character varying(30),
+    description text,
+    image character varying(50)
+);
+
+
+ALTER TABLE enemy_bases OWNER TO modimore;
+
+--
+-- Name: enemy_base_id_seq; Type: SEQUENCE; Schema: public; Owner: modimore
+--
+
+CREATE SEQUENCE enemy_base_id_seq
+    START WITH 1
+    INCREMENT BY 6
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE enemy_base_id_seq OWNER TO modimore;
+
+--
+-- Name: enemy_base_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: modimore
+--
+
+ALTER SEQUENCE enemy_base_id_seq OWNED BY enemy_bases.base_id;
+
+
+--
+-- Name: enemy_elemental_modifiers; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_elemental_modifiers (
+    enemy_ver_id smallint NOT NULL,
+    element character varying(11) NOT NULL,
+    modifier smallint
+);
+
+
+ALTER TABLE enemy_elemental_modifiers OWNER TO modimore;
+
+--
+-- Name: enemy_items; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_items (
+    enemy_ver_id smallint NOT NULL,
+    item_slot_id smallint DEFAULT 0 NOT NULL,
+    item_name character varying(20) NOT NULL,
+    get_method character(1) NOT NULL,
+    get_chance smallint
+);
+
+
+ALTER TABLE enemy_items OWNER TO modimore;
+
+--
+-- Name: enemy_skill_info; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_skill_info (
+    ability_id smallint NOT NULL,
+    mp_cost smallint,
+    reflectable boolean,
+    missable boolean,
+    manip_only boolean
+);
+
+
+ALTER TABLE enemy_skill_info OWNER TO modimore;
+
+--
+-- Name: enemy_skill_users; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_skill_users (
+    ability_id smallint NOT NULL,
+    enemy_name character varying(30) NOT NULL
+);
+
+
+ALTER TABLE enemy_skill_users OWNER TO modimore;
+
+--
+-- Name: enemy_status_immunities; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_status_immunities (
+    enemy_ver_id smallint NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE enemy_status_immunities OWNER TO modimore;
+
+--
+-- Name: enemy_versions; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE enemy_versions (
+    base_id smallint NOT NULL,
+    ver_id smallint NOT NULL,
+    ver_name character varying(40),
+    level smallint,
+    hp smallint,
+    mp smallint,
+    attack smallint,
+    defense smallint,
+    magic_attack smallint,
+    magic_defense smallint,
+    defense_pct smallint,
+    magic_defense_pct smallint,
+    dexterity smallint,
+    luck smallint,
+    exp smallint,
+    ap smallint,
+    gil smallint
+);
+
+
+ALTER TABLE enemy_versions OWNER TO modimore;
+
+--
+-- Name: enemy_ver_id_seq; Type: SEQUENCE; Schema: public; Owner: modimore
+--
+
+CREATE SEQUENCE enemy_ver_id_seq
+    START WITH 1
+    INCREMENT BY 7
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE enemy_ver_id_seq OWNER TO modimore;
+
+--
+-- Name: enemy_ver_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: modimore
+--
+
+ALTER SEQUENCE enemy_ver_id_seq OWNED BY enemy_versions.ver_id;
+
+
+--
+-- Name: formation_enemies; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE formation_enemies (
+    formation_id smallint NOT NULL,
+    row_num smallint NOT NULL,
+    "position" smallint NOT NULL,
+    enemy_ver_id smallint
+);
+
+
+ALTER TABLE formation_enemies OWNER TO modimore;
+
+--
+-- Name: formation_locations; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE formation_locations (
+    formation_id smallint NOT NULL,
+    loc character varying(40) NOT NULL,
+    sub_loc character varying(40) NOT NULL
+);
+
+
+ALTER TABLE formation_locations OWNER TO modimore;
+
+--
+-- Name: formations; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE formations (
+    uid smallint NOT NULL,
+    attack_type smallint
+);
+
+
+ALTER TABLE formations OWNER TO modimore;
+
+--
+-- Name: items; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE items (
+    uid smallint NOT NULL,
+    name character varying(20) NOT NULL,
+    item_type character varying(20),
+    descr_id smallint
+);
+
+
+ALTER TABLE items OWNER TO modimore;
+
+--
+-- Name: magic_info; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE magic_info (
+    ability_id smallint NOT NULL,
+    mp_cost smallint,
+    spell_type character varying(8),
+    reflectable boolean
+);
+
+
+ALTER TABLE magic_info OWNER TO modimore;
+
+--
+-- Name: summon_attacks; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE summon_attacks (
+    summon_id smallint NOT NULL,
+    attack_id smallint NOT NULL
+);
+
+
+ALTER TABLE summon_attacks OWNER TO modimore;
+
+--
+-- Name: summon_info; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE summon_info (
+    ability_id smallint NOT NULL,
+    mp_cost smallint,
+    possible_attacks smallint
+);
+
+
+ALTER TABLE summon_info OWNER TO modimore;
+
+--
+-- Name: weapons; Type: TABLE; Schema: public; Owner: modimore
+--
+
+CREATE TABLE weapons (
+    uid smallint NOT NULL,
+    name character varying(20) NOT NULL,
+    growth_rate smallint,
+    linked_slots smallint,
+    single_slots smallint,
+    attack smallint,
+    hit_pct smallint,
+    magic_bonus smallint,
+    element character varying(16),
+    wielder character varying(10)
+);
+
+
+ALTER TABLE weapons OWNER TO modimore;
+
+--
+-- Name: uid; Type: DEFAULT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY abilities ALTER COLUMN uid SET DEFAULT nextval('ability_id_seq'::regclass);
+
+
+--
+-- Name: uid; Type: DEFAULT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY description_formats ALTER COLUMN uid SET DEFAULT nextval('description_format_seq'::regclass);
+
+
+--
+-- Name: base_id; Type: DEFAULT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_bases ALTER COLUMN base_id SET DEFAULT nextval('enemy_base_id_seq'::regclass);
+
+
+--
+-- Name: ver_id; Type: DEFAULT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_versions ALTER COLUMN ver_id SET DEFAULT nextval('enemy_ver_id_seq'::regclass);
+
+
+--
+-- Data for Name: abilities; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY abilities (uid, name, description_id, category, has_notes, has_info) FROM stdin;
+1	Cure	11	Magic	f	t
+2	Cure2	11	Magic	f	t
+3	Cure3	11	Magic	f	t
+4	Poisona	12	Magic	f	t
+5	Esuna	13	Magic	f	t
+6	Resist	14	Magic	f	t
+7	Life	15	Magic	f	t
+8	Life2	16	Magic	f	t
+9	Regen	17	Magic	f	t
+10	Fire	10	Magic	f	t
+11	Fire2	10	Magic	f	t
+12	Fire3	10	Magic	f	t
+13	Ice	10	Magic	f	t
+14	Ice2	10	Magic	f	t
+15	Ice3	10	Magic	f	t
+16	Bolt	10	Magic	f	t
+17	Bolt2	10	Magic	f	t
+18	Bolt3	10	Magic	f	t
+19	Quake	10	Magic	f	t
+20	Quake2	10	Magic	f	t
+21	Quake3	10	Magic	f	t
+22	Bio	10	Magic	f	t
+23	Bio2	10	Magic	f	t
+24	Bio3	10	Magic	f	t
+25	Demi	18	Magic	f	t
+26	Demi2	18	Magic	f	t
+27	Demi3	18	Magic	f	t
+28	Sleepel	19	Magic	f	t
+29	Confu	20	Magic	f	t
+30	Silence	21	Magic	f	t
+31	Mini	22	Magic	f	t
+32	Toad	22	Magic	f	t
+33	Berserk	23	Magic	f	t
+34	Haste	24	Magic	f	t
+35	Slow	24	Magic	f	t
+36	Stop	25	Magic	f	t
+37	Barrier	26	Magic	f	t
+38	MBarrier	26	Magic	f	t
+39	Reflect	27	Magic	f	t
+40	DeBarrier	28	Magic	f	t
+41	DeSpell	29	Magic	f	t
+42	Death	30	Magic	f	t
+43	Escape	31	Magic	t	t
+44	Remove	32	Magic	f	t
+45	Comet	34	Magic	f	t
+46	Comet2	34	Magic	f	t
+47	Freeze	35	Magic	f	t
+48	Break	35	Magic	f	t
+49	Tornado	36	Magic	f	t
+50	Flare	10	Magic	f	t
+51	FullCure	37	Magic	f	t
+52	Shield	38	Magic	f	t
+53	Ultima	38	Magic	f	t
+54	Choco/Mog	39	Summon	t	f
+55	DeathBlow!!	1	Summon Attack	f	t
+56	Fat-Chocobo	1	Summon Attack	f	t
+57	Shiva	40	Summon	f	f
+58	Diamond Dust	1	Summon Attack	f	t
+59	Ifrit	40	Summon	f	f
+60	Hellfire	1	Summon Attack	f	t
+61	Ramuh	40	Summon	f	f
+62	Judgement Bolt	1	Summon Attack	f	t
+63	Titan	41	Summon	f	f
+64	Anger of the Land	1	Summon Attack	f	t
+65	Odin	46	Summon	t	f
+66	Steel Bladed Sword	1	Summon Attack	f	t
+67	Gunge Lance	1	Summon Attack	f	t
+68	Leviathan	42	Summon	f	f
+69	Tidal Wave	1	Summon Attack	f	t
+70	Bahamut	43	Summon	f	f
+71	Mega Flare	1	Summon Attack	f	t
+72	Kujata	44	Summon	t	f
+73	Tetra-Disaster	1	Summon Attack	f	t
+74	Alexander	45	Summon	f	f
+75	Judgement	1	Summon Attack	f	t
+76	Phoenix	47	Summon	f	f
+77	Phoenix Flame	1	Summon Attack	t	t
+78	Neo Bahamut	43	Summon	f	f
+79	Giga Flare	1	Summon Attack	f	t
+80	Hades	48	Summon	f	f
+81	Cauldron	1	Summon Attack	f	t
+82	Typhon	44	Summon	t	f
+83	Disintegration	1	Summon Attack	f	t
+84	Bahamut ZERO	43	Summon	f	f
+85	Tera Flare	1	Summon Attack	f	t
+86	Knights of Round	49	Summon	f	f
+87	Ultimate End	1	Summon Attack	f	t
+88	Frog Song	50	Enemy Skill	f	t
+89	L4 Suicide	51	Enemy Skill	t	t
+90	Magic Hammer	52	Enemy Skill	t	t
+91	White Wind	53	Enemy Skill	t	t
+92	Big Guard	57	Enemy Skill	t	t
+93	Angel Whisper	54	Enemy Skill	t	t
+94	Dragon Force	55	Enemy Skill	t	t
+95	Death Force	56	Enemy Skill	t	t
+96	Flame Thrower	58	Enemy Skill	t	t
+97	Laser	59	Enemy Skill	t	t
+98	Matra Magic	60	Enemy Skill	t	t
+99	Bad Breath	61	Enemy Skill	t	t
+100	Beta	62	Enemy Skill	t	t
+101	Aqualung	62	Enemy Skill	t	t
+102	Trine	62	Enemy Skill	t	t
+103	Magic Breath	62	Enemy Skill	t	t
+104	????	63	Enemy Skill	t	t
+105	Goblin Punch	64	Enemy Skill	t	t
+106	Chocobuckle	64	Enemy Skill	t	t
+107	L5 Death	51	Enemy Skill	t	t
+108	Death Sentence	65	Enemy Skill	t	t
+109	Roulette	65	Enemy Skill	t	t
+110	Shadow Flare	64	Enemy Skill	t	t
+111	Pandora's Box	66	Enemy Skill	t	t
+112	Attack	67	Command	t	t
+113	2x-Cut	68	Command	t	t
+114	4x-Cut	69	Command	t	t
+115	Slash-All	70	Command	t	t
+116	Flash	71	Command	t	t
+117	Magic	72	Command	t	f
+118	W-Magic	73	Command	t	f
+119	Summon	74	Command	t	f
+120	W-Summon	73	Command	t	f
+121	Item	75	Command	t	f
+122	W-Item	73	Command	t	f
+123	E.Skill	76	Command	t	f
+124	Change	77	Command	t	f
+125	Defend	78	Command	t	f
+126	Steal	79	Command	t	t
+127	Mug	80	Command	t	t
+128	Sense	81	Command	t	f
+129	Throw	82	Command	t	t
+130	Coin	83	Command	t	t
+131	Morph	84	Command	t	t
+132	D.blow	85	Command	t	t
+133	Manip.	86	Command	t	t
+134	Mime	87	Command	t	f
+\.
+
+
+--
+-- Data for Name: ability_damage; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY ability_damage (ability_id, formula, power, long_range, piercing) FROM stdin;
+1	Cure	5	t	t
+2	Cure	35	t	t
+3	Cure	130	t	t
+7	Max HP%	8	t	t
+8	Max HP%	32	t	t
+10	Magical	8	t	f
+11	Magical	20	t	f
+12	Magical	64	t	f
+13	Magical	8	t	f
+14	Magical	20	t	f
+15	Magical	64	t	f
+16	Magical	8	t	f
+17	Magical	20	t	f
+18	Magical	64	t	f
+19	Magical	11	t	f
+20	Magical	24	t	f
+21	Magical	70	t	f
+22	Magical	10	t	f
+23	Magical	21	t	f
+24	Magical	68	t	f
+25	HP%	8	t	t
+26	HP%	16	t	t
+27	HP%	24	t	t
+45	Magical	80	t	f
+46	Magical	30	t	f
+47	Magical	95	t	f
+48	Magical	100	t	f
+49	Magical	105	t	f
+50	Magical	115	t	f
+51	Max HP%	32	t	t
+53	Magical	105	t	f
+55	Magical	16	t	f
+56	Magical	20	t	f
+58	Magical	24	t	f
+60	Magical	27	t	f
+62	Magical	30	t	f
+64	Magical	33	t	f
+67	Magical	78	t	f
+69	Magical	75	t	f
+71	Magical	65	t	t
+73	Magical	100	t	f
+75	Magical	120	t	f
+77	Magical	60	t	f
+79	Magical	80	t	t
+81	Magical	90	t	f
+83	Magical	100	t	t
+85	Magical	120	t	t
+87	Magical	80	t	t
+89	HP%	31	t	t
+90	Fixed MP	100	t	t
+91	Caster's HP	0	t	t
+93	Max HP%	32	t	t
+96	Magical	14	t	f
+97	HP%	16	t	t
+98	Magical	11	t	t
+100	Magical	54	t	f
+101	Magical	52	t	f
+102	Magical	34	t	f
+103	Magical	77	t	f
+104	Balance	0	t	t
+105	Physical	12	f	f
+106	Escapes	0	t	t
+110	Magical	125	t	f
+111	Magical	60	t	t
+112	Physical	16	f	f
+113	Physical	16	f	f
+114	Physical	16	t	f
+115	Physical	16	t	f
+116	Physical	16	t	f
+127	Physical	16	f	f
+129	Physical	16	t	f
+130	Custom	0	t	f
+131	Physical	2	t	f
+132	Weapon	16	t	f
+\.
+
+
+--
+-- Name: ability_id_seq; Type: SEQUENCE SET; Schema: public; Owner: modimore
+--
+
+SELECT pg_catalog.setval('ability_id_seq', 1, false);
+
+
+--
+-- Data for Name: ability_notes; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY ability_notes (ability_id, note_id, note_text) FROM stdin;
+43	0	Caster's party automatically flees from battle
+54	0	Uses Fat-Chocobo 1/16 of the time, otherwise uses DeathBlow!!
+65	0	Uses Steel Bladed Sword unless it will not kill any enemies
+72	0	Tetra-disaster is Fire-, Ice-, and Lightning-elemental
+77	0	In addition to attacking, revives all KO'd allies to full HP
+89	0	Cannot be learned when all characters are past level 96
+94	0	Raises defense and magic defense by 50% of their natural values for the rest of the battle
+94	1	Cannot raise modifier by more than 100%
+105	0	damage is multipled by 8 if caster and target are the same level
+109	0	chooses a single target randomly from both allies and enemies
+111	0	due to a bug, will only be used once per save file
+116	0	Attempt to inflict Death on all enemies in one party
+117	0	Opens the Magic menu
+118	0	Opens the Magic menu so you can use two spells
+119	0	Opens the Summon menu
+120	0	Opens the Summon menu so you can use two spells
+121	0	Opens the Item menu
+122	0	Opens the Item menu so you can use two items
+123	0	Opens the Enemy Skill menu so you can select one for use
+124	0	Swaps which row the user is in
+125	0	Halves physical damage against the user until their next turn
+126	0	Attempt to steal an item from the target
+127	0	Steal and attack at the same time
+128	0	display enemy's HP,MP, and elemental weaknesses if any
+128	1	does not work if enemy has more than 30,000 HP
+129	0	throw a weapon at an opponent to deal damage
+129	1	thrown weapon will be lost
+129	2	ability uses an unusual calculation for Att in the damage formula
+130	0	Choose an amount of gil and throw it to deal 1/10 as much damage
+131	0	Any enemy that dies from this attack turns into its morph item (if any)
+132	0	Reduced accuracy, automatic critical on hit
+133	0	Attempt to manipulate your targets
+134	0	repeats the most recent action of a party member
+134	1	fails if that action was a limit break
+\.
+
+
+--
+-- Data for Name: ability_property_map; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY ability_property_map (ability_id, type, value) FROM stdin;
+1	Hit Formula	Magical
+2	Hit Formula	Magical
+3	Hit Formula	Magical
+4	Hit Formula	Magical
+5	Hit Formula	Magical
+6	Hit Formula	Magical
+7	Hit Formula	Magical
+8	Hit Formula	Magical
+9	Hit Formula	Magical
+10	Hit Formula	Magical
+11	Hit Formula	Magical
+12	Hit Formula	Magical
+13	Hit Formula	Magical
+14	Hit Formula	Magical
+15	Hit Formula	Magical
+16	Hit Formula	Magical
+17	Hit Formula	Magical
+18	Hit Formula	Magical
+19	Hit Formula	Magical
+20	Hit Formula	Magical
+21	Hit Formula	Magical
+22	Hit Formula	Magical
+23	Hit Formula	Magical
+24	Hit Formula	Magical
+25	Hit Formula	Magical
+26	Hit Formula	Magical
+27	Hit Formula	Magical
+28	Hit Formula	Magical
+29	Hit Formula	Magical
+30	Hit Formula	Magical
+31	Hit Formula	Magical
+32	Hit Formula	Magical
+33	Hit Formula	Magical
+34	Hit Formula	Magical
+35	Hit Formula	Magical
+36	Hit Formula	Magical
+37	Hit Formula	Magical
+38	Hit Formula	Magical
+39	Hit Formula	Magical
+40	Hit Formula	Magical
+41	Hit Formula	Magical
+42	Hit Formula	Magical
+43	Hit Formula	Magical
+44	Hit Formula	Magical
+45	Hit Formula	Magical
+46	Hit Formula	Magical
+47	Hit Formula	Magical
+48	Hit Formula	Magical
+49	Hit Formula	Magical
+50	Hit Formula	Magical
+51	Hit Formula	Magical
+52	Hit Formula	Magical
+53	Hit Formula	Magical
+55	Hit Formula	Magical
+56	Hit Formula	Magical
+58	Hit Formula	Magical
+60	Hit Formula	Magical
+62	Hit Formula	Magical
+64	Hit Formula	Magical
+66	Hit Formula	Magical
+67	Hit Formula	Magical
+69	Hit Formula	Magical
+71	Hit Formula	Magical
+73	Hit Formula	Magical
+75	Hit Formula	Magical
+77	Hit Formula	Magical
+79	Hit Formula	Magical
+81	Hit Formula	Magical
+83	Hit Formula	Magical
+85	Hit Formula	Magical
+87	Hit Formula	Magical
+88	Hit Formula	Magical
+89	Hit Formula	Magical
+90	Hit Formula	Magical
+91	Hit Formula	Magical
+92	Hit Formula	Magical
+93	Hit Formula	Magical
+94	Hit Formula	Magical
+95	Hit Formula	Magical
+96	Hit Formula	Magical
+97	Hit Formula	Magical
+98	Hit Formula	Magical
+99	Hit Formula	Magical
+100	Hit Formula	Magical
+101	Hit Formula	Magical
+102	Hit Formula	Magical
+103	Hit Formula	Magical
+104	Hit Formula	Physical
+105	Hit Formula	Physical
+106	Hit Formula	Physical
+107	Hit Formula	Magical
+108	Hit Formula	Magical
+109	Hit Formula	Magical
+110	Hit Formula	Magical
+111	Hit Formula	Magical
+112	Hit Formula	Physical
+113	Hit Formula	Physical
+114	Hit Formula	Physical
+115	Hit Formula	Physical
+116	Hit Formula	Physical
+126	Hit Formula	Physical
+127	Hit Formula	Physical
+129	Hit Formula	Physical
+130	Hit Formula	Physical
+131	Hit Formula	Physical
+132	Hit Formula	Physical
+133	Hit Formula	Physical
+1	Accuracy	256
+2	Accuracy	256
+3	Accuracy	256
+4	Accuracy	256
+5	Accuracy	256
+6	Accuracy	256
+7	Accuracy	256
+8	Accuracy	256
+9	Accuracy	256
+10	Accuracy	100
+11	Accuracy	100
+12	Accuracy	100
+13	Accuracy	100
+14	Accuracy	100
+15	Accuracy	100
+16	Accuracy	100
+17	Accuracy	100
+18	Accuracy	100
+19	Accuracy	100
+20	Accuracy	100
+21	Accuracy	100
+22	Accuracy	100
+23	Accuracy	100
+24	Accuracy	100
+25	Accuracy	100
+26	Accuracy	100
+27	Accuracy	100
+28	Accuracy	100
+29	Accuracy	100
+30	Accuracy	100
+31	Accuracy	100
+32	Accuracy	100
+33	Accuracy	100
+34	Accuracy	256
+35	Accuracy	256
+36	Accuracy	256
+37	Accuracy	256
+38	Accuracy	256
+39	Accuracy	256
+40	Accuracy	256
+41	Accuracy	256
+42	Accuracy	100
+43	Accuracy	110
+44	Accuracy	110
+45	Accuracy	100
+46	Accuracy	100
+47	Accuracy	100
+48	Accuracy	100
+49	Accuracy	100
+50	Accuracy	100
+51	Accuracy	255
+52	Accuracy	256
+53	Accuracy	100
+55	Accuracy	255
+56	Accuracy	255
+58	Accuracy	255
+60	Accuracy	255
+62	Accuracy	255
+64	Accuracy	255
+66	Accuracy	255
+67	Accuracy	255
+69	Accuracy	255
+71	Accuracy	255
+73	Accuracy	255
+75	Accuracy	255
+77	Accuracy	255
+79	Accuracy	255
+81	Accuracy	255
+83	Accuracy	255
+85	Accuracy	255
+87	Accuracy	255
+88	Accuracy	100
+89	Accuracy	256
+90	Accuracy	100
+91	Accuracy	255
+92	Accuracy	256
+93	Accuracy	256
+94	Accuracy	256
+95	Accuracy	256
+96	Accuracy	100
+97	Accuracy	100
+98	Accuracy	100
+99	Accuracy	100
+100	Accuracy	100
+101	Accuracy	100
+102	Accuracy	100
+103	Accuracy	100
+104	Accuracy	100
+105	Accuracy	100
+106	Accuracy	100
+107	Accuracy	256
+108	Accuracy	100
+109	Accuracy	255
+110	Accuracy	100
+111	Accuracy	100
+133	Accuracy	256
+1	Element	Restorative
+2	Element	Restorative
+3	Element	Restorative
+10	Element	Fire
+11	Element	Fire
+12	Element	Fire
+13	Element	Ice
+14	Element	Ice
+15	Element	Ice
+16	Element	Lightning
+17	Element	Lightning
+18	Element	Lightning
+19	Element	Earth
+20	Element	Earth
+21	Element	Earth
+22	Element	Poison
+23	Element	Poison
+24	Element	Poison
+25	Element	Gravity
+26	Element	Gravity
+27	Element	Gravity
+47	Element	Ice
+48	Element	Earth
+49	Element	Wind
+50	Element	Fire
+51	Element	Restorative
+58	Element	Ice
+60	Element	Fire
+62	Element	Lightning
+64	Element	Earth
+69	Element	Water
+73	Element	Multi
+75	Element	Holy
+77	Element	Fire
+83	Element	Multi
+91	Element	Restorative
+96	Element	Fire
+97	Element	Gravity
+100	Element	Fire
+101	Element	Water
+102	Element	Lightning
+103	Element	Multi
+46	Repeat	4
+87	Repeat	13
+113	Repeat	2
+114	Repeat	4
+44	Target	All
+55	Target	All
+56	Target	All
+58	Target	All
+60	Target	All
+62	Target	All
+64	Target	All
+66	Target	All
+69	Target	All
+71	Target	All
+73	Target	All
+75	Target	All
+77	Target	All
+79	Target	All
+81	Target	All
+83	Target	All
+85	Target	All
+87	Target	All
+91	Target	All
+92	Target	All
+98	Target	All
+99	Target	All
+100	Target	All
+101	Target	All
+102	Target	All
+103	Target	All
+107	Target	All
+111	Target	All
+115	Target	All
+116	Target	All
+46	Target	Random
+109	Target	Random
+114	Target	Random
+\.
+
+
+--
+-- Data for Name: ability_property_set; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY ability_property_set (ability_id, type) FROM stdin;
+1	Friendly
+2	Friendly
+3	Friendly
+4	Friendly
+5	Friendly
+6	Friendly
+7	Friendly
+8	Friendly
+9	Friendly
+34	Friendly
+43	Friendly
+51	Friendly
+52	Friendly
+91	Friendly
+92	Friendly
+93	Friendly
+94	Friendly
+95	Friendly
+55	No-split
+56	No-split
+58	No-split
+60	No-split
+62	No-split
+64	No-split
+66	No-split
+67	No-split
+69	No-split
+71	No-split
+73	No-split
+75	No-split
+77	No-split
+79	No-split
+81	No-split
+83	No-split
+85	No-split
+87	No-split
+89	No-split
+90	No-split
+91	No-split
+92	No-split
+93	No-split
+94	No-split
+95	No-split
+97	No-split
+98	No-split
+99	No-split
+100	No-split
+101	No-split
+102	No-split
+103	No-split
+104	No-split
+105	No-split
+106	No-split
+107	No-split
+108	No-split
+109	No-split
+110	No-split
+111	No-split
+116	No-split
+126	No-split
+129	No-split
+130	No-split
+\.
+
+
+--
+-- Data for Name: ability_status_info; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY ability_status_info (ability_id, mode, chance) FROM stdin;
+4	Cure	255
+5	Cure	255
+6	Grant	255
+7	Cure	255
+8	Cure	255
+9	Grant	255
+22	Inflict	48
+23	Inflict	48
+24	Inflict	72
+28	Inflict	72
+29	Inflict	60
+30	Inflict	60
+31	Toggle	72
+32	Toggle	72
+33	Inflict	80
+34	Grant	256
+35	Inflict	100
+36	Inflict	60
+37	Grant	256
+38	Grant	256
+39	Grant	256
+40	Remove	256
+41	Remove	256
+42	Inflict	44
+44	Inflict	256
+47	Inflict	68
+48	Inflict	32
+49	Inflict	32
+52	Grant	256
+55	Inflict	40
+66	Inflict	92
+81	Inflict	256
+88	Toggle	256
+89	Inflict	256
+91	Cure	256
+92	Grant	256
+93	Cure	256
+95	Grant	256
+99	Inflict	256
+107	Inflict	256
+108	Inflict	256
+109	Inflict	256
+116	Inflict	256
+133	Inflict	256
+\.
+
+
+--
+-- Data for Name: ability_status_list; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY ability_status_list (ability_id, status) FROM stdin;
+22	Poison
+23	Poison
+24	Poison
+4	Poison
+7	Death
+8	Death
+6	Resist
+9	Regen
+5	Sleep
+5	Poison
+5	Sadness
+5	Fury
+5	Confusion
+5	Silence
+5	Frog
+5	Small
+5	Slow-numb
+5	Petrify
+5	Berserk
+5	Paralysis
+5	Darkness
+28	Sleep
+29	Confusion
+30	Silence
+31	Small
+32	Frog
+33	Berserk
+34	Haste
+35	Slow
+36	Stop
+37	Barrier
+38	MBarrier
+39	Reflect
+40	Barrier
+40	MBarrier
+40	Reflect
+40	Shield
+41	Haste
+41	Slow
+41	Stop
+41	Regen
+41	Barrier
+41	MBarrier
+41	Reflect
+41	Shield
+41	Death Force
+41	Resist
+42	Death
+44	Death
+47	Stop
+48	Petrify
+49	Confusion
+52	Shield
+55	Stop
+66	Death
+81	Poison
+81	Confuse
+81	Sleep
+81	Silence
+81	Mini
+81	Frog
+81	Slow
+81	Paralysis
+88	Sleep
+88	Frog
+89	Small
+91	Sleep
+91	Poison
+91	Confusion
+91	Silence
+91	Slow
+91	Stop
+91	Frog
+91	Small
+91	Slow-numb
+91	Petrify
+91	Berserk
+91	Paralysis
+91	Darkness
+91	Death Force
+91	Resist
+92	Haste
+92	Barrier
+92	MBarrier
+93	Death
+93	Sleep
+93	Poison
+93	Confusion
+93	Silence
+93	Slow
+93	Stop
+93	Frog
+93	Small
+93	Slow-numb
+93	Petrify
+93	Berserk
+93	Paralysis
+93	Darkness
+95	Death Force
+99	Sleep
+99	Poison
+99	Confusion
+99	Silence
+99	Frog
+99	Small
+107	Death
+108	Death-sentence
+109	Death
+116	Death
+133	Manipulate
+\.
+
+
+--
+-- Data for Name: armor; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY armor (uid, name, growth_rate, linked_slots, single_slots, defense, magic_defense, defense_pct, magic_defense_pct) FROM stdin;
+21	Bronze Bangle	1	0	0	8	0	0	0
+22	Iron Bangle	1	0	1	10	2	0	0
+23	Titan Bangle	1	0	2	14	4	2	0
+24	Mythril Armlet	1	1	0	18	8	3	0
+25	Carbon Bangle	1	1	1	27	14	3	0
+\.
+
+
+--
+-- Data for Name: character_categories; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY character_categories (uid, name) FROM stdin;
+1	Party Members
+2	Major Villains
+3	Shinra
+\.
+
+
+--
+-- Data for Name: character_intros; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY character_intros (uid, full_name, job, age, weapon, height, birthdate, birthplace, blood_type, description) FROM stdin;
+1	Cloud Strife	Mercenary (ex-member of SOLDIER)	21	Sword	67	08/19	Nibelheim	AB	The main character in Final Fantasy VII. Originally a member of SOLDIER, he is now a mercenary who will take any job. After being hired by AVALANCHE, he gradually gets caught up in a massive struggle for the life of the planet. His enormous sword can cut almost anything in two.
+2	Aeris Gainsborough	Flower Merchant	22	Rod	63	02/07		O	Young, beautiful, and somewhat mysterious, Aeris met Cloud while selling flowers on the streets of Midgar. She decided to join him soon after. Her unusual abilities enable her to use magic, but she seems more interested in deepening the love triangle between herself, Cloud and Tifa.
+3	Tifa Lockheart	Bar Hostess, AVALANCHE member	20	Glove	64	05/03	Nibelheim	B	Bright and optimistic, Tifa alwats cheers up the others when they're down. But don't let her looks fool you, she can decimate almost any enemy with her fists. She is one of the main members of AVALANCHE. She and Cloud were childhood friends, and although she has strong feelings for him, she would never admit it.
+4	Barret Wallace	Leader of AVALANCHE	35	Gun-arm	76	12/15	Corel Village	O	Head of the underground resistance movement, AVALANCHE, Barret is fighting the mega-conglomerate Shinra, Inc. which has monopolized Mako energy by building special reactors to suck it out of the planet. Barret depends on brute strength and his "Gun-arm" to see him through. His wife died in an accident several years ago, and he now lives with his daughter Marlene.
+5	Red XIII	Beast	48	Headdress	45		Cosmo Canyon		Just as his name implies, he is an animal with fire-red fur. But under his fierce exterior is an intelligence surpassing that of any human's. His sharp claws and fangs make him good at close-range fighting, but other than that, not much is known about him. It's not even certain that "Red XIII" is his real name. A real enigma.
+6	Cid Highwind	Pilot	32	Spear	68	02/22		B	Cid is a tough-talking, warm-hearted old pilot who hasn't forgotten his dreams. There's no better pilot by air or sea. He believes someday he'll fly to the ends of the universe. With his handmade spear and knowledge of machinery, he throws himself into any attack regardless of the danger.
+7	Sephiroth	Top ranking SOLDIER officer	0	Long Sword	73				Even amongst the elite troops of SOLDIER, Sephiroth is known to be the best. His past is locked away in a confidential file held by Shinra, Inc. His giant sword, which only he can handle, has extremely destructive power. Said to have disappeared in a battle years ago, his current whereabouts are unknown.
+8	Yuffie Kisaragi	Materia Hunter, Ninja	16	Knife, boomerang, origami (for throwing)	62	11/20	Wutai	A	Although you'd never know it by looking at her, Yuffie comes from a long line of Ninja. She forced herself into the group just to get a 'certain something'. She's sneaky, arrogant, and "way" selfish. But with her super shuriken and her special skills, there isn't anyone else you'd rather have on your side in a fight.
+9	Cait Sith	Toysaurus	0	Megaphone	38				Cait Sith rides around on the back of a huge stuffed Mog he magically brought to life. Megaphone in hand, he's always shouting orders and creating dopey attacks. When his slot machine attack works, the enemy lines look like an overturned toy box. His hobby is fortune-telling, but like his personality, it's pretty unreliable.
+10	Vincent Valentine	Unemployed	27	Gun	72	10/13		A	A mystical man, stern and upright while at the same time dark and mysterious. His past connection with Shinra, Inc. is what made him join Cloud and the others. He may seem frail at first glance, but hidden inside his body lurks a fearsome power.
+\.
+
+
+--
+-- Data for Name: characters; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY characters (uid, name, category_id) FROM stdin;
+1	Cloud	0
+2	Aeris	0
+3	Tifa	0
+4	Barret	0
+5	Red XIII	0
+6	Cid	0
+7	Sephiroth	0
+8	Yuffie	0
+9	Cait Sith	0
+10	Vincent	0
+\.
+
+
+--
+-- Data for Name: description_fillers; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY description_fillers (referent_type, referent_id, place, content) FROM stdin;
+item	1	0	HP
+item	2	0	HP
+item	3	0	HP
+item	4	0	MP
+item	5	0	MP
+item	1	1	100
+item	4	1	100
+item	2	1	500
+item	6	0	HP/MP
+item	9	0	Poison
+item	10	0	Petrify
+item	11	0	Silence
+item	12	0	Small
+item	13	0	Frog
+item	14	0	Darkness
+item	17	0	Sadness
+item	18	0	Fury
+Ability	10	0	Fire
+Ability	11	0	Fire
+Ability	12	0	Fire
+Ability	13	0	Ice
+Ability	14	0	Ice
+Ability	15	0	Ice
+Ability	16	0	Lightning
+Ability	17	0	Lightning
+Ability	18	0	Lightning
+Ability	19	0	Earth
+Ability	20	0	Earth
+Ability	21	0	Earth
+Ability	22	0	Poison
+Ability	23	0	Poison
+Ability	24	0	Poison
+Ability	25	0	3/4
+Ability	26	0	1/2
+Ability	27	0	1/4
+Ability	31	0	Small
+Ability	32	0	Frog
+Ability	34	0	Increases
+Ability	35	0	Decreases
+Ability	37	0	physical
+Ability	38	0	magical
+Ability	47	0	Ice
+Ability	47	1	Stop
+Ability	48	0	Earth
+Ability	48	1	Petrify
+Ability	52	0	defense
+Ability	53	0	attack
+Ability	50	0	Fire
+Ability	57	0	Ice
+Ability	59	0	Fire
+Ability	61	0	Lightning
+Ability	68	0	Water
+Ability	72	0	Fire/Ice/Lightning
+Ability	82	0	Fire/Ice/Lightning/Earth
+Ability	88	0	Sleepel/Frog
+Ability	89	0	Critical/Small
+Ability	100	0	Fire
+Ability	101	0	Water
+Ability	102	0	Lightning
+Ability	103	0	[Fire/Ice/Lightning]
+Ability	88	1	4
+Ability	105	0	Non-elemental
+Ability	106	0	Non-elemental
+Ability	107	0	Death
+Ability	107	1	5
+Ability	108	0	 sentence
+Ability	108	1	
+Ability	109	0	
+Ability	109	1	 or ally
+Ability	110	0	Big non-elemental
+Ability	118	0	Cast
+Ability	118	1	Magic spells
+Ability	120	0	Cast
+Ability	120	1	Summon spells
+Ability	122	0	Use
+Ability	122	1	items
+\.
+
+
+--
+-- Name: description_format_seq; Type: SEQUENCE SET; Schema: public; Owner: modimore
+--
+
+SELECT pg_catalog.setval('description_format_seq', 1, true);
+
+
+--
+-- Data for Name: description_formats; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY description_formats (uid, format_string, num_slots) FROM stdin;
+1		0
+2	Description for {0}	1
+3	Restores {0} by {1}	2
+4	Fully Restores {0}	1
+5	Cures [{0}]	1
+6	Restores ally's max HP/MP. Use at Save Point	0
+7	Fully restores all members HP/MP	0
+8	Cures abnormal status	0
+9	Protects against transformations	0
+10	{0} element attack	1
+11	Restores HP	0
+12	Heals Poison	0
+13	Cures unusual status	0
+14	Makes you resistant to transformation	0
+15	Restores life	0
+16	Restores life and all HP	0
+17	Gradually restores HP	0
+18	Gravity-based attack. HP at {0}	1
+19	Puts opponent to Sleep	0
+20	Confuses opponent	0
+21	Constrains Magic	0
+22	Induces or cures a [{0}] state	1
+23	Causes opponent to go berserk	0
+24	{0} speed	1
+25	Stops all movement	0
+26	Creates a barrier resistant to {0} attacks	1
+27	Can reflect magic spell back up to 4 times	0
+28	Destroys function of any barriers	0
+29	Makes magic ineffective	0
+30	Causes sudden death	0
+31	Lets you escape from battle	0
+32	Eliminates opponent from battle	0
+33	Creates [Barrier/MBarrier] simultaneously	0
+34	Non-elemental attack	0
+35	Very strong {0} magic. Sometimes causes [{1}]	2
+36	Wind elemental attack. Sometimes causes [Confu]	0
+37	Restores entire HP	0
+38	Extreme magic {0}	1
+39	Attacks all opponents. Sometimes causes [Stop]	0
+40	{0} magic damage on all opponents	1
+41	Damages all opponents on the ground	0
+42	{0} Magic damage on all opponents	1
+43	Unblockable Non-Elemental attack	0
+44	Causes [{0}] magic damage	1
+45	Causes Holy Magic Damage on all opponents	0
+46	Slashes all opponents	0
+47	Causes Fire Magic damage, and revives all allies	0
+48	Changes status of all opponents	0
+49	Extreme summoned monsters	0
+50	Causes [{0}] on one opponent	1
+51	Causes [{0}] with levels in multiples of {1}	2
+52	Drains 100 MP out of every opponent	0
+53	Restores HP and status to every ally	0
+54	Revives, restores HP and status to any one ally	0
+55	Raises the Defense and Magic Def. level of one ally	0
+56	Makes any one ally immune to death	0
+57	Adds [Barrier/MBarrier/Haste] to every ally	0
+58	Causes Fire damage to any single opponent	0
+59	Lessens one opponent's HP by 1/2	0
+60	Non-elemental damage to all opponents	0
+61	[Poison/Confu/Sleepel/Silence/Small/Frog] on all	0
+62	{0} damage on all opponents	1
+63	Does damage equal to user's MaxHP/HP	0
+64	{0} damage on any one opponent	1
+65	Pronounces death{0} on any one opponent{1}	2
+66	Big damage on all opponents, ignore defense	0
+67	Attack with equipped weapon	0
+68	Attacks constantly	0
+69	Four consecutive cuts	0
+70	Attack all opponents	0
+71	Instantly kills opponent	0
+72	Cast spell	0
+73	{0} two {1} at once	2
+74	Call Summon monster	0
+75	Use available item	0
+76	Use enemy skills used on you	0
+77	Change position to or from front/back row	0
+78	Defend without attacking	0
+79	Steal item	0
+80	Steals from an opponent at a given rate while attacking	0
+81	Senses opponent's HP/MP/etc	0
+82	Throws item damaging opponent	0
+83	What can I say? It's all about money	0
+84	Transform opponent into an item	0
+85	Attacks that either deal critical damage or miss	0
+86	You control opponent's movements	0
+87	Mimics attack immediately before your command	0
+\.
+
+
+--
+-- Data for Name: enemy_actions; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_actions (enemy_ver_id, action, name_hidden, manipulate) FROM stdin;
+\.
+
+
+--
+-- Name: enemy_base_id_seq; Type: SEQUENCE SET; Schema: public; Owner: modimore
+--
+
+SELECT pg_catalog.setval('enemy_base_id_seq', 7, true);
+
+
+--
+-- Data for Name: enemy_bases; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_bases (base_id, name, description, image) FROM stdin;
+1	Grunt	A low-ranking Shinra military unit. Grunts are often assigned to guard duty at various shinra facilities.	images/enemies/grunt.png
+2	MP	A member of the Shinra Military Police, armed with a machine gun and some basic riot control gear.	images/enemies/mp.png
+3	1st Ray	A laser cannon that is part of Reactor No. 1's security system.	images/enemies/1st_ray.png
+4	Guard Hound	Seemingly a panther-dog hybrid set to roam the grounds of Shinra company reactors defending against intruders	images/enemies/guard_hound.png
+5	Mono Drive	This tiny floating watch-creature aims to please its fellow guards by shouting loudly when it sees it enemies and setting its targets on fire.	images/enemies/mono_drive.png
+6	Sweeper	A gun-toting robot that serves as the heavy trooper of the No. 1 Reactor. Adorned with drills also, but doesn't use them in combat.	images/enemies/sweeper.png
+7	Guard Scorpion	A robotic scorpion guarding the core of the Sector 5 reactor.	images/enemies/guard_scorpion.png
+\.
+
+
+--
+-- Data for Name: enemy_elemental_modifiers; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_elemental_modifiers (enemy_ver_id, element, modifier) FROM stdin;
+3	Lighting	200
+5	Wind	200
+5	Earth	0
+6	Lightning	200
+7	Lightning	200
+\.
+
+
+--
+-- Data for Name: enemy_items; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_items (enemy_ver_id, item_slot_id, item_name, get_method, get_chance) FROM stdin;
+1	0	Potion	D	8
+1	1	Potion	D	8
+1	2	Grenade	S	8
+1	3	Potion	M	\N
+2	0	Potion	D	8
+2	1	Grenade	S	8
+2	2	Potion	M	\N
+3	0	Potion	M	\N
+4	0	Potion	D	8
+4	1	Grenade	S	32
+4	2	Potion	M	\N
+5	0	Potion	D	8
+5	1	Ether	D	2
+5	2	Ether	M	\N
+6	0	Potion	M	\N
+7	0	Potion	M	\N
+\.
+
+
+--
+-- Data for Name: enemy_skill_info; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_skill_info (ability_id, mp_cost, reflectable, missable, manip_only) FROM stdin;
+88	5	f	f	f
+89	10	f	t	f
+90	3	t	f	t
+91	34	f	f	t
+92	56	f	f	t
+93	50	f	f	t
+94	19	f	f	t
+95	3	f	f	t
+96	10	t	f	f
+97	16	t	f	f
+98	8	t	f	f
+99	58	f	f	f
+100	35	f	f	f
+101	34	t	f	f
+102	20	f	t	f
+103	75	f	f	f
+104	3	f	f	f
+105	0	f	f	f
+106	3	f	f	f
+107	22	f	t	t
+108	10	f	f	f
+109	6	f	f	f
+110	100	t	f	f
+111	110	t	t	f
+\.
+
+
+--
+-- Data for Name: enemy_skill_users; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_skill_users (ability_id, enemy_name) FROM stdin;
+88	Touch Me
+88	Toxic Frog
+88	Christopher
+89	Mu
+89	Trickplay
+90	Razor Weed
+91	Zemelzett
+91	Wind Wing
+92	Beachplug
+92	Wolfmeister
+93	Pollensalta
+94	Dark Dragon
+95	Adamantaimai
+96	Ark Dragon
+96	Dragon
+97	Dark Dragon
+97	Death Claw
+98	Bullmotor
+98	Custom Sweeper
+98	Death Machine
+99	Malboro
+100	Midgar Zolom
+101	Jenova:LIFE
+101	Harpy
+101	Serpent
+102	Materia Keeper
+102	Godo
+102	Stilva
+103	Parasite
+103	Stilva
+104	Jersey
+104	Behemoth
+105	Goblin
+106	Chocobo
+107	Parasite
+108	Boundfat
+108	Gi Spector
+108	Sneaky Step
+109	Death Dealer
+110	Safer:Sephiroth
+110	Ultimate Weapon
+110	Dragon Zombie
+110	Ruby Weapon
+111	Dragon Zombie
+\.
+
+
+--
+-- Data for Name: enemy_status_immunities; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_status_immunities (enemy_ver_id, status) FROM stdin;
+3	Sleep
+3	Poison
+3	Sadness
+3	Fury
+3	Frog
+3	Small
+3	Death-sentence
+3	Paralyzed
+3	Darkness
+5	Stop
+5	Frog
+5	Paralyzed
+6	Sleep
+6	Poison
+6	Sadness
+6	Fury
+6	Frog
+6	Small
+6	Death-sentence
+6	Paralyzed
+6	Darkness
+7	Sleep
+7	Poison
+7	Sadness
+7	Fury
+7	Frog
+7	Small
+7	Death-sentence
+7	Paralyzed
+7	Darkness
+\.
+
+
+--
+-- Name: enemy_ver_id_seq; Type: SEQUENCE SET; Schema: public; Owner: modimore
+--
+
+SELECT pg_catalog.setval('enemy_ver_id_seq', 15, true);
+
+
+--
+-- Data for Name: enemy_versions; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY enemy_versions (base_id, ver_id, ver_name, level, hp, mp, attack, defense, magic_attack, magic_defense, defense_pct, magic_defense_pct, dexterity, luck, exp, ap, gil) FROM stdin;
+1	1	Normal	7	40	0	12	10	2	2	4	0	58	8	22	2	15
+2	2	Normal	2	30	0	6	4	0	0	0	0	50	4	16	2	10
+3	3	Normal	4	18	0	10	2	0	0	0	0	40	0	12	1	5
+4	4	Normal	3	42	0	8	4	2	2	6	0	64	6	20	2	12
+5	5	Normal	2	28	28	3	6	3	4	6	0	49	2	18	3	8
+6	6	Normal	8	140	0	18	20	0	4	0	0	48	1	27	3	30
+6	7	Battle Square	8	280	0	22	20	0	4	0	0	48	1	27	3	30
+7	8	Normal	12	800	0	30	15	40	256	0	0	60	1	100	10	100
+7	15	Tail Raised	12	800	0	30	15	255	384	0	0	60	1	100	10	100
+\.
+
+
+--
+-- Data for Name: formation_enemies; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY formation_enemies (formation_id, row_num, "position", enemy_ver_id) FROM stdin;
+301	1	0	2
+301	1	1	2
+303	1	0	2
+303	1	1	4
+306	1	0	2
+306	1	1	2
+306	2	0	5
+302	1	0	4
+304	-1	0	4
+305	1	0	5
+305	1	1	5
+\.
+
+
+--
+-- Data for Name: formation_locations; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY formation_locations (formation_id, loc, sub_loc) FROM stdin;
+301	Sector 1	Platform
+301	Sector 1	Sector 1 Station
+301	Sector 1	Sector 1
+303	Sector 1	Platform
+303	Sector 1	Sector 1 Station
+303	Sector 1	Sector 1
+306	Sector 1	Outside Reactor
+302	Sector 1	Platform
+302	Sector 1	Sector 1 Station
+302	Sector 1	Sector 1
+304	Sector 1	Platform
+304	Sector 1	Sector 1 Station
+304	Sector 1	Sector 1
+305	Sector 1	Outside Reactor
+\.
+
+
+--
+-- Data for Name: formations; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY formations (uid, attack_type) FROM stdin;
+301	0
+303	0
+306	0
+302	0
+304	1
+305	0
+\.
+
+
+--
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY items (uid, name, item_type, descr_id) FROM stdin;
+1	Potion	Restorative	3
+2	Hi-Potion	Restorative	3
+3	X-Potion	Restorative	4
+4	Ether	Restorative	3
+5	Turbo Ether	Restorative	4
+6	Elixir	Restorative	4
+7	Megalixir	Restorative	7
+8	Tent	Field	6
+9	Antidote	Restorative	5
+10	Soft	Restorative	5
+11	Echo Screen	Restorative	5
+12	Cornucopia	Restorative	5
+13	Maiden's Kiss	Restorative	5
+14	Eye drop	Restorative	5
+15	Remedy	Restorative	8
+16	Vaccine	Restorative	9
+17	Hyper	Restorative	5
+18	Tranquilizer	Restorative	5
+19	Buster Sword	Weapon	1
+20	Mythril Saber	Weapon	1
+21	Bronze Bangle	Armor	1
+22	Iron Bangle	Armor	1
+23	Titan Bangle	Armor	1
+24	Mythril Armlet	Armor	1
+25	Carbon Bangle	Armor	1
+26	Gatling Gun	Weapon	1
+27	Leather Glove	Weapon	1
+\.
+
+
+--
+-- Data for Name: magic_info; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY magic_info (ability_id, mp_cost, spell_type, reflectable) FROM stdin;
+1	5	Restore	t
+2	24	Restore	t
+3	64	Restore	t
+4	3	Restore	t
+5	15	Restore	t
+6	120	Restore	t
+7	34	Restore	t
+8	100	Restore	t
+9	120	Restore	t
+10	4	Attack	t
+11	22	Attack	t
+12	52	Attack	t
+13	4	Attack	t
+14	22	Attack	t
+15	52	Attack	t
+16	4	Attack	t
+17	22	Attack	t
+18	52	Attack	t
+19	6	Attack	t
+20	28	Attack	t
+21	68	Attack	t
+22	8	Attack	t
+23	36	Attack	t
+24	80	Attack	t
+25	14	Attack	f
+26	33	Attack	f
+27	48	Attack	f
+28	8	Indirect	t
+29	18	Indirect	t
+30	24	Indirect	t
+31	10	Indirect	t
+32	14	Indirect	t
+33	28	Indirect	t
+34	28	Indirect	t
+35	20	Indirect	t
+36	34	Indirect	t
+37	16	Indirect	t
+38	24	Indirect	t
+39	30	Indirect	f
+40	12	Indirect	f
+41	20	Indirect	f
+42	30	Indirect	t
+43	30	Indirect	f
+44	30	Indirect	t
+45	70	Other	f
+46	110	Other	f
+47	82	Other	t
+48	86	Other	t
+49	90	Other	t
+50	100	Other	t
+51	99	Other	t
+52	180	Other	t
+53	130	Other	t
+\.
+
+
+--
+-- Data for Name: summon_attacks; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY summon_attacks (summon_id, attack_id) FROM stdin;
+54	55
+54	56
+57	58
+59	60
+61	62
+63	64
+65	66
+65	67
+68	69
+70	71
+72	73
+74	75
+76	77
+78	79
+80	81
+82	83
+84	85
+86	87
+\.
+
+
+--
+-- Data for Name: summon_info; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY summon_info (ability_id, mp_cost, possible_attacks) FROM stdin;
+54	14	2
+57	32	1
+59	34	1
+61	40	1
+63	46	1
+65	80	2
+68	78	1
+70	100	1
+72	110	1
+74	120	1
+76	180	1
+78	140	1
+80	150	1
+82	160	1
+84	180	1
+86	250	1
+\.
+
+
+--
+-- Data for Name: weapons; Type: TABLE DATA; Schema: public; Owner: modimore
+--
+
+COPY weapons (uid, name, growth_rate, linked_slots, single_slots, attack, hit_pct, magic_bonus, element, wielder) FROM stdin;
+19	Buster Sword	1	1	0	18	96	2	Cut	Cloud
+20	Mythril Saber	1	1	1	23	98	4	Cut	Cloud
+26	Gatling Gun	1	0	1	14	97	0	Shoot	Barret
+27	Leather Glove	1	0	1	13	99	0	Hit	Tifa
+\.
+
+
+--
+-- Name: abilities_name_key; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY abilities
+    ADD CONSTRAINT abilities_name_key UNIQUE (name);
+
+
+--
+-- Name: abilities_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY abilities
+    ADD CONSTRAINT abilities_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: ability_damage_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_damage
+    ADD CONSTRAINT ability_damage_pkey PRIMARY KEY (ability_id);
+
+
+--
+-- Name: ability_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_notes
+    ADD CONSTRAINT ability_notes_pkey PRIMARY KEY (ability_id, note_id);
+
+
+--
+-- Name: ability_property_map_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_property_map
+    ADD CONSTRAINT ability_property_map_pkey PRIMARY KEY (ability_id, type, value);
+
+
+--
+-- Name: ability_property_set_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_property_set
+    ADD CONSTRAINT ability_property_set_pkey PRIMARY KEY (ability_id, type);
+
+
+--
+-- Name: ability_status_info_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_status_info
+    ADD CONSTRAINT ability_status_info_pkey PRIMARY KEY (ability_id);
+
+
+--
+-- Name: ability_status_list_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_status_list
+    ADD CONSTRAINT ability_status_list_pkey PRIMARY KEY (ability_id, status);
+
+
+--
+-- Name: armor_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY armor
+    ADD CONSTRAINT armor_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: character_categories_name_key; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY character_categories
+    ADD CONSTRAINT character_categories_name_key UNIQUE (name);
+
+
+--
+-- Name: character_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY character_categories
+    ADD CONSTRAINT character_categories_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: character_intro_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY character_intros
+    ADD CONSTRAINT character_intro_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: character_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY characters
+    ADD CONSTRAINT character_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: description_filler_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY description_fillers
+    ADD CONSTRAINT description_filler_pkey PRIMARY KEY (referent_type, referent_id, place);
+
+
+--
+-- Name: description_format_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY description_formats
+    ADD CONSTRAINT description_format_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: enemies_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_bases
+    ADD CONSTRAINT enemies_pkey PRIMARY KEY (base_id);
+
+
+--
+-- Name: enemy_action_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_actions
+    ADD CONSTRAINT enemy_action_pkey PRIMARY KEY (enemy_ver_id, action);
+
+
+--
+-- Name: enemy_elemental_modifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_elemental_modifiers
+    ADD CONSTRAINT enemy_elemental_modifiers_pkey PRIMARY KEY (enemy_ver_id, element);
+
+
+--
+-- Name: enemy_items_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_items
+    ADD CONSTRAINT enemy_items_pkey PRIMARY KEY (enemy_ver_id, item_slot_id);
+
+
+--
+-- Name: enemy_skill_info_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_skill_info
+    ADD CONSTRAINT enemy_skill_info_pkey PRIMARY KEY (ability_id);
+
+
+--
+-- Name: enemy_skill_users_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_skill_users
+    ADD CONSTRAINT enemy_skill_users_pkey PRIMARY KEY (ability_id, enemy_name);
+
+
+--
+-- Name: enemy_status_immunities_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_status_immunities
+    ADD CONSTRAINT enemy_status_immunities_pkey PRIMARY KEY (enemy_ver_id, status);
+
+
+--
+-- Name: enemy_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_versions
+    ADD CONSTRAINT enemy_versions_pkey PRIMARY KEY (ver_id);
+
+
+--
+-- Name: formation_enemies_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY formation_enemies
+    ADD CONSTRAINT formation_enemies_pkey PRIMARY KEY (formation_id, row_num, "position");
+
+
+--
+-- Name: formation_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY formation_locations
+    ADD CONSTRAINT formation_locations_pkey PRIMARY KEY (formation_id, loc, sub_loc);
+
+
+--
+-- Name: formations_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY formations
+    ADD CONSTRAINT formations_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: items_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT items_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: magic_info_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY magic_info
+    ADD CONSTRAINT magic_info_pkey PRIMARY KEY (ability_id);
+
+
+--
+-- Name: summon_attacks_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY summon_attacks
+    ADD CONSTRAINT summon_attacks_pkey PRIMARY KEY (summon_id, attack_id);
+
+
+--
+-- Name: summon_info_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY summon_info
+    ADD CONSTRAINT summon_info_pkey PRIMARY KEY (ability_id);
+
+
+--
+-- Name: weapons_pkey; Type: CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY weapons
+    ADD CONSTRAINT weapons_pkey PRIMARY KEY (uid);
+
+
+--
+-- Name: abilities_description_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY abilities
+    ADD CONSTRAINT abilities_description_id_fkey FOREIGN KEY (description_id) REFERENCES description_formats(uid);
+
+
+--
+-- Name: ability_damage_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_damage
+    ADD CONSTRAINT ability_damage_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: ability_notes_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_notes
+    ADD CONSTRAINT ability_notes_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: ability_property_map_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_property_map
+    ADD CONSTRAINT ability_property_map_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: ability_property_set_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_property_set
+    ADD CONSTRAINT ability_property_set_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: ability_status_info_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_status_info
+    ADD CONSTRAINT ability_status_info_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: ability_status_list_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY ability_status_list
+    ADD CONSTRAINT ability_status_list_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: armor_uid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY armor
+    ADD CONSTRAINT armor_uid_fkey FOREIGN KEY (uid) REFERENCES items(uid);
+
+
+--
+-- Name: character_intro_uid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY character_intros
+    ADD CONSTRAINT character_intro_uid_fkey FOREIGN KEY (uid) REFERENCES characters(uid);
+
+
+--
+-- Name: enemy_action_enemy_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_actions
+    ADD CONSTRAINT enemy_action_enemy_ver_id_fkey FOREIGN KEY (enemy_ver_id) REFERENCES enemy_versions(ver_id);
+
+
+--
+-- Name: enemy_elemental_modifiers_enemy_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_elemental_modifiers
+    ADD CONSTRAINT enemy_elemental_modifiers_enemy_ver_id_fkey FOREIGN KEY (enemy_ver_id) REFERENCES enemy_versions(ver_id);
+
+
+--
+-- Name: enemy_items_enemy_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_items
+    ADD CONSTRAINT enemy_items_enemy_ver_id_fkey FOREIGN KEY (enemy_ver_id) REFERENCES enemy_versions(ver_id);
+
+
+--
+-- Name: enemy_skill_info_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_skill_info
+    ADD CONSTRAINT enemy_skill_info_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: enemy_skill_users_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_skill_users
+    ADD CONSTRAINT enemy_skill_users_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: enemy_status_immunities_enemy_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_status_immunities
+    ADD CONSTRAINT enemy_status_immunities_enemy_ver_id_fkey FOREIGN KEY (enemy_ver_id) REFERENCES enemy_versions(ver_id);
+
+
+--
+-- Name: enemy_versions_base_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY enemy_versions
+    ADD CONSTRAINT enemy_versions_base_id_fkey FOREIGN KEY (base_id) REFERENCES enemy_bases(base_id);
+
+
+--
+-- Name: formation_enemies_enemy_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY formation_enemies
+    ADD CONSTRAINT formation_enemies_enemy_ver_id_fkey FOREIGN KEY (enemy_ver_id) REFERENCES enemy_versions(ver_id);
+
+
+--
+-- Name: formation_enemies_formation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY formation_enemies
+    ADD CONSTRAINT formation_enemies_formation_id_fkey FOREIGN KEY (formation_id) REFERENCES formations(uid);
+
+
+--
+-- Name: formation_locations_formation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY formation_locations
+    ADD CONSTRAINT formation_locations_formation_id_fkey FOREIGN KEY (formation_id) REFERENCES formations(uid);
+
+
+--
+-- Name: items_descr_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY items
+    ADD CONSTRAINT items_descr_id_fkey FOREIGN KEY (descr_id) REFERENCES description_formats(uid);
+
+
+--
+-- Name: magic_info_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY magic_info
+    ADD CONSTRAINT magic_info_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: summon_attacks_attack_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY summon_attacks
+    ADD CONSTRAINT summon_attacks_attack_id_fkey FOREIGN KEY (attack_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: summon_attacks_summon_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY summon_attacks
+    ADD CONSTRAINT summon_attacks_summon_id_fkey FOREIGN KEY (summon_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: summon_info_ability_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY summon_info
+    ADD CONSTRAINT summon_info_ability_id_fkey FOREIGN KEY (ability_id) REFERENCES abilities(uid);
+
+
+--
+-- Name: weapons_uid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: modimore
+--
+
+ALTER TABLE ONLY weapons
+    ADD CONSTRAINT weapons_uid_fkey FOREIGN KEY (uid) REFERENCES items(uid);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

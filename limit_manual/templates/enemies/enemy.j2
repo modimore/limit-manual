@@ -18,7 +18,8 @@
 {%- endmacro %}
 
 {% block content %}
-  <div id="stat-box" class="content-area small">
+<div class="content-wrapper small">
+  <div id="stat-box" class="content-area">
     {# left block #}
     <div class="left">
       {# Enemy Image #}
@@ -163,10 +164,11 @@
       {% if (formations|length) > 0 %}
         <table id="formations">
           <thead>
-            <tr><th class="lighter" colspan="2">Formations</th></tr>
+            <tr><th class="lighter" colspan="3">Formations</th></tr>
             <tr>
               <th class="lighter">Locations</th>
               <th class="lighter">Enemies</th>
+              <th class="lighter">Attack Type</th>
             </tr>
           </thead>
           <tbody>
@@ -188,6 +190,7 @@
                     {% endfor %}{# rows #}
                   </ul>
                 </td>
+                <td>{{ formation.attack_type }}</td>
               </tr>
             {% endfor %}{# formations #}
           </tbody>
@@ -196,4 +199,5 @@
 
     </div>{# div.right #}
   </div>
+</div>
 {% endblock content%}

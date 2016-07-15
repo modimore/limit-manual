@@ -8,11 +8,11 @@
 
 {% block content %}
   <div class="content-wrapper small">
-    <div class="content-area scaled-grid-12">
+    <div class="content-area lattice-12">
       <h3>Playable Characters</h4>
-      <ul id="playable-characters" class="image-list scaled-row-wrapper">
+      <ul id="playable-characters" class="image-list lw-bar-12">
       {% for character in characters %}
-        <li id="{{ character.name }}" class="scale-12-4">
+        <li id="{{ character.name }}" class="lw-seg-12-4">
           <a href="/characters/{{ character.name }}">
             <img src="{{ url_for('static', filename='images/characters/' + character.image) }}">
           </a>

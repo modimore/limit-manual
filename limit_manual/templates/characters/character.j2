@@ -17,25 +17,27 @@
 
 {% block content %}
   {# introduction to the character #}
-  <div id="intro" class="content-area small character-colors">
+  <div class="content-wrapper small">
+    <div id="intro" class="content-area">
 
-    <div class="sizing-reference">{# used to correctly size portrait image #}
-      {% with intro = character.intro %}
-        <table id="intro-table">
-          <tbody>
-            {{ intro_pair('job', intro.job) }}
-            {{ intro_pair('age', intro.age) }}
-            {{ intro_pair('weapon', intro.weapon) }}
-            {{ intro_pair('height', intro.height) }}
-            {{ intro_pair('birthdate', intro.birthdate) }}
-            {{ intro_pair('birthplace', intro.birthplace) }}
-            {{ intro_pair('blood type', intro.blood_type) }}
-            <tr><td colspan="2">{{ intro.description }}</td></tr>
-          </tbody>
-        </table>
-      {% endwith %}
+      <div class="sizing-reference">{# used to correctly size portrait image #}
+        {% with intro = character.intro %}
+          <table id="intro-table">
+            <tbody>
+              {{ intro_pair('job', intro.job) }}
+              {{ intro_pair('age', intro.age) }}
+              {{ intro_pair('weapon', intro.weapon) }}
+              {{ intro_pair('height', intro.height) }}
+              {{ intro_pair('birthdate', intro.birthdate) }}
+              {{ intro_pair('birthplace', intro.birthplace) }}
+              {{ intro_pair('blood type', intro.blood_type) }}
+              <tr><td colspan="2">{{ intro.description }}</td></tr>
+            </tbody>
+          </table>
+        {% endwith %}
 
-      <img class="portrait back" src="{{ url_for('static', filename=character.main_image) }}" alt="Portrait of {{ character.name }}">
+        <img class="portrait back" src="{{ url_for('static', filename=character.main_image) }}" alt="Portrait of {{ character.name }}">
+      </div>
     </div>
   </div>
 {% endblock content %}

@@ -3,12 +3,12 @@
 {% block title %}<title>Items - Limit Manual</title>{% endblock %}
 
 {% macro item_table(items,table_name,table_id,with_type=false) -%}
-  <table id="{{ table_id }}" class="scaled-grid-12">
+  <table id="{{ table_id }}">
     <thead>
       <tr><th colspan="3">{{ table_name }}</th></tr>
       <tr>
-        <th class="scale-12-2">Name</th>
-        {% if with_type %}<th class="scale-12-2">Type</th>{% endif %}
+        <th class="lw-seg-12-2">Name</th>
+        {% if with_type %}<th class="lw-seg-12-2">Type</th>{% endif %}
         <th>Description</th>
       </tr>
     </thead>

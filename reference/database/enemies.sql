@@ -1,6 +1,6 @@
 -- ENEMIES  ===================================================
 CREATE SEQUENCE enemy_base_id_seq;
-CREATE TABLE enemies (
+CREATE TABLE enemy_bases (
 	base_id SMALLINT PRIMARY KEY DEFAULT nextval('enemy_base_id_seq'),
 	name VARCHAR(30),
 	description TEXT,
@@ -10,7 +10,7 @@ ALTER SEQUENCE enemy_base_id_seq OWNED BY enemies.base_id;
 
 CREATE SEQUENCE enemy_ver_id_seq;
 CREATE TABLE enemy_versions (
-	base_id SMALLINT NOT NULL REFERENCES enemies (base_id),
+	base_id SMALLINT NOT NULL REFERENCES enemy_bases (base_id),
 	ver_id SMALLINT PRIMARY KEY DEFAULT nextval('enemy_ver_id_seq'),
 	ver_name VARCHAR(40),
 	level SMALLINT,

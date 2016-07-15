@@ -8,7 +8,7 @@ class EnemyBase(object):
     def __init__(self,name,conn):
         self.name = name
         cur = conn.cursor()
-        cur.execute('''SELECT base_id, description, image FROM enemies
+        cur.execute('''SELECT base_id, description, image FROM enemy_bases
                        WHERE name=%s''', (name,))
         result = cur.fetchone()
         self.base_id = result[0]
@@ -110,8 +110,15 @@ class Enemy(EnemyBase):
                        WHERE enemy_ver_id=%s''', (self.ver_id,))
         formation_ids = [ row[0] for row in cur.fetchall() ]
 
+        attack_types = ["Normal", "Back Attack", "Side Attack"]
+
         for f_id in formation_ids:
             this_f = { 'id': f_id, 'locations': {}, 'enemy_rows': {} }
+
+            cur.execute('''SELECT attack_type
+                           FROM formations
+                           WHERE uid=%s''', (f_id,))
+            this_f['attack_type'] = attack_types[cur.fetchone()[0]]
 
             cur.execute('''SELECT loc, sub_loc
                            FROM formation_locations
@@ -160,7 +167,7 @@ def all_enemies():
 
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT base_id, name FROM enemies")
+    cur.execute("SELECT base_id, name FROM enemy_bases")
     results = cur.fetchall()
 
     enemies = []
