@@ -1,15 +1,20 @@
 @import '_base';
-@import 'latticeworks/_core';
+@import 'latticeworks/core';
+@import 'latticeworks/tables';
+@import 'latticeworks/forms';
 
 @include latticeworks-init;
 @include lw-segments(12);
-@include lw-segments-tablefix(12);
+
 @include lw-bar(12);
 @include lattice(12);
 @include lattice-static(12, 1200px);
 
+@include lw-tables(12);
+@include lattice-form(12);
+
 #foreground {
-  padding: $spacing-unit/2;
+  padding: $spacing-unit;
   @include spaced-column($spacing-unit);
 }
 

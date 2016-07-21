@@ -4,11 +4,16 @@
 
 {% macro item_table(items,table_name,table_id,with_type=false) -%}
   <table id="{{ table_id }}">
+    <caption>{{ table_name }}</caption>
+    <colgroup>
+      <col class="lw-seg-12-2"></col>
+      {% if with_type %}<col class="lw-seg-12-2"></col>{% endif %}
+      <col></col>
+    </colgroup>
     <thead>
-      <tr><th colspan="3">{{ table_name }}</th></tr>
       <tr>
-        <th class="lw-seg-12-2">Name</th>
-        {% if with_type %}<th class="lw-seg-12-2">Type</th>{% endif %}
+        <th>Name</th>
+        {% if with_type %}<th>Type</th>{% endif %}
         <th>Description</th>
       </tr>
     </thead>

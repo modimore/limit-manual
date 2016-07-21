@@ -1,1 +1,11 @@
-/home/modimore/projects/latticeworks/scss/_util.scss
+/* clearfix */
+%clearfix {
+  &:before, &:after {
+    display: table;
+    content: " ";
+  }
+
+  &, &:after {
+    clear: both;
+  }
+}

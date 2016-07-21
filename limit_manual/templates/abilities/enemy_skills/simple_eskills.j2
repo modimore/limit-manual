@@ -22,12 +22,18 @@
 
 {% macro eskill_table(eskill_list) %}
   <table id="Enemy Skills" class="simple">
+    <caption>Enemy Skills</caption>
+    <colgroup>
+      <col class="lw-seg-12-2"></col>
+      <col class="lw-seg-12-1"></col>
+      <col class="lw-seg-12-2"></col>
+      <col></col>
+    </colgroup>
     <thead>
-      <tr><th colspan="4">Enemy Skills</th></tr>
       <tr>
-        <th class="lw-seg-12-2">Name</th>
-        <th class="lw-seg-12-1">MP</th>
-        <th class="lw-seg-12-2">Users</th>
+        <th>Name</th>
+        <th>MP</th>
+        <th>Users</th>
         <th>Effect</th>
       </tr>
     </thead>

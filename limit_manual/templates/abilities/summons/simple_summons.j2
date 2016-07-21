@@ -27,15 +27,20 @@
 
 {% macro summon_table(summon_list) %}
   <table id="Summons" class="simple">
+    <caption>Summons</caption>
+    <colgroup>
+      <col class="lw-seg-12-2"></col>
+      <col class="lw-seg-12-1"></col>
+      <col></col>
+    </colgroup>
     <thead>
-      <tr><th colspan="4">Summons</th></tr>
       <tr>
-        <th rowspan="2" class="lw-seg-12-2">Name</th>
-        <th rowspan="2" class="lw-seg-12-1">MP</th>
+        <th rowspan="2">Name</th>
+        <th rowspan="2">MP</th>
         <th colspan="2">Description</th>
       </tr>
       <tr>
-        <th class="lw-seg-12-2">Attack Name</th>
+        <th>Attack Name</th>
         <th>Attack Effect</th>
       </tr>
     </thead>

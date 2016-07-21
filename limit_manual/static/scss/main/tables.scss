@@ -15,11 +15,22 @@ table {
   }
 }
 
+caption {
+  font-weight: bold;
+  padding: 2px 5px;
+}
+
 thead, tbody {
   border-top: 2*$table-border-width solid $table-border-color;
 
-  &:first-child {
-    border-top: none;
+  &:first-child,
+  colgroup + & {
+    border-top-width: 0px;
+  }
+
+  caption + &,
+  caption + colgroup + & {
+    border-top-width: $table-border-width;
   }
 }
 

@@ -17,12 +17,17 @@
 {% macro spell_table(name,spell_list,html_id=none) %}
   {% set html_id = html_id if html_id is not none else name %}
   <table id="{{html_id}}" class="simple">
+    <caption>{{ name }}</caption>
+    <colgroup>
+      <col class="lw-seg-12-2"></col>
+      <col class="lw-seg-12-1"></col>
+      <col class="lw-seg-12-1"></col>
+      <col></col>
     <thead>
-      <tr><th colspan="4">{{ name }}</th></tr>
       <tr>
-        <th class="lw-seg-12-2">Name</th>
-        <th class="lw-seg-12-1">MP</th>
-        <th class="lw-seg-12-1">Type</th>
+        <th>Name</th>
+        <th>MP</th>
+        <th>Type</th>
         <th>Effect</th>
       </tr>
     </thead>
