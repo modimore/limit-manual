@@ -6,12 +6,12 @@
 @include latticeworks-init;
 @include lw-segments(12);
 
-@include lw-bar(12);
-@include lattice(12);
-@include lattice-static(12, 1200px);
+@include lw-group;
+@include lw-box(12);
+@include lw-box-static(12, 1200px);
 
 @include lw-tables(12);
-@include lattice-form(12);
+@include lw-form(12);
 
 #foreground {
   padding: $spacing-unit;
@@ -39,7 +39,7 @@
   @extend %thick-border;
   overflow: auto;
 
-  padding: $spacing-unit/2;
+  padding: $spacing-unit;
 
   &.packed {
     padding: 0px;

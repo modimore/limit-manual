@@ -23,14 +23,16 @@ table, thead, tbody, th, tr, td {
     margin-right: $spacing-unit;
 
     @include spaced-column($spacing-unit);
+    > * { width: 100%;}
   }
 
   .right {
     display: inline-block;
     float: right;
-    width: #{$sml-width - 3*$spacing-unit - 200px};
+    width: #{$sml-width - 4*$spacing-unit - 200px};
 
     @include spaced-column($spacing-unit);
+    > * { width: 100%; }
   }
 
   img { background-color: darken($enemy-color-2, 10%); }

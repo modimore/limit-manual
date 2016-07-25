@@ -1,12 +1,12 @@
-@mixin lw-tables($n) {
+@mixin lw-tablefix($n) {
   %lw-seg-tablefix {
     position: static;
     float: none;
   }
 
-  table {
+  col, th, td {
     @for $i from 1 through $n {
-      .lw-seg-#{$n}-#{$i} {
+      &.lw-seg-#{$n}-#{$i} {
         @extend %lw-seg-tablefix;
       }
     }

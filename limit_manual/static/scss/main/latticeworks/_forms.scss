@@ -1,7 +1,7 @@
 @include "_util";
 
-@mixin lattice-form($n) {
-  .lattice-form-$n {
+@mixin lw-form($n) {
+  .lw-form-$n {
     @extend %clearfix;
   }
 
@@ -12,11 +12,12 @@
       width: 100%;
     }
   }
-  
+
   @for $i from 1 through $n {
     .lw-field-#{$n}-#{$i} {
-      @extend %lw-field-common;
       width: $i / $n * 100%;
+      
+      @extend %lw-field-common;
     }
   }
 }

@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 
 from .. import app, get_connection
 
@@ -27,6 +27,14 @@ class EnemyBase(object):
         conn.close()
 
         return result
+
+    @staticmethod
+    def new(data):
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute('''INSERT INTO enemy_bases (name, description, image)
+                       VALUES (%s, %s, %s)''', (data["name"], data["description"], data["image"]))
+        conn.commit()
 
 # Version-specific info about an enemy
 # Includes location, stats, formations, items, ...
@@ -131,7 +139,7 @@ class Enemy(EnemyBase):
             cur.execute('''SELECT name, ver_name, row_num, position
                            FROM formation_enemies JOIN
                                 (SELECT name, ver_name, ver_id
-                                 FROM enemies AS e JOIN enemy_versions AS ev ON e.base_id=ev.base_id) as enemy_info
+                                 FROM enemy_bases AS e JOIN enemy_versions AS ev ON e.base_id=ev.base_id) as enemy_info
                                 ON formation_enemies.enemy_ver_id=enemy_info.ver_id
                            WHERE formation_id=%s''', (f_id,))
             for row in cur.fetchall():
@@ -181,3 +189,15 @@ def all_enemies():
 
     conn.close()
     return render_template('enemies/all_enemies.j2', enemies=enemies)
+
+@app.route('/enemies/new', methods=("GET", "POST"))
+def add_enemy():
+    if request.method == "POST":
+        from werkzeug import secure_filename
+
+        data = { "name": request.form["name"], "description": request.form["descr"] }
+        data["image"] = "images/enemies/" + secure_filename(request.files["image"].filename)
+        EnemyBase.new(data)
+        return redirect(url_for('add_enemy'))
+    else:
+        return render_template("enemies/new.j2")

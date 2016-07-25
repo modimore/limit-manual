@@ -8,9 +8,9 @@
 
 {% block content %}
   <div class="content-wrapper small">
-    <div class="content-area lattice-12">
+    <div class="content-area lw-box-12">
       <h3>Playable Characters</h4>
-      <ul id="playable-characters" class="image-list lw-bar-12">
+      <ul id="playable-characters" class="image-list lw-group">
       {% for character in characters %}
         <li id="{{ character.name }}" class="lw-seg-12-4">
           <a href="/characters/{{ character.name }}">

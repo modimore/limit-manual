@@ -3,7 +3,7 @@
 $character-color-1: #d70000;
 $character-color-2: #eddf36;
 
-$character-alpha-color: rgba( 240, 100, 100, 0.4);
+$character-alpha-color: rgba( 240, 100, 100, 0.6);
 
 .content-area {
   background-color: $character-color-1;
@@ -33,15 +33,24 @@ ul.image-list {
   > .sizing-reference {
     position: relative;
     float: left;
+    width: 100%;
 
     > table {
       position: relative;
       z-index: 1;
       float: right;
-      margin-left: 200px;
+      min-width: 400px;
 
       background-color: lighten($character-color-1, 5%);
       background-color: $character-alpha-color;
+
+      .single-line {
+        white-space: nowrap;
+      }
+
+      .shrink {
+        width: 1px;
+      }
     }
   }
 
