@@ -1,11 +1,13 @@
-@include "_util";
+@import "_util";
 
 @mixin lw-form($n) {
-  .lw-form-$n {
+  .lw-form-#{$n} {
     @extend %clearfix;
   }
 
   %lw-field-common {
+    float: left;
+    
     > input,
     > textarea {
       display: block;
@@ -16,7 +18,7 @@
   @for $i from 1 through $n {
     .lw-field-#{$n}-#{$i} {
       width: $i / $n * 100%;
-      
+
       @extend %lw-field-common;
     }
   }

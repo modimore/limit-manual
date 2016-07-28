@@ -20,20 +20,29 @@
 {% block content %}
 <div class="content-wrapper small">
   <div id="stat-box" class="content-area">
-    {# left block #}
-    <div class="left">
+    <div id="intro" class="lw-group">
+      {# left block #}
       {# Enemy Image #}
-      <img src="{{ url_for('static', filename=enemy.image) }}" alt="Enemy model: {{ enemy.name }}">
+      <div class="lw-cell-12-4">
+        <img src="{{ url_for('static', filename=enemy.image) }}" alt="Enemy model: {{ enemy.name }}">
+      </div>
 
       {# Enemy Version Info #}
-      <table id="info">
-        <tbody>
-          <tr>{{ stat_kvp('Name', enemy.name) }}</tr>
-          <tr>{{ stat_kvp('Version', enemy.version) }}</tr>
-        </tbody>
-      </table>
+      <div class="lw-cell-12-8">
+        <table id="info">
+          <tbody>
+            <tr>{{ stat_kvp('Name', enemy.name) }}</tr>
+            <tr>{{ stat_kvp('Version', enemy.version) }}</tr>
+          </tbody>
+        </table>
+      </div>
 
-      {# Links to other versions #}
+      <p class="lw-cell-12-8">{{ enemy.description }}</p>
+    </div>
+    {# end left block #}
+
+    {# Links to other versions #}
+    <div class="lw-cell-12-4">
       {% if (enemy.other_versions|length) > 0 %}
         <table id="other-versions">
           <thead>
@@ -48,18 +57,6 @@
           </tbody>
         </table>
       {% endif %}{# other_versions #}
-
-      {# Rewards for defeating enemy #}
-      <table id="rewards">
-        <thead><tr>
-          <th class="lighter" colspan="2">Rewards</th>
-        </tr></thead>
-        <tbody>
-          <tr>{{ stat_kvp("EXP", enemy.rewards.exp) }}</tr>
-          <tr>{{ stat_kvp("AP", enemy.rewards.ap) }}</tr>
-          <tr>{{ stat_kvp("Gil", enemy.rewards.gil) }}</tr>
-        </tbody>
-      </table>
 
       {# Items #}
       <table id="items">
@@ -98,12 +95,48 @@
           {% endif %}{# morph #}
         </tbody>
       </table>
-    </div>{# div.left #}
 
-    <div class="right">
-      <p>{{ enemy.description }}</p>
+      {# Rewards for defeating enemy #}
+      <table id="rewards">
+        <thead><tr>
+          <th class="lighter" colspan="2">Rewards</th>
+        </tr></thead>
+        <tbody>
+          <tr>{{ stat_kvp("EXP", enemy.rewards.exp) }}</tr>
+          <tr>{{ stat_kvp("AP", enemy.rewards.ap) }}</tr>
+          <tr>{{ stat_kvp("Gil", enemy.rewards.gil) }}</tr>
+        </tbody>
+      </table>
 
-      {# Stats #}
+      {# Elemental Affinities #}
+      {% if (enemy.elemental_modifiers|length) > 0 %}
+        <table id="elemental-modifiers">
+          <thead>
+            <tr><th class="lighter" colspan="2">Elemental Modifiers</th></tr>
+          </thead>
+          <tbody>
+            {% for element in enemy.elemental_modifiers %}
+              <tr>{{ stat_kvp(element.element, element.modifier) }}</tr>
+            {% endfor %}{# elements #}
+          </tbody>
+        </table>
+      {% endif %}{# elements #}
+
+      {% if (enemy.status_immunities|length) > 0 %}
+        <table id="status-immunities">
+          <thead>
+            <tr><th class="lighter">Status Immunities</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>{{ enemy.status_immunities | join(', ') }}</td></tr>
+          </tbody>
+        </table>
+      {% endif %}{# statuses #}
+    </div>
+
+    {# right block #}
+    {# Stats #}
+    <div class="lw-cell-12-8">
       <table id="stats">
         <thead>
           <tr><th class="lighter" colspan=4>Stats</th></tr>
@@ -135,31 +168,6 @@
           </tr>
         </tbody>
       </table>
-
-      {# Elemental Affinities #}
-      {% if (enemy.elemental_modifiers|length) > 0 %}
-        <table id="elemental-modifiers">
-          <thead>
-            <tr><th class="lighter" colspan="2">Elemental Modifiers</th></tr>
-          </thead>
-          <tbody>
-            {% for element in enemy.elemental_modifiers %}
-              <tr>{{ stat_kvp(element.element, element.modifier) }}</tr>
-            {% endfor %}{# elements #}
-          </tbody>
-        </table>
-      {% endif %}{# elements #}
-
-      {% if (enemy.status_immunities|length) > 0 %}
-        <table id="status-immunities">
-          <thead>
-            <tr><th class="lighter">Status Immunities</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>{{ enemy.status_immunities | join(', ') }}</td></tr>
-          </tbody>
-        </table>
-      {% endif %}{# statuses #}
 
       {% if (formations|length) > 0 %}
         <table id="formations">
@@ -196,8 +204,8 @@
           </tbody>
         </table>
       {% endif %}{# formations #}
-
-    </div>{# div.right #}
+    </div>
+    {# end right block #}
   </div>
 </div>
 {% endblock content%}

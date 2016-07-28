@@ -10,6 +10,16 @@
   }
 }
 
-// full-width utility
-// intended to explicitly group certain selectors
-%full-width { width: 100%; }
+.clear-left {
+  clear: left;
+  overflow: hidden;
+}
+
+.clear-right {
+  clear: right;
+  overflow: hidden;
+}
+
+.float-right {
+  float: right;
+}

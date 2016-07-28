@@ -9,56 +9,43 @@
   }
 }
 
-/* Latticework segment styles */
-// Common segment styling
-%lw-seg-common {
+/* Latticework cell styles */
+// Common cell styling
+%lw-cell-common {
   position: relative;
   min-height: 1px;
   float: left;
 }
 
-// Generates $n segment classes with increasing percentage widths
-@mixin lw-segments($n) {
+// Generates $n cell classes with increasing percentage widths
+@mixin lw-cells($n) {
   @for $i from 1 to $n+1 {
-    .lw-seg-#{$n}-#{$i} {
-      @extend %lw-seg-common;
+    .lw-cell-#{$n}-#{$i} {
+      @extend %lw-cell-common;
       width: $i / $n * 100%;
     }
   }
 }
 
-// Adjust segment widths under screen width breakpoint
-@mixin lw-segments-adjust($n, $screen-width-max, $cutoff) {
+// Adjust cell widths under screen width breakpoint
+// When @including, make sure to use unique $n and $cutoff combinations
+// Failing to do so will cause an error
+@mixin lw-cells-adjust-at($n, $screen-width-max, $cutoff) {
   @media screen and (max-width: $screen-width-max) {
-    @for $i from 1 to $cutoff {
-      .lw-seg-#{$n}-#{$i} {
-        width: $i / $cutoff * 100%;
+    @if $cutoff != 1 {
+      @for $i from 1 to $cutoff {
+        .lw-cell-#{$n}-#{$i} { width: $i / $cutoff * 100%; }
       }
     }
 
+    $cutoff-classes: ();
+
     @for $i from $cutoff through $n {
-      .lw-seg-#{$n}-#{$i} { @extend %full-width; }
+      $cutoff-classes: append($cutoff-classes, unquote('.lw-cell-#{$n}-#{$i}'), 'comma');
     }
-  }
-}
 
-// Adjust all segment widths to 100% under screen width breakpoint
-@mixin lw-segments-adjust-all($n, $screen-width-max) {
-  @media screen and (max-width: $screen-width-max) {
-    @for $i from 1 through $n {
-      .lw-seg-#{$n}-#{$i} { @extend %full-width; }
-    }
-  }
-}
-
-@mixin lw-segments-pad($n, $padding) {
-  %lw-seg-padded {
-    padding: $padding;
-  }
-
-  @for $i from 1 through $n {
-    .lw-seg-#{$n}-#{$i} {
-      @extend %lw-seg-padded;
+    $cutoff-classes {
+      width: 100%;
     }
   }
 }
@@ -84,14 +71,14 @@
   @extend %clearfix;
 }
 
-// Full-width lattice
+// Full-width box
 @mixin lw-box($size) {
   .lw-box-#{$size} {
     @extend %lw-box-common;
   }
 }
 
-// Fixed-width lattice
+// Fixed-width box
 @mixin lw-box-static($size, $lw-box-width) {
   .lw-box-static-#{$size} {
     @extend %lw-box-common;
@@ -99,7 +86,7 @@
   }
 }
 
-// Adjust lattice width under screen width breakpoint
+// Adjust box width under screen width breakpoint
 @mixin lw-box-static-cutoff($size, $screen-width-max, $lw-box-width) {
   @media screen and (max-width: $screen-width-max) {
     .lw-box-static-#{$size} {

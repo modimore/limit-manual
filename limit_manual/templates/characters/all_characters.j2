@@ -12,7 +12,7 @@
       <h3>Playable Characters</h4>
       <ul id="playable-characters" class="image-list lw-group">
       {% for character in characters %}
-        <li id="{{ character.name }}" class="lw-seg-12-4">
+        <li id="{{ character.name }}" class="lw-cell-12-4">
           <a href="/characters/{{ character.name }}">
             <img src="{{ url_for('static', filename='images/characters/' + character.image) }}">
           </a>

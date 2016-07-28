@@ -2,15 +2,16 @@
 @import 'latticeworks/core';
 @import 'latticeworks/tables';
 @import 'latticeworks/forms';
+@import 'latticeworks/util';
 
 @include latticeworks-init;
-@include lw-segments(12);
+@include lw-cells(12);
 
 @include lw-group;
 @include lw-box(12);
 @include lw-box-static(12, 1200px);
 
-@include lw-tables(12);
+@include lw-tablefix(12);
 @include lw-form(12);
 
 #foreground {
