@@ -27,6 +27,18 @@
   }
 }
 
+@mixin lw-cells-pad($n, $padding) {
+  .lw-padded-#{$padding} {
+    padding: $padding;
+  }
+
+  @for $i from 1 through $n {
+    .lw-cell-#{$n}-#{$i} {
+      @extend .lw-padded-#{$padding};
+    }
+  }
+}
+
 // Adjust cell widths under screen width breakpoint
 // When @including, make sure to use unique $n and $cutoff combinations
 // Failing to do so will cause an error
@@ -44,7 +56,7 @@
       $cutoff-classes: append($cutoff-classes, unquote('.lw-cell-#{$n}-#{$i}'), 'comma');
     }
 
-    $cutoff-classes {
+    #{$cutoff-classes} {
       width: 100%;
     }
   }

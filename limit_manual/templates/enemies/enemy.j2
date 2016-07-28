@@ -20,34 +20,26 @@
 {% block content %}
 <div class="content-wrapper small">
   <div id="stat-box" class="content-area">
-    <div id="intro" class="lw-group">
-      {# left block #}
-      {# Enemy Image #}
-      <div class="lw-cell-12-4">
-        <img src="{{ url_for('static', filename=enemy.image) }}" alt="Enemy model: {{ enemy.name }}">
-      </div>
-
-      {# Enemy Version Info #}
-      <div class="lw-cell-12-8">
-        <table id="info">
-          <tbody>
-            <tr>{{ stat_kvp('Name', enemy.name) }}</tr>
-            <tr>{{ stat_kvp('Version', enemy.version) }}</tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p class="lw-cell-12-8">{{ enemy.description }}</p>
+    {# left block #}
+    {# Enemy Image #}
+    <div class="lw-cell-12-4">
+      <img src="{{ url_for('static', filename=enemy.image) }}" alt="Enemy model: {{ enemy.name }}">
     </div>
+
+    {# Enemy Version Info #}
+    <h2 class="lw-cell-12-8">
+      {{ enemy.name }}
+      <small>{{ enemy.version }}</small>
+    </h2>
+
+    <p class="lw-cell-12-8">{{ enemy.description }}</p>
     {# end left block #}
 
     {# Links to other versions #}
-    <div class="lw-cell-12-4">
-      {% if (enemy.other_versions|length) > 0 %}
+    {% if (enemy.other_versions|length) > 0 %}
+      <div class="lw-cell-12-4 lw-float-right">
         <table id="other-versions">
-          <thead>
-            <tr><th class="lighter">Other Versions</th></tr>
-          </thead>
+          <caption>Other Versions</caption>
           <tbody>
             {% for version in enemy.other_versions %}
               <tr><td>
@@ -56,155 +48,162 @@
             {% endfor %}{# other_versions #}
           </tbody>
         </table>
-      {% endif %}{# other_versions #}
+      </div>
+    {% endif %}{# other_versions #}
 
-      {# Items #}
-      <table id="items">
-        <thead><tr>
-          <th colspan="2">Items</th>
-        </tr></thead>
-        <tbody>
-          {% if (enemy.items.drop|length) > 0 %}
+    <div class="lw-group">
+      {# Stats #}
+      <div class="lw-cell-12-4 clear-left">
+        <table id="stats">
+          <caption>Stats</caption>
+          <tbody>
             <tr>
-              <th class="lighter">Drop</th>
+              {{ stat_kvp('Level', enemy.stats.level) }}
+            </tr><tr>
+              {{ stat_kvp('Version', enemy.version) }}
+            </tr>
+            <tr>
+              {{ stat_kvp('HP', enemy.stats.hp) }}
+            </tr><tr>
+              {{ stat_kvp('MP', enemy.stats.mp) }}
+            </tr>
+            <tr>
+              {{ stat_kvp('Attack', enemy.stats.attack) }}
+            </tr><tr>
+              {{ stat_kvp('Magic Attack', enemy.stats.magic_attack) }}
+            </tr>
+            <tr>
+              {{ stat_kvp('Defense', enemy.stats.defense) }}
+            </tr><tr>
+              {{ stat_kvp('Magic Defense', enemy.stats.magic_defense) }}
+            </tr>
+            <tr>
+              {{ stat_kvp('Defense%', enemy.stats.defense_pct) }}
+            </tr><tr>
+              {{ stat_kvp('Magic Defense%', enemy.stats.magic_defense_pct) }}
+            </tr>
+            <tr>
+              {{ stat_kvp('Dexterity', enemy.stats.dexterity) }}
+            </tr><tr>
+              {{ stat_kvp('Luck', enemy.stats.luck) }}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="lw-cell-12-4">
+        {# Items #}
+        <table id="items">
+          <caption>Items</caption>
+          <tbody>
+            {% if (enemy.items.drop|length) > 0 %}
+              <tr>
+                <th class="lighter">Drop</th>
+                <td>
+                  <ul>
+                    {% for item in enemy.items.drop %}
+                      <li>{{ item[0] }} [{{ item[1] }}]</li>
+                    {% endfor %}
+                  </ul>
+                </td>
+              </tr>
+            {% endif %}{# drop #}
+
+            {% if (enemy.items.steal|length) > 0 %}
+            <tr>
+              <th class="lighter">Steal</th>
               <td>
                 <ul>
-                  {% for item in enemy.items.drop %}
+                  {% for item in enemy.items.steal %}
                     <li>{{ item[0] }} [{{ item[1] }}]</li>
                   {% endfor %}
-                </ul>
+                <ul>
               </td>
             </tr>
-          {% endif %}{# drop #}
+            {% endif %}{# steal #}
 
-          {% if (enemy.items.steal|length) > 0 %}
-          <tr>
-            <th class="lighter">Steal</th>
-            <td>
-              <ul>
-                {% for item in enemy.items.steal %}
-                  <li>{{ item[0] }} [{{ item[1] }}]</li>
-                {% endfor %}
-              <ul>
-            </td>
-          </tr>
-          {% endif %}{# steal #}
-
-          {% if enemy.items.morph %}
-            <tr>{{ stat_kvp('Morph',enemy.items.morph) }}</tr>
-          {% endif %}{# morph #}
-        </tbody>
-      </table>
+            {% if enemy.items.morph %}
+              <tr>{{ stat_kvp('Morph',enemy.items.morph) }}</tr>
+            {% endif %}{# morph #}
+          </tbody>
+        </table>
+      </div>
 
       {# Rewards for defeating enemy #}
-      <table id="rewards">
-        <thead><tr>
-          <th class="lighter" colspan="2">Rewards</th>
-        </tr></thead>
-        <tbody>
-          <tr>{{ stat_kvp("EXP", enemy.rewards.exp) }}</tr>
-          <tr>{{ stat_kvp("AP", enemy.rewards.ap) }}</tr>
-          <tr>{{ stat_kvp("Gil", enemy.rewards.gil) }}</tr>
-        </tbody>
-      </table>
+      <div class="lw-cell-12-4">
+        <table id="rewards">
+          <caption>Rewards</caption>
+          <tbody>
+            <tr>{{ stat_kvp("EXP", enemy.rewards.exp) }}</tr>
+            <tr>{{ stat_kvp("AP", enemy.rewards.ap) }}</tr>
+            <tr>{{ stat_kvp("Gil", enemy.rewards.gil) }}</tr>
+          </tbody>
+        </table>
+      </div>
 
       {# Elemental Affinities #}
       {% if (enemy.elemental_modifiers|length) > 0 %}
-        <table id="elemental-modifiers">
-          <thead>
-            <tr><th class="lighter" colspan="2">Elemental Modifiers</th></tr>
-          </thead>
-          <tbody>
-            {% for element in enemy.elemental_modifiers %}
-              <tr>{{ stat_kvp(element.element, element.modifier) }}</tr>
-            {% endfor %}{# elements #}
-          </tbody>
-        </table>
+        <div class="lw-cell-12-4">
+          <table id="elemental-modifiers">
+            <caption>Elemental Modifiers</caption>
+            <tbody>
+              {% for element in enemy.elemental_modifiers %}
+                <tr>{{ stat_kvp(element.element, element.modifier) }}</tr>
+              {% endfor %}{# elements #}
+            </tbody>
+          </table>
+        </div>
       {% endif %}{# elements #}
 
       {% if (enemy.status_immunities|length) > 0 %}
-        <table id="status-immunities">
-          <thead>
-            <tr><th class="lighter">Status Immunities</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>{{ enemy.status_immunities | join(', ') }}</td></tr>
-          </tbody>
-        </table>
+        <div class="lw-cell-12-4">
+          <table id="status-immunities">
+            <caption>Status Immunities</caption>
+            <tbody>
+              <tr><td>{{ enemy.status_immunities | join(', ') }}</td></tr>
+            </tbody>
+          </table>
+        </div>
       {% endif %}{# statuses #}
-    </div>
-
-    {# right block #}
-    {# Stats #}
-    <div class="lw-cell-12-8">
-      <table id="stats">
-        <thead>
-          <tr><th class="lighter" colspan=4>Stats</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            {{ stat_kvp('Level', enemy.stats.level) }}
-            {{ stat_kvp('Version', enemy.version) }}
-          </tr>
-          <tr>
-            {{ stat_kvp('HP', enemy.stats.hp) }}
-            {{ stat_kvp('MP', enemy.stats.mp) }}
-          </tr>
-          <tr>
-            {{ stat_kvp('Attack', enemy.stats.attack) }}
-            {{ stat_kvp('Magic Attack', enemy.stats.magic_attack) }}
-          </tr>
-          <tr>
-            {{ stat_kvp('Defense', enemy.stats.defense) }}
-            {{ stat_kvp('Magic Defense', enemy.stats.magic_defense) }}
-          </tr>
-          <tr>
-            {{ stat_kvp('Defense%', enemy.stats.defense_pct) }}
-            {{ stat_kvp('Magic Defense%', enemy.stats.magic_defense_pct) }}
-          </tr>
-          <tr>
-            {{ stat_kvp('Dexterity', enemy.stats.dexterity) }}
-            {{ stat_kvp('Luck', enemy.stats.luck) }}
-          </tr>
-        </tbody>
-      </table>
 
       {% if (formations|length) > 0 %}
-        <table id="formations">
-          <thead>
-            <tr><th class="lighter" colspan="3">Formations</th></tr>
-            <tr>
-              <th class="lighter">Locations</th>
-              <th class="lighter">Enemies</th>
-              <th class="lighter">Attack Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for formation in formations %}
+      <div class="lw-cell-12-8">
+          <table id="formations">
+            <caption>Formations</caption>
+            <thead>
               <tr>
-                <td><dl>
-                  {% for location in formation.locations %}
-                    <dt>{{ location }}</dt>
-                    <dd>{{ formation.locations[locations] | join(', ') }}</dd>
-                  {% endfor %}{# locations #}
-                </dl></td>
-                <td>
-                  {# improve this display setup #}
-                  <ul>
-                    {% for row_num in formation.enemy_rows %}
-                      <li>
-                        {% for enemy in formation.enemy_rows[row_num] %}{{ enemy_link(enemy[0], enemy[1]) }} {% endfor %}
-                      </li>
-                    {% endfor %}{# rows #}
-                  </ul>
-                </td>
-                <td>{{ formation.attack_type }}</td>
+                <th class="lighter">Locations</th>
+                <th class="lighter">Enemies</th>
+                <th class="lighter">Attack Type</th>
               </tr>
-            {% endfor %}{# formations #}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for formation in formations %}
+                <tr>
+                  <td><dl>
+                    {% for location in formation.locations %}
+                      <dt>{{ location }}</dt>
+                      <dd>{{ formation.locations[locations] | join(', ') }}</dd>
+                    {% endfor %}{# locations #}
+                  </dl></td>
+                  <td>
+                    {# improve this display setup #}
+                    <ul>
+                      {% for row_num in formation.enemy_rows %}
+                        <li>
+                          {% for enemy in formation.enemy_rows[row_num] %}{{ enemy_link(enemy[0], enemy[1]) }} {% endfor %}
+                        </li>
+                      {% endfor %}{# rows #}
+                    </ul>
+                  </td>
+                  <td>{{ formation.attack_type }}</td>
+                </tr>
+              {% endfor %}{# formations #}
+            </tbody>
+          </table>
+      </div>
       {% endif %}{# formations #}
-    </div>
+    </div>{# end version info #}
     {# end right block #}
   </div>
 </div>
