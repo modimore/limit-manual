@@ -1,5 +1,6 @@
 @import "main/_base";
-@import "main/latticeworks/core";
+@import "latticeworks/_core";
+@import "latticeworks/_forms";
 
 $enemy-color-1: #740000;
 $enemy-color-2: #decec1;
@@ -15,6 +16,10 @@ $enemy-color-2: #decec1;
 
 table, thead, tbody, th, tr, td {
   border-color: $enemy-color-2;
+}
+
+form > .field {
+  @include lw-form-field;
 }
 
 #stat-box {
@@ -58,7 +63,7 @@ table, thead, tbody, th, tr, td {
 
     > * {
       margin-top: 5px;
-      &:first-child {/
+      &:first-child {
         margin-top: 0px;
       }
     }

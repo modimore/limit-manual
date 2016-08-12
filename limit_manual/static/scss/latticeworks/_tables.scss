@@ -1,0 +1,23 @@
+%lw-cell-tablefix {
+  position: static;
+  float: none;
+}
+
+@mixin lw-tablefix {
+  table {
+    &::before, &::after {
+      display: none !important;
+    }
+  }
+}
+
+@mixin lw-tablecells($n, $class-base: 'lw-cell') {
+  col, th, td {
+    @for $i from 1 to $n {
+      &.#{$class-base}-#{$n}-#{$i} {
+        @extend %lw-cell-tablefix;
+        width: $i / $n * 100% !important;
+      }
+    }
+  }
+}

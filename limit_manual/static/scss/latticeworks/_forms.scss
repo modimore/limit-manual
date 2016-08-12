@@ -1,0 +1,18 @@
+// General improvements for elements in forms
+@mixin lw-form-field {
+  > label,
+  > input,
+  > textarea {
+    margin: 0px;
+  }
+
+  > input,
+  > textarea {
+    display: block;
+    width: 100%;
+  }
+
+  > textarea {
+    max-width: 100%;
+  }
+}

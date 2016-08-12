@@ -1,0 +1,42 @@
+{% extends 'layout.j2' %}
+
+{% block page_styles %}
+  {% assets 'css_enemy' %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+  {% endassets %}
+{% endblock page_styles %}
+
+{% block content %}
+  <div class="content-wrapper">
+    <div class="content-area">
+      <form name="enemy" action="/enemies/new" method="POST" enctype="multipart/form-data" class="lw-box">
+        {# Enemy Base Info #}
+        <div class="lw-cell-12-12 field">
+          <label for="name">Enemy Name</label>
+          <input type="text" name="name"></input>
+        </div>
+        <div class="lw-cell-12-12 field">
+          <label for="descr">Description</label>
+          <textarea name="descr"></textarea>
+        </div>
+        <div class="lw-cell-12-12 field">
+          <label for="image">Image</label>
+          <input type="file" name="image" accepts="image/*"></input><br>
+        </div>
+
+        {# Enemy Info #}
+        <div class="lw-cell-12-6 field">
+          <label for="version">Version Name</label>
+          <input type="text" name="version"></input>
+        </div>
+        <div class="lw-cell-12-6 field">
+          <label for="level">Level</label>
+          <input type="number" name="level" min="1" max="100"></input>
+        </div>
+
+        {# form submission #}
+        <input type="submit" class="lw-float-right"></input>
+      </form>
+    </div>
+  </div>
+{% endblock content %}
