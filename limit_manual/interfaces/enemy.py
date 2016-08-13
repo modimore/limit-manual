@@ -1,3 +1,7 @@
+'''
+Data access and organization for enemies.
+'''
+
 from flask import render_template, request, redirect, url_for
 
 from .. import app, get_connection

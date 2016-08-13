@@ -1,5 +1,6 @@
 '''
 Uses Flask-Assets package to monitor and compile "static" assets.
+Currently requires 'sass' Ruby gem on your system.
 '''
 
 import os.path

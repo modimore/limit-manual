@@ -1,3 +1,7 @@
+'''
+Flask application defining base file.
+'''
+
 # Basic Flask & Jinja2 related imports
 from flask import Flask, render_template
 

@@ -1,8 +1,13 @@
+'''
+Data access and organization for characters.
+'''
+
 from flask import render_template
 
 from .. import app, get_connection
 
 class Character(object):
+    ''' Class representing a character in the game. '''
     def __init__(self,name):
         self.name = name
         with get_connection() as conn:
@@ -41,6 +46,8 @@ class Character(object):
                 }
 
     def extract(self, with_uid=False):
+        ''' Transform character object into a dictionary '''
+
         result = {
             'name': self.name,
             'intro': self.intro
@@ -52,6 +59,8 @@ class Character(object):
 
     @staticmethod
     def extract_all(with_uid=False):
+        ''' Transform all characters in the database into dictionaries. '''
+
         all_characters = []
 
         conn = get_connection()

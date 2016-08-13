@@ -1,10 +1,22 @@
+'''
+Data access and organization for abilities.
+'''
+
 from flask import render_template, request
 
 from .. import app, get_connection
 from .common_relations import get_description
 
 class Ability(object):
+    '''
+    Representation of an Ability, usable by a playable character.
+    Parses common properties.
+    Is subclassed for different types of ability.
+    '''
+
     def get_statuses(self,conn):
+        ''' Get the list of statuses the ability can inflict or heal '''
+
         cur = conn.cursor()
         cur.execute('''SELECT mode, chance FROM ability_status_info
                           WHERE ability_id=%s''', (self.uid,))
@@ -23,6 +35,8 @@ class Ability(object):
             }
 
     def get_damage(self,conn):
+        ''' Get the damage an ability can inflict or heal '''
+
         cur = conn.cursor()
         cur.execute('''SELECT formula, power, piercing
                           FROM ability_damage
@@ -42,6 +56,8 @@ class Ability(object):
             self.get_damage_string()
 
     def get_damage_string(self):
+        ''' Transform the damage into a more readable string '''
+
         if self.damage['formula'] == 'Max HP%':
             if self.damage['power'] == 32:
                 self.damage_text = 'Restore HP to full'
@@ -77,6 +93,11 @@ class Ability(object):
                 self.damage_text = self.damage_text + ' to each target'
 
     def __init__(self,conn,name=None,uid=None):
+        '''
+        Set common ability properties on this object,
+        gotten from database.
+        '''
+
         cur = conn.cursor()
 
         if uid != None:
@@ -110,17 +131,6 @@ class Ability(object):
             ability_notes.extend([ row[0] for row in cur.fetchall() ])
 
         if ability_row[5]: # has_info
-            # cur.execute("SELECT * FROM ability_info WHERE uid=%s", (self.uid,))
-            # info_row = cur.fetchone()
-            # self.hit_formula = info_row[1]
-            # self.accuracy = info_row[2]
-            # self.element = info_row[3]
-            # self.friendly = info_row[4] == 1
-            # self.target_all = info_row[5] == 1
-            # self.target_random = info_row[6] == 1
-            # self.num_attacks = info_row[7]
-            # self.split = info_row[8] == 1
-
             cur.execute('''SELECT type, value FROM ability_property_map
                            WHERE ability_id=%s''', (self.uid,))
             for row in cur.fetchall():
@@ -156,7 +166,11 @@ class Ability(object):
         self.in_game_description = get_description(ability_row[2],"Ability",self.uid)
 
 class Spell(Ability):
+    ''' Ability found in the Magic menu '''
+
     def __init__(self,conn,name):
+        ''' Call Ability constructor, then get spell-specific properties.'''
+
         Ability.__init__(self,conn,name)
 
         cur = conn.cursor()
@@ -169,7 +183,11 @@ class Spell(Ability):
         self.reflectable = row[2] == 1
 
 class Summon(Ability):
+    ''' Ability found in the Summon menu '''
+
     def __init__(self,conn,name):
+        ''' Call Ability constructor, then get summon-specific properties. '''
+
         Ability.__init__(self,conn,name)
 
         cur = conn.cursor()
@@ -184,7 +202,11 @@ class Summon(Ability):
         self.attacks = [ Ability(conn,uid=r[0]) for r in cur.fetchmany(info_row[1]) ]
 
 class EnemySkill(Ability):
+    ''' Ability found in the E.Skill menu '''
+
     def __init__(self,conn,name):
+        ''' Call Ability constructor, then get E.Skill-specific properties. '''
+
         Ability.__init__(self,conn,name=name)
 
         cur = conn.cursor()
@@ -202,13 +224,21 @@ class EnemySkill(Ability):
         self.users = [ row[0] for row in cur.fetchall() ]
 
 class Command(Ability):
+    ''' Ability found at the top-level on the battle menu '''
+
     def __init__(self,conn,name):
+        ''' Call Ability constructor. '''
         Ability.__init__(self,conn,name=name)
 
 
 @app.route('/abilities')
 @app.route('/abilities/all')
 def all_actions():
+    '''
+    Render page showing all abilities,
+    each shown under their respective category.
+    '''
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT name, category FROM abilities;")
@@ -239,6 +269,11 @@ def all_actions():
 @app.route('/abilities/magic')
 @app.route('/abilities/spells')
 def all_magic():
+    '''
+    Render page to show all spells,
+    sorted into one of four type of magic (Restore, Attack, Indirect, Other)
+    '''
+
     detail = (request.args.get('display',None) in ['Detail','detail'])
 
     restore = []
@@ -269,6 +304,10 @@ def all_magic():
 
 @app.route('/abilities/summons')
 def all_summons():
+    '''
+    Render page to show all summons.
+    '''
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT name FROM abilities WHERE category=%s",("Summon",))
@@ -283,6 +322,10 @@ def all_summons():
 @app.route('/abilities/enemy skills')
 @app.route('/abilities/eskills')
 def all_eskills():
+    '''
+    Render page to show all enemy skills.
+    '''
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT name FROM abilities WHERE category=%s", ("Enemy Skill", ))
@@ -296,6 +339,10 @@ def all_eskills():
 
 @app.route('/abilities/commands')
 def all_commands():
+    '''
+    Render page to show all commands.
+    '''
+
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("SELECT name FROM abilities WHERE category=%s", ("Command",))

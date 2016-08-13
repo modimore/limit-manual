@@ -1,3 +1,7 @@
+'''
+Data access and organization for items.
+'''
+
 from flask import render_template
 
 from .. import app, get_connection
@@ -5,6 +9,10 @@ from .common_relations import get_description
 
 # Representation of the basic item type
 class Item(object):
+    '''
+    General item representation.
+    '''
+    
     def __init__(self,name,uid=None):
         self.name = name
         conn = get_connection()
@@ -32,8 +40,11 @@ class Item(object):
             all_items.append(Item(item.name,item.uid).extract(with_uid))
         return all_items
 
-# Representation of a weapon
 class Weapon(Item):
+    '''
+    Representation of a weapon.
+    '''
+
     def __init__(self,name):
         Item.__init__(self,name)
 
@@ -60,6 +71,10 @@ class Weapon(Item):
         return '<{0}>'.format(self.name)
 
 class Armor(Item):
+    '''
+    Representation of armor.
+    '''
+
     def __init__(self,name):
         Item.__init__(self,name)
 

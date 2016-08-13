@@ -1,3 +1,7 @@
+'''
+Data access for shared database tables.
+'''
+
 from .. import get_connection
 
 def get_description(descr_id,referent_type,referent_id):
